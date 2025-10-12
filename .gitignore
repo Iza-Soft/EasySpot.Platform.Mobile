@@ -1,0 +1,82 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Expo
+.expo/
+.expo-shared/
+
+# TypeScript
+*.tsbuildinfo
+
+# Build outputs
+android/app/build/
+ios/build/
+ios/Pods/
+ios/Podfile.lock
+ios/Podfile.lock.old
+
+# Xcode
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.xcuserstate
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Android/IntelliJ
+*.iml
+.gradle/
+local.properties
+.idea/
+*.apk
+*.ap_/
+*.dex
+*.class
+captures/
+output.json
+
+# React Native Packager
+$TMPDIR/react-*
+*.packager
+*.map
+*.hbc
+
+# Metro
+.expo/
+.expo-shared/
+.expo-dev/
+
+# Logs
+*.log
+
+# Misc
+.env
+.env.local
+.env.*.local
+*.swp
+*.swo
+*.tmp
+*.temp
+
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
+*.icloud
