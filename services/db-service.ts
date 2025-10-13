@@ -6,9 +6,10 @@ import { CardItem } from "../types/common";
 export const DB_NAME = "easyspot.db";
 
 export const createDBifNeeded = async (db: SQLiteDatabase) => {
-  await db.execAsync(SQL.DROP_LOCATION_TABLE);
-  console.log("Database initialized or already exists.");
+  //await db.execAsync(SQL.DROP_LOCATION_TABLE); - DO NOT USE DROP IN PRODUCTION
+  console.log("Checking database...");
   await db.execAsync(SQL.CREATE_LOCATION_TABLE);
+  console.log("✅ Database initialized and ready.");
 };
 
 export const saveLocationDB = async (
