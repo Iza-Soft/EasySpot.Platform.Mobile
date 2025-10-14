@@ -1,11 +1,18 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 
 export default function FooterComponent() {
   return (
     <View style={styles.footer}>
-      <Text style={styles.footerText}>
-        🅿️ © {new Date().getFullYear()} ParkMate. All rights reserved.
-      </Text>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Image
+          source={require("../assets/easyspot-logo.png")}
+          style={{ width: 20, height: 20, marginRight: 0 }}
+          resizeMode="contain"
+        />
+        <Text style={styles.footerText}>
+          © {new Date().getFullYear()} EasySpot. All rights reserved.
+        </Text>
+      </View>
     </View>
   );
 }
