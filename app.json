@@ -31,11 +31,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "eas": {
-        "projectId": "a21cf7aa-7db6-4ab3-977d-3f070c13d9a7"
-      }
-    },
     "plugins": [
       "expo-sqlite",
       [
@@ -45,6 +40,11 @@
         }
       ]
     ],
-    "owner": "i.adamov"
+    "owner": "i.z.adamov",
+    "extra": {
+      "eas": {
+        "projectId": "a817f6ab-8aca-40af-bbb4-47369905f326"
+      }
+    }
   }
 }
