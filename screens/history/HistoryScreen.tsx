@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
   },
   tabSelected: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.tab,
   },
   tabText: {
     color: colors.text,
