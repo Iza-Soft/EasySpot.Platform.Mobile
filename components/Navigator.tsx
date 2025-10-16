@@ -1,14 +1,36 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StatusBar, StyleSheet, Image, View, Text } from "react-native";
+import {
+  StatusBar,
+  StyleSheet,
+  Image,
+  View,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import MainScreenComponent from "../screens/main/MainScreen";
 import FooterComponent from "./Footer";
 import HistoryScreenComponent from "../screens/history/HistoryScreen";
 import { colors } from "../themes/main";
+import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
 
-const NavigatorComponent = () => {
+const NavigatorComponent = ({ navigation }: any) => {
+  const HeaderMenuButton = ({ navigation }: any) => (
+    <TouchableOpacity
+      onPress={() => {
+        // 👇 Handle your menu action here
+        console.log("Menu (accordion) button pressed");
+        // Example if using drawer navigation:
+        // navigation.toggleDrawer();
+      }}
+      style={{ marginRight: 15 }}
+    >
+      <Ionicons name="menu" size={28} color={colors.tab} />
+    </TouchableOpacity>
+  );
+
   return (
     <NavigationContainer>
       <StatusBar
@@ -46,6 +68,7 @@ const NavigatorComponent = () => {
                 </Text>
               </View>
             ),
+            headerRight: () => <HeaderMenuButton navigation={navigation} />,
           }}
         />
         <Stack.Screen
@@ -79,6 +102,7 @@ const NavigatorComponent = () => {
             ),
             headerLeft: () => null, // <-- removes the back button
             headerBackVisible: false, // hides back button
+            headerRight: () => <HeaderMenuButton navigation={navigation} />,
           }}
         />
       </Stack.Navigator>
