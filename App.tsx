@@ -8,7 +8,6 @@ import NavigatorComponent from "./components/Navigator";
 import { useEffect, useRef, useState } from "react";
 import {
   View,
-  Image,
   StyleSheet,
   Text,
   Animated,
@@ -18,20 +17,18 @@ import {
 import { colors } from "./themes/main";
 
 export default function App() {
-  const [db, setDb] = useState<any>(null);
+  const [isReady, setIsReady] = useState(false);
+  const [dbError, setDbError] = useState(false);
   const [isSplashVisible, setIsSplashVisible] = useState(true);
 
   // Animation values
-  const logoY = useRef(new Animated.Value(-200)).current; // logo starts above screen
-  const textOpacity = useRef(new Animated.Value(0)).current; // text starts invisible
+  const logoY = useRef(new Animated.Value(-200)).current;
+  const textOpacity = useRef(new Animated.Value(0)).current;
+  const gearRotation = useRef(new Animated.Value(0)).current;
+  const initializingOpacity = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    (async () => {
-      const database = await openPersistentDB();
-      setDb(database);
-    })();
-
-    // Animate logo drop + text fade in
+    // Splash animation
     Animated.sequence([
       Animated.timing(logoY, {
         toValue: 0,
@@ -45,34 +42,66 @@ export default function App() {
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
-    ]).start();
+    ]).start(() =>
+      (async () => {
+        try {
+          // Start gear rotation indefinitely
+          Animated.loop(
+            Animated.timing(gearRotation, {
+              toValue: 1,
+              duration: 1600,
+              easing: Easing.linear,
+              useNativeDriver: true,
+            })
+          ).start();
 
-    // Force splash for 30 seconds
-    const timer = setTimeout(() => {
-      setIsSplashVisible(false);
-    }, 6000); // 6,000 ms = 6 seconds
+          const timer = setTimeout(async () => {
+            await openPersistentDB(); // just ensures persistence setup
+            setIsReady(true);
+          }, 500);
 
-    return () => clearTimeout(timer);
+          // this should be uncommented in production - TODO
+          // await openPersistentDB(); // just ensures persistence setup
+          // setIsReady(false);
+          // setIsSplashVisible(false);
+          // this should be uncommented in production -TODO
+
+          // simulate longer init for demo - this should be removed in production - TODO
+          const new_timer = setTimeout(async () => {
+            try {
+              //throw new Error("Database initialization timeout!"); //- simulate error
+              await openPersistentDB(); // just ensures persistence setup
+              setIsReady(false);
+              setIsSplashVisible(false);
+            } catch (error) {
+              setDbError(true);
+              setIsReady(false);
+            }
+          }, 3000);
+          // simulate longer init for demo - TODO
+
+          return () => clearTimeout(timer);
+        } catch (error) {
+          console.error("❌ Database open failed:", error);
+          setDbError(true);
+          setIsReady(false);
+        }
+      })()
+    );
   }, []);
 
-  if (!db || isSplashVisible) {
+  const spin = gearRotation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
+
+  if (isSplashVisible) {
     return (
-      // <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      //   <ActivityIndicator size="large" />
-      // </View>
-      // <View style={styles.loadingContainer}>
-      //   <Image
-      //     source={require("./assets/easyspot-logo.png")}
-      //     style={styles.logo}
-      //     resizeMode="contain"
-      //   />
-      //   <Text style={styles.appName}>Easy Spot</Text>
-      // </View>
       <View style={styles.loadingContainer}>
         <StatusBar
           barStyle="dark-content"
+          translucent
           backgroundColor="transparent"
-          translucent={true}
         />
         <Animated.Image
           source={require("./assets/easyspot-logo.png")}
@@ -82,6 +111,24 @@ export default function App() {
         <Animated.Text style={[styles.appName, { opacity: textOpacity }]}>
           Easy Spot
         </Animated.Text>
+
+        {isReady && (
+          <Animated.View
+            style={[styles.initRow, { opacity: initializingOpacity }]}
+          >
+            <Text style={styles.initializingText}>Getting ready...</Text>
+            <Animated.Text
+              style={[styles.gear, { transform: [{ rotate: spin }] }]}
+            >
+              ⚙️
+            </Animated.Text>
+          </Animated.View>
+        )}
+        {dbError && (
+          <Text style={styles.errorText}>
+            Easy Spot hit a small bump! Try reopening the app 🚧
+          </Text>
+        )}
       </View>
     );
   }
@@ -112,5 +159,26 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(0, 0, 0, 0.2)",
     textShadowOffset: { width: 1, height: 3 },
     textShadowRadius: 6,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 14,
+    position: "absolute",
+    bottom: 80, // distance from bottom of screen
+  },
+  initRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    position: "absolute",
+    bottom: 80, // distance from bottom of screen
+  },
+  initializingText: {
+    fontSize: 16,
+    color: colors.muted,
+    marginRight: 6,
+    fontWeight: "600",
+  },
+  gear: {
+    fontSize: 22,
   },
 });
