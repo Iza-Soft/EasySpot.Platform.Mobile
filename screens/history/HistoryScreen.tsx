@@ -19,6 +19,7 @@ import {
   deleteLocationAsync,
   getAllSavedLocationAsync,
 } from "../../services/location-service";
+import Toast from "react-native-toast-message";
 
 export default function HistoryScreenComponent() {
   const database = useSQLiteContext();
@@ -66,7 +67,12 @@ export default function HistoryScreenComponent() {
               setLocations((prev) => prev.filter((l) => l.id !== id));
             },
             onError: (message) => {
-              Alert.alert("Error", message);
+              console.error("❌ Failed to delete location:", message);
+              Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: "Failed to delete the location.",
+              });
             },
           });
         },

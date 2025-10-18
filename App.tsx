@@ -15,6 +15,8 @@ import {
   StatusBar,
 } from "react-native";
 import { colors } from "./themes/main";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "./components/toastConfig";
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -56,9 +58,8 @@ export default function App() {
           ).start();
 
           const timer = setTimeout(async () => {
-            await openPersistentDB(); // just ensures persistence setup
-            setIsReady(true);
-          }, 500);
+            setIsReady(true); // wait before starting DB init animation for 3 seconds
+          }, 300);
 
           // this should be uncommented in production - TODO
           // await openPersistentDB(); // just ensures persistence setup
@@ -134,9 +135,17 @@ export default function App() {
   }
 
   return (
-    <SQLiteProvider databaseName={DB_NAME} onInit={createDBifNeeded}>
-      <NavigatorComponent />
-    </SQLiteProvider>
+    <>
+      <SQLiteProvider databaseName={DB_NAME} onInit={createDBifNeeded}>
+        <NavigatorComponent />
+      </SQLiteProvider>
+      <Toast
+        config={toastConfig}
+        position="bottom"
+        visibilityTime={3000}
+        bottomOffset={80}
+      />
+    </>
   );
 }
 

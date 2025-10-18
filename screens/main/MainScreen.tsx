@@ -17,6 +17,7 @@ import {
 import { Maps } from "../../constants/maps";
 import { LocationData } from "../../types/common";
 import * as Location from "expo-location";
+import Toast from "react-native-toast-message";
 
 export default function MainScreenComponent({ navigation }: any) {
   const database = useSQLiteContext();
@@ -31,11 +32,20 @@ export default function MainScreenComponent({ navigation }: any) {
           action,
           onSuccess: () => {
             setLoading(false);
-            Alert.alert("Success", "Parking location saved successfully.");
+            Toast.show({
+              type: "success",
+              text1: "Success",
+              text2: "Parking location saved successfully.",
+            });
           },
           onError: (message) => {
             setLoading(false);
-            Alert.alert("Error", message);
+            console.error("❌ Failed to save location:", message);
+            Toast.show({
+              type: "error",
+              text1: "Error",
+              text2: "Failed to save location.",
+            });
           },
         });
       })();
@@ -51,14 +61,20 @@ export default function MainScreenComponent({ navigation }: any) {
                 map: Maps.google,
               });
             } else {
-              Alert.alert(
-                "No saved locations",
-                "Add a location to get started."
-              );
+              Toast.show({
+                type: "info",
+                text1: "Info",
+                text2: "No saved locations found.",
+              });
             }
           },
           onError: (message) => {
-            Alert.alert("Error", message);
+            console.error("❌ Failed to retrieve location:", message);
+            Toast.show({
+              type: "error",
+              text1: "Error",
+              text2: "Failed to retrieve the saved location.",
+            });
           },
         });
       })();
@@ -72,15 +88,23 @@ export default function MainScreenComponent({ navigation }: any) {
           action,
           onSuccess: () => {
             setLoading(false);
-            Alert.alert("Success", "Favorite location saved successfully.");
+            Toast.show({
+              type: "success",
+              text1: "Success",
+              text2: "Favorite location saved successfully.",
+            });
           },
           onError: (message) => {
             setLoading(false);
-            Alert.alert("Error", message);
+            console.error("❌ Failed to save location:", message);
+            Toast.show({
+              type: "error",
+              text1: "Error",
+              text2: "Failed to save location.",
+            });
           },
         });
       })();
-      // Alert.alert("Feature not implemented", "Favorites is coming soon!");
     } else if (action === "share") {
       (async () => {
         try {
@@ -89,23 +113,33 @@ export default function MainScreenComponent({ navigation }: any) {
           setLoading(true);
           if (status !== "granted") {
             setLoading(false);
-            Alert.alert(
-              "Error",
-              "Location permission not granted. Please enable it in settings."
-            );
+            Toast.show({
+              type: "info",
+              text1: "Info",
+              text2:
+                "Location permission not granted. Please enable it in settings.",
+            });
             return;
           }
 
           await ShareLocationAsync(Maps.google);
         } catch (err) {
           console.error("❌ Share current location failed:", err);
-          Alert.alert("Error", "Failed to share your current location.");
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: "Failed to share your current location.",
+          });
         } finally {
           setLoading(false);
         }
       })();
     } else {
-      Alert.alert("Feature not implemented", "This feature is coming soon!");
+      Toast.show({
+        type: "info",
+        text1: "Info",
+        text2: "This feature is coming soon!",
+      });
     }
   };
 
