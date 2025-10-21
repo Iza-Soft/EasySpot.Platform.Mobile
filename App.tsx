@@ -16,7 +16,9 @@ import {
 } from "react-native";
 import { colors } from "./themes/main";
 import Toast from "react-native-toast-message";
-import { toastConfig } from "./components/toastConfig";
+import { toastConfigComponent } from "./components/toastConfig";
+import * as Notifications from "expo-notifications";
+import { setupNotifications } from "./config/notifications-config";
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -89,6 +91,8 @@ export default function App() {
         }
       })()
     );
+
+    setupNotifications(); // 👈 runs once to configure everything
   }, []);
 
   const spin = gearRotation.interpolate({
@@ -140,7 +144,7 @@ export default function App() {
         <NavigatorComponent />
       </SQLiteProvider>
       <Toast
-        config={toastConfig}
+        config={toastConfigComponent}
         position="bottom"
         visibilityTime={3000}
         bottomOffset={80}

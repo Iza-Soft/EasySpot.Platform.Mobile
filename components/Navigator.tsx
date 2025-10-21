@@ -13,18 +13,17 @@ import FooterComponent from "./Footer";
 import HistoryScreenComponent from "../screens/history/HistoryScreen";
 import { colors } from "../themes/main";
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import SettingsModalComponent from "./SettingsModal";
 
 const Stack = createNativeStackNavigator();
 
 const NavigatorComponent = ({ navigation }: any) => {
+  const [settingsVisible, setSettingsVisible] = useState(false);
+
   const HeaderMenuButton = ({ navigation }: any) => (
     <TouchableOpacity
-      onPress={() => {
-        // 👇 Handle your menu action here
-        console.log("Menu (accordion) button pressed");
-        // Example if using drawer navigation:
-        // navigation.toggleDrawer();
-      }}
+      onPress={() => setSettingsVisible(true)}
       style={{ marginRight: 15 }}
     >
       <Ionicons name="menu" size={28} color={colors.tab} />
@@ -107,6 +106,10 @@ const NavigatorComponent = ({ navigation }: any) => {
         />
       </Stack.Navigator>
       <FooterComponent />
+      <SettingsModalComponent
+        visible={settingsVisible}
+        onClose={() => setSettingsVisible(false)}
+      />
     </NavigationContainer>
   );
 };

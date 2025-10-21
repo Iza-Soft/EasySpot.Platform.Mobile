@@ -7,7 +7,7 @@ import {
 import { StyleSheet, Text, View } from "react-native";
 import { colors } from "../themes/main";
 
-export const toastConfig: ToastConfig = {
+export const toastConfigComponent: ToastConfig = {
   success: (props: ToastConfigParams<any>) => (
     <BaseToast
       {...props}

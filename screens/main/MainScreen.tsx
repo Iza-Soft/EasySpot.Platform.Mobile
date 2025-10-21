@@ -18,6 +18,7 @@ import { Maps } from "../../constants/maps";
 import { LocationData } from "../../types/common";
 import * as Location from "expo-location";
 import Toast from "react-native-toast-message";
+import { scheduleNotificationAsync } from "../../services/notification-service";
 
 export default function MainScreenComponent({ navigation }: any) {
   const database = useSQLiteContext();
@@ -30,8 +31,9 @@ export default function MainScreenComponent({ navigation }: any) {
         await saveLocationAsync({
           database,
           action,
-          onSuccess: () => {
+          onSuccess: async () => {
             setLoading(false);
+            await scheduleNotificationAsync(); // <-- ⏰ Start the timer here
             Toast.show({
               type: "success",
               text1: "Success",
