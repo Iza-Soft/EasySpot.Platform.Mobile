@@ -17,7 +17,6 @@ import {
 import { colors } from "./themes/main";
 import Toast from "react-native-toast-message";
 import { toastConfigComponent } from "./components/toastConfig";
-//import { setupNotifications } from "./config/notifications-config";
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
