@@ -10,6 +10,11 @@ import {
 export async function saveLocationAsync({
   database,
   action,
+  title,
+  level,
+  section,
+  spot,
+  comments,
   onSuccess,
   onError,
 }: LocationProps) {
@@ -40,6 +45,11 @@ export async function saveLocationAsync({
       address?.postalCode || null,
       address?.country || null,
       action,
+      title || null,
+      level || null,
+      section || null,
+      spot || null,
+      comments || null,
       new Date().toISOString(),
     ]);
 
@@ -77,11 +87,12 @@ export async function getLastSavedLocationAsync({
 
 export async function getAllSavedLocationAsync({
   database,
+  searchText,
   onSuccess,
   onError,
 }: LocationProps) {
   try {
-    const locations = await getAllSavedLocationDB(database);
+    const locations = await getAllSavedLocationDB(database, searchText);
     if (!locations) {
       onError?.("No saved locations found.");
       return;

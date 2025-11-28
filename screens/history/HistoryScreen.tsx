@@ -5,6 +5,7 @@ import {
   Pressable,
   StyleSheet,
   Alert,
+  TextInput,
 } from "react-native";
 import { colors } from "../../themes/main";
 import { useEffect, useState } from "react";
@@ -28,11 +29,13 @@ export default function HistoryScreenComponent() {
   const [selectedTab, setSelectedTab] = useState<
     "all" | "favorites" | "parking"
   >("all");
+  const [searchText, setSearchText] = useState<string | undefined>();
 
   useEffect(() => {
     (async () => {
       await getAllSavedLocationAsync({
         database,
+        searchText,
         onSuccess: async (results) => {
           setLoading(false);
           setLocations(results as CardItem[]);
@@ -43,7 +46,7 @@ export default function HistoryScreenComponent() {
         },
       });
     })();
-  }, []);
+  }, [searchText]);
 
   const openInMaps = async (item: CardItem) => {
     await openMapsAsync({
@@ -117,7 +120,22 @@ export default function HistoryScreenComponent() {
           </Pressable>
         ))}
       </View>
-
+      {/* Search field */}
+      <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
+        <TextInput
+          placeholder="Search locations..."
+          value={searchText}
+          onChangeText={setSearchText} // make sure you have this state
+          style={{
+            backgroundColor: "#fff",
+            paddingHorizontal: 12,
+            paddingVertical: 8,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: colors.border,
+          }}
+        />
+      </View>
       {filteredLocations.length === 0 ? (
         <EmptyComponent text="No locations found 📂" />
       ) : (

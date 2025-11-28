@@ -7,6 +7,11 @@ export type CardItem = {
   region?: string;
   country?: string;
   type: string; // 'favorite', 'parking', etc.
+  title?: string;
+  level?: string;
+  section?: string;
+  spot?: string;
+  comments?: string;
   timestamp: string;
 };
 

@@ -80,3 +80,4 @@ $TMPDIR/react-*
 # macOS
 .DS_Store
 *.icloud
+/android

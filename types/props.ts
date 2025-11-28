@@ -10,8 +10,14 @@ export type SlideCardProps = {
 
 export type LocationProps<T = LocationData | CardItem[]> = {
   database: SQLiteDatabase;
+  searchText?: string | undefined;
   id?: number;
   action?: string;
+  title?: string;
+  level?: string;
+  section?: string;
+  spot?: string;
+  comments?: string;
   onSuccess?: (data?: T) => void;
   onError?: (message: string) => void;
 };

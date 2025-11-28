@@ -86,10 +86,24 @@ export const getLastSavedLocationDB = async (
 };
 
 export const getAllSavedLocationDB = async (
-  db: SQLiteDatabase
+  db: SQLiteDatabase,
+  searchText?: string | undefined
 ): Promise<CardItem[] | null> => {
   try {
-    const result = await db.getAllAsync<CardItem>(SQL.SELECT_ALL_LOCATION);
+    if (!searchText || searchText.trim() === "") {
+      const result = await db.getAllAsync<CardItem>(SQL.SELECT_ALL_LOCATION);
+      return result || null;
+    }
+
+    const query = `%${searchText}%`; // LIKE pattern
+
+    const result = await db.getAllAsync<CardItem>(SQL.SELECT_SEARCH_LOCATION, [
+      query,
+      query,
+      query,
+      query,
+      query,
+    ]);
     return result || null;
   } catch (error) {
     throw error;

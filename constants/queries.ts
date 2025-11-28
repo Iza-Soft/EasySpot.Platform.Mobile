@@ -1,8 +1,9 @@
 export const SQL = {
   DELETE_LOCATION: `DELETE FROM locations WHERE id = ?`,
   SELECT_ALL_LOCATION: `SELECT * FROM locations ORDER BY timestamp DESC`,
+  SELECT_SEARCH_LOCATION: `SELECT * FROM locations WHERE title LIKE ? OR street LIKE ? OR city LIKE ? OR region LIKE ? OR country LIKE ? ORDER BY timestamp DESC`,
   SELECT_LAST_LOCATION: `SELECT * FROM locations ORDER BY timestamp DESC LIMIT 1`,
-  INSERT_LOCATION: `INSERT INTO locations (latitude, longitude, street, city, region, postalCode, country, type, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  INSERT_LOCATION: `INSERT INTO locations (latitude, longitude, street, city, region, postalCode, country, type, title, level, section, spot, comments, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   DROP_LOCATION_TABLE: `DROP TABLE IF EXISTS locations`,
   CREATE_LOCATION_TABLE: `CREATE TABLE IF NOT EXISTS locations (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -14,6 +15,11 @@ export const SQL = {
         postalCode TEXT,
         country TEXT,
         type TEXT NOT NULL,
+        title TEXT,
+        level TEXT,
+        section TEXT,
+        spot TEXT,
+        comments TEXT,
         timestamp TEXT NOT NULL
       );`,
 };
