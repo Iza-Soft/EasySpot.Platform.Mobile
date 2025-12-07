@@ -21,9 +21,25 @@ export async function openMapsAsync(navigation: NavigationProps) {
   );
 }
 
-export async function ShareLocationAsync(map: Maps) {
-  const loc = await Location.getCurrentPositionAsync({});
-  const { latitude, longitude } = loc.coords;
+export async function ShareLocationAsync(
+  map: Maps,
+  coordinates?: { latitude: number | undefined; longitude: number | undefined }
+) {
+  // const loc = await Location.getCurrentPositionAsync({});
+  // const { latitude, longitude } = loc.coords;
+  let latitude: number;
+  let longitude: number;
+
+  if (coordinates?.latitude != null && coordinates?.longitude != null) {
+    // Use provided coordinates
+    latitude = coordinates.latitude;
+    longitude = coordinates.longitude;
+  } else {
+    // Fallback to current device location
+    const loc = await Location.getCurrentPositionAsync({});
+    latitude = loc.coords.latitude;
+    longitude = loc.coords.longitude;
+  }
   let url: string;
   switch (map) {
     case Maps.google:

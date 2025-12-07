@@ -9,12 +9,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import MainScreenComponent from "../screens/main/MainScreen";
-import FooterComponent from "./Footer";
+import FooterComponent from "./FooterComponent";
 import HistoryScreenComponent from "../screens/history/HistoryScreen";
 import { colors } from "../themes/main";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import SettingsModalComponent from "./SettingsModal";
+import SettingsComponent from "./SettingsComponent";
 
 const Stack = createNativeStackNavigator();
 
@@ -106,7 +106,7 @@ const NavigatorComponent = ({ navigation }: any) => {
         />
       </Stack.Navigator>
       <FooterComponent />
-      <SettingsModalComponent
+      <SettingsComponent
         visible={settingsVisible}
         onClose={() => setSettingsVisible(false)}
       />

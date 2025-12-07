@@ -1,7 +1,7 @@
 import { ActivityIndicator, View, Text, StyleSheet } from "react-native";
 import { colors } from "../themes/main";
 
-const Loading = ({ message }: { message: string }) => {
+const LoadingComponent = ({ message }: { message: string }) => {
   return (
     <View style={styles.loadingOverlay}>
       <ActivityIndicator size="large" />
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Loading;
+export default LoadingComponent;

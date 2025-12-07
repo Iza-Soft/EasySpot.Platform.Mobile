@@ -4,7 +4,7 @@ import {
   DB_NAME,
   openPersistentDB,
 } from "./services/db-service";
-import NavigatorComponent from "./components/Navigator";
+import NavigatorComponent from "./components/NavigatorComponent";
 import { useEffect, useRef, useState } from "react";
 import {
   View,
@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { colors } from "./themes/main";
 import Toast from "react-native-toast-message";
-import { toastConfigComponent } from "./components/toastConfig";
+import { toastConfigComponent } from "./components/toastConfigComponent";
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);

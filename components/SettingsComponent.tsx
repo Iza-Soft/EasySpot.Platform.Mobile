@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../themes/main";
 
 const screenHeight = Dimensions.get("window").height;
-export default function SettingsModalComponent({ visible, onClose }: any) {
+export default function SettingsComponent({ visible, onClose }: any) {
   const slideAnim = useRef(new Animated.Value(screenHeight)).current; // starts off-screen
   const [isMounted, setIsMounted] = useState(false); // ✅ Track mounting state
 

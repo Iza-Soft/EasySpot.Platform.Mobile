@@ -2,7 +2,7 @@ import { Pressable, View, Text, StyleSheet } from "react-native";
 import { colors } from "../themes/main";
 import { SlideCardProps } from "../types/props";
 
-export function SlideCard({ item, onPress }: SlideCardProps) {
+export function SlideCardComponent({ item, onPress }: SlideCardProps) {
   return (
     <Pressable
       onPress={() => onPress(item.action)}
