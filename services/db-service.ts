@@ -87,11 +87,20 @@ export const getLastSavedLocationDB = async (
 
 export const getAllSavedLocationDB = async (
   db: SQLiteDatabase,
-  searchText?: string | undefined
+  searchText?: string | undefined,
+  limit?: number,
+  offset?: number
 ): Promise<CardItem[] | null> => {
   try {
+    if (limit == undefined || offset == undefined) {
+      throw new Error("Pagination requires limit and offset values.");
+    }
+
     if (!searchText || searchText.trim() === "") {
-      const result = await db.getAllAsync<CardItem>(SQL.SELECT_ALL_LOCATION);
+      const result = await db.getAllAsync<CardItem>(SQL.SELECT_ALL_LOCATION, [
+        limit,
+        offset,
+      ]);
       return result || null;
     }
 
@@ -103,6 +112,8 @@ export const getAllSavedLocationDB = async (
       query,
       query,
       query,
+      limit,
+      offset,
     ]);
     return result || null;
   } catch (error) {

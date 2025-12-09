@@ -1,7 +1,7 @@
 export const SQL = {
   DELETE_LOCATION: `DELETE FROM locations WHERE id = ?`,
-  SELECT_ALL_LOCATION: `SELECT * FROM locations ORDER BY timestamp DESC`,
-  SELECT_SEARCH_LOCATION: `SELECT * FROM locations WHERE title LIKE ? OR street LIKE ? OR city LIKE ? OR region LIKE ? OR country LIKE ? ORDER BY timestamp DESC`,
+  SELECT_ALL_LOCATION: `SELECT * FROM locations ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
+  SELECT_SEARCH_LOCATION: `SELECT * FROM locations WHERE title LIKE ? OR street LIKE ? OR city LIKE ? OR region LIKE ? OR country LIKE ? ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
   SELECT_LAST_LOCATION: `SELECT * FROM locations ORDER BY timestamp DESC LIMIT 1`,
   INSERT_LOCATION: `INSERT INTO locations (latitude, longitude, street, city, region, postalCode, country, type, title, level, section, spot, comments, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   DROP_LOCATION_TABLE: `DROP TABLE IF EXISTS locations`,

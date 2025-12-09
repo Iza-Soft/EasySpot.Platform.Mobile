@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Alert,
   TextInput,
-  TouchableOpacity,
 } from "react-native";
 import { colors } from "../../themes/main";
 import { useEffect, useState } from "react";
@@ -26,6 +25,8 @@ import {
 } from "../../services/location-service";
 import Toast from "react-native-toast-message";
 import ModalComponent from "../../components/modal/ModalComponent";
+import LocationCardOptionsComponent from "../../components/LocationCardOptionsComponent";
+import LocationDetailsComponent from "../../components/modal/LocationDetailsComponent";
 
 export default function HistoryScreenComponent() {
   const database = useSQLiteContext();
@@ -40,29 +41,55 @@ export default function HistoryScreenComponent() {
   const [loadingMessage, setLoadingMessage] =
     useState<string>("Loading history…");
 
+  const PAGE_SIZE = 20;
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(0);
+
+  const [cardOptionsVisible, setCardOptionsVisible] = useState(false);
+
   useEffect(() => {
-    (async () => {
-      await getAllSavedLocationAsync({
-        database,
-        searchText,
-        onSuccess: async (results) => {
-          setLoading(false);
-          setLocations(results as CardItem[]);
-        },
-        onError: (message) => {
-          setLoading(false);
-          console.error("❌ Failed to load history:", message);
-        },
-      });
-    })();
+    loadPage(0, true);
   }, [searchText]);
 
-  const openInMaps = async (item: CardItem) => {
-    await openMapsAsync({
-      latitude: item.latitude,
-      longitude: item.longitude,
-      map: Maps.google,
+  const loadPage = async (pageToLoad: number, reset = false) => {
+    await getAllSavedLocationAsync({
+      database,
+      searchText,
+      limit: PAGE_SIZE,
+      offset: pageToLoad * PAGE_SIZE,
+      onSuccess: async (results) => {
+        setHasMore((results as CardItem[]).length === PAGE_SIZE);
+
+        if (reset) {
+          setLocations(results as CardItem[]);
+        } else {
+          setLocations((prev) => [...prev, ...(results as CardItem[])]);
+        }
+
+        setPage(pageToLoad);
+        setLoading(false);
+      },
+      onError: (message) => {
+        setLoading(false);
+        console.error("❌ Failed to load history:", message);
+      },
     });
+  };
+
+  const openInMaps = async (item?: CardItem | null) => {
+    if (item) {
+      await openMapsAsync({
+        latitude: item.latitude,
+        longitude: item.longitude,
+        map: Maps.google,
+      });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to retrieve the saved location.",
+      });
+    }
   };
 
   const deleteLocation = async (id: number | undefined) => {
@@ -72,7 +99,7 @@ export default function HistoryScreenComponent() {
         text: "Delete",
         style: "destructive",
         onPress: async () => {
-          setModalVisible(false);
+          setCardOptionsVisible(false);
           setLoadingMessage("Deleting location...");
           setLoading(true);
           await deleteLocationAsync({
@@ -106,7 +133,7 @@ export default function HistoryScreenComponent() {
     latitude: number | undefined;
     longitude: number | undefined;
   }) => {
-    setModalVisible(false);
+    setCardOptionsVisible(false);
     setLoading(true);
     setLoadingMessage("Share location...");
     setTimeout(async () => {
@@ -128,11 +155,6 @@ export default function HistoryScreenComponent() {
     }, 500);
   };
 
-  const openActionModal = (item: CardItem) => {
-    setSelectedItem(item);
-    setModalVisible(true);
-  };
-
   const filteredLocations =
     selectedTab === "all"
       ? locations
@@ -141,8 +163,17 @@ export default function HistoryScreenComponent() {
   const renderItem = ({ item }: { item: CardItem }) => (
     <LocationCard
       item={item}
-      onPress={openInMaps}
-      onLongPress={() => openActionModal(item)}
+      onPress={() => {
+        setSelectedItem(item);
+        setCardOptionsVisible(true);
+      }}
+      onLongPress={() =>
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "This feature is temporarily unavailable.",
+        })
+      }
     />
   );
 
@@ -191,6 +222,10 @@ export default function HistoryScreenComponent() {
           renderItem={renderItem}
           contentContainerStyle={styles.list}
           ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+          onEndReached={() => {
+            if (hasMore) loadPage(page + 1);
+          }}
+          showsVerticalScrollIndicator={true}
         />
       )}
 
@@ -200,49 +235,35 @@ export default function HistoryScreenComponent() {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
       >
-        <Text style={styles.alertTitle}>
-          Choose an option for: {selectedItem?.title ?? "(No Title)"}
-        </Text>
-
-        <Text style={styles.alertMessage}>
-          You can delete or share this location. Choose an option below.
-        </Text>
-        <TouchableOpacity
-          onPress={() => deleteLocation(selectedItem?.id)}
-          style={{
-            backgroundColor: colors.tab,
-            padding: 12,
-            borderRadius: 8,
-            marginBottom: 8,
+        <LocationDetailsComponent
+          mode="view"
+          action={selectedItem?.type}
+          initialData={{
+            title: selectedItem?.title ? selectedItem?.title?.trim() : "",
+            level: selectedItem?.level ? selectedItem?.level?.trim() : "",
+            section: selectedItem?.section ? selectedItem?.section?.trim() : "",
+            spot: selectedItem?.spot ? selectedItem?.spot?.trim() : "",
+            comments: selectedItem?.comments
+              ? selectedItem?.comments?.trim()
+              : "",
           }}
-        >
-          <Text
-            style={{ color: colors.bg, textAlign: "center", fontWeight: "600" }}
-          >
-            Delete
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            shareLocation({
-              latitude: selectedItem?.latitude,
-              longitude: selectedItem?.longitude,
-            })
-          }
-          style={{
-            backgroundColor: colors.tab,
-            padding: 12,
-            borderRadius: 8,
-            marginBottom: 8,
-          }}
-        >
-          <Text
-            style={{ color: colors.bg, textAlign: "center", fontWeight: "600" }}
-          >
-            Share
-          </Text>
-        </TouchableOpacity>
+        />
       </ModalComponent>
+
+      <LocationCardOptionsComponent
+        title={selectedItem?.title ?? "(No title)"}
+        visible={cardOptionsVisible}
+        onClose={() => setCardOptionsVisible(false)}
+        onShare={() =>
+          shareLocation({
+            latitude: selectedItem?.latitude,
+            longitude: selectedItem?.longitude,
+          })
+        }
+        onDelete={() => deleteLocation(selectedItem?.id)}
+        onNavigate={() => openInMaps(selectedItem)}
+        onViewDetails={() => setModalVisible(true)}
+      />
     </View>
   );
 }
@@ -277,16 +298,5 @@ const styles = StyleSheet.create({
   },
   tabTextSelected: {
     color: "#fff",
-  },
-  alertTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 16,
-    color: colors.text,
-  },
-  alertMessage: {
-    fontSize: 15,
-    color: colors.text,
-    marginBottom: 20,
   },
 });

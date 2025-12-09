@@ -2,10 +2,6 @@ import { Pressable, View, Text, StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
 import { colors } from "../themes/main";
 import { LocationCardProps } from "../types/props";
-import { CardItem } from "../types/common";
-import ModalComponent from "./modal/ModalComponent";
-import LocationDetailsComponent from "./modal/LocationDetailsComponent";
-import { useState } from "react";
 
 export default function LocationItemCard({
   item,
@@ -20,11 +16,7 @@ export default function LocationItemCard({
   ]
     .filter(Boolean)
     .join(", ");
-  const [modalVisible, setModalVisible] = useState(false);
 
-  const onSeeComments = (item: CardItem) => {
-    setModalVisible(true);
-  };
   return (
     <>
       <Pressable
@@ -52,34 +44,8 @@ export default function LocationItemCard({
               </Text>
             </View>
           </View>
-          {details && (
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text style={styles.comments} onPress={() => onSeeComments(item)}>
-                see details ...
-              </Text>
-            </View>
-          )}
         </View>
       </Pressable>
-
-      <ModalComponent
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-      >
-        <LocationDetailsComponent
-          mode="view"
-          action={item.type}
-          initialData={{
-            title: item.title ? item.title?.trim() : "",
-            level: item.level ? item.level?.trim() : "",
-            section: item.section ? item.section?.trim() : "",
-            spot: item.spot ? item.spot?.trim() : "",
-            comments: item.comments ? item.comments?.trim() : "",
-          }}
-        />
-      </ModalComponent>
     </>
   );
 }
@@ -126,26 +92,10 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.text,
   },
-  park_details: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: colors.text,
-  },
+
   time: {
     fontSize: 13,
     color: colors.muted,
     marginTop: 2,
-  },
-  comments: {
-    // marginLeft: 10,
-    color: colors.tab,
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  inlineRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "90%",
   },
 });

@@ -14,4 +14,5 @@ export const colors = {
   info: "#2196F3",
   textOnLight: "#000000",
   textOnDark: "#FFFFFF",
+  danger: "#D32F2F",
 };

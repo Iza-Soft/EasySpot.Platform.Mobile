@@ -89,10 +89,17 @@ export async function getAllSavedLocationAsync({
   database,
   searchText,
   onSuccess,
+  limit,
+  offset,
   onError,
 }: LocationProps) {
   try {
-    const locations = await getAllSavedLocationDB(database, searchText);
+    const locations = await getAllSavedLocationDB(
+      database,
+      searchText,
+      limit,
+      offset
+    );
     if (!locations) {
       onError?.("No saved locations found.");
       return;
