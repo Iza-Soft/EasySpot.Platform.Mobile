@@ -22,11 +22,14 @@ import EmptyComponent from "../../components/EmptyComponent";
 import {
   deleteLocationAsync,
   getAllSavedLocationAsync,
+  updateLocationAsync,
 } from "../../services/location-service";
 import Toast from "react-native-toast-message";
 import ModalComponent from "../../components/modal/ModalComponent";
 import LocationCardOptionsComponent from "../../components/LocationCardOptionsComponent";
-import LocationDetailsComponent from "../../components/modal/LocationDetailsComponent";
+import LocationDetailsComponent, {
+  LocationDetails,
+} from "../../components/modal/LocationDetailsComponent";
 
 export default function HistoryScreenComponent() {
   const database = useSQLiteContext();
@@ -37,6 +40,9 @@ export default function HistoryScreenComponent() {
   >("all");
   const [searchText, setSearchText] = useState<string | undefined>();
   const [modalVisible, setModalVisible] = useState(false);
+  const [detailsMode, setDetailsMode] = useState<"edit" | "view" | "update">(
+    "view"
+  );
   const [selectedItem, setSelectedItem] = useState<CardItem | null>(null);
   const [loadingMessage, setLoadingMessage] =
     useState<string>("Loading history…");
@@ -133,7 +139,6 @@ export default function HistoryScreenComponent() {
     latitude: number | undefined;
     longitude: number | undefined;
   }) => {
-    setCardOptionsVisible(false);
     setLoading(true);
     setLoadingMessage("Share location...");
     setTimeout(async () => {
@@ -153,6 +158,70 @@ export default function HistoryScreenComponent() {
         setLoading(false);
       }
     }, 500);
+  };
+
+  const handleUpdateLocation = async (data: LocationDetails) => {
+    setModalVisible(false);
+    setLoading(true);
+    setLoadingMessage("Update location...");
+
+    (async () => {
+      await updateLocationAsync({
+        database,
+        id: selectedItem?.id,
+        title: data.title?.trim(),
+        level: data.level?.trim(),
+        section: data.section?.trim(),
+        spot: data.spot?.trim(),
+        comments: data.comments?.trim(),
+        onSuccess: () => {
+          setLocations((prev) =>
+            prev.map((item) =>
+              item.id === selectedItem?.id
+                ? {
+                    ...item,
+                    title: data.title?.trim(),
+                    level: data.level?.trim(),
+                    section: data.section?.trim(),
+                    spot: data.spot?.trim(),
+                    comments: data.comments?.trim(),
+                  }
+                : item
+            )
+          );
+          setSelectedItem((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  title: data.title?.trim(),
+                  level: data.level?.trim(),
+                  section: data.section?.trim(),
+                  spot: data.spot?.trim(),
+                  comments: data.comments?.trim(),
+                }
+              : prev
+          );
+          setLoading(false);
+          Toast.show({
+            type: "success",
+            text1: "Success",
+            text2:
+              selectedItem?.type === "favorites"
+                ? "Favorite location updated successfully."
+                : "Parking location update successfully.",
+          });
+        },
+        onError: (message) => {
+          setLoading(false);
+          console.error("❌ Failed to update location:", message);
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: "Failed to update location.",
+          });
+        },
+      });
+    })();
   };
 
   const filteredLocations =
@@ -229,14 +298,12 @@ export default function HistoryScreenComponent() {
         />
       )}
 
-      {loading && <LoadingComponent message={loadingMessage} />}
-
       <ModalComponent
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
       >
         <LocationDetailsComponent
-          mode="view"
+          mode={detailsMode}
           action={selectedItem?.type}
           initialData={{
             title: selectedItem?.title ? selectedItem?.title?.trim() : "",
@@ -246,6 +313,9 @@ export default function HistoryScreenComponent() {
             comments: selectedItem?.comments
               ? selectedItem?.comments?.trim()
               : "",
+          }}
+          onSubmit={(data) => {
+            handleUpdateLocation(data);
           }}
         />
       </ModalComponent>
@@ -262,8 +332,17 @@ export default function HistoryScreenComponent() {
         }
         onDelete={() => deleteLocation(selectedItem?.id)}
         onNavigate={() => openInMaps(selectedItem)}
-        onViewDetails={() => setModalVisible(true)}
+        onViewDetails={() => {
+          setDetailsMode("view");
+          setModalVisible(true);
+        }}
+        onUpdateDetails={() => {
+          setDetailsMode("update");
+          setModalVisible(true);
+        }}
       />
+
+      {loading && <LoadingComponent message={loadingMessage} />}
     </View>
   );
 }

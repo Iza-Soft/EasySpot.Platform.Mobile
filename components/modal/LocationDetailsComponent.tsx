@@ -18,7 +18,7 @@ export type LocationDetails = {
 };
 
 type Props = {
-  mode: "edit" | "view";
+  mode: "edit" | "view" | "update";
   action: string | undefined;
   initialData: LocationDetails;
   onSubmit?: (data: LocationDetails) => void; // only used in edit mode
@@ -30,7 +30,7 @@ export default function LocationDetailsComponent({
   initialData,
   onSubmit,
 }: Props) {
-  const isEdit = mode === "edit";
+  const isEdit = mode === "edit" || mode === "update";
   const [title, setTitle] = useState(initialData.title || "");
   const [level, setLevel] = useState(initialData.level || "");
   const [section, setSection] = useState(initialData.section || "");
@@ -96,7 +96,7 @@ export default function LocationDetailsComponent({
         isEdit ? setTitle : undefined,
         "E.g. Home, Work, Gym"
       )}
-      {action === "parking" && mode !== "view" && (
+      {action === "parking" && mode !== "view" && mode !== "update" && (
         <TouchableOpacity
           onPress={() => setShowDetails(!showDetails)}
           style={{ marginBottom: 8, paddingVertical: 4 }}
@@ -106,7 +106,7 @@ export default function LocationDetailsComponent({
           </Text>
         </TouchableOpacity>
       )}
-      {showDetails && (
+      {action === "parking" && showDetails && (
         <>
           {renderInput(
             "Level",
@@ -163,7 +163,7 @@ export default function LocationDetailsComponent({
           <Text
             style={{ color: colors.bg, textAlign: "center", fontWeight: "600" }}
           >
-            Save
+            {mode === "edit" ? "Save" : "Update"}
           </Text>
         </TouchableOpacity>
       )}

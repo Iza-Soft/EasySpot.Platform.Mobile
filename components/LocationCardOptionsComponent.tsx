@@ -20,6 +20,7 @@ export default function LocationCardOptionsComponent({
   onDelete,
   onNavigate,
   onViewDetails,
+  onUpdateDetails,
 }: any) {
   const slideAnim = useRef(new Animated.Value(screenHeight)).current; // starts off-screen
   const [isMounted, setIsMounted] = useState(false); // ✅ Track mounting state
@@ -60,7 +61,7 @@ export default function LocationCardOptionsComponent({
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>{title}</Text>
+          <Text style={styles.headerText}>{title?.trim() || "(No title)"}</Text>
           <TouchableOpacity onPress={onClose}>
             <Ionicons name="close" size={28} color={colors.tab} />
           </TouchableOpacity>
@@ -73,8 +74,16 @@ export default function LocationCardOptionsComponent({
             <Text style={styles.emoji}>🔎</Text>
             <View>
               <Text style={styles.itemText}>View Details</Text>
+              <Text style={styles.itemSubText}>See saved location details</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.item} onPress={onUpdateDetails}>
+            <Text style={styles.emoji}>✏️</Text>
+            <View>
+              <Text style={styles.itemText}>Edit Details</Text>
               <Text style={styles.itemSubText}>
-                Comments, spot, level & section info
+                Modify saved location details
               </Text>
             </View>
           </TouchableOpacity>

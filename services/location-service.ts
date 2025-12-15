@@ -5,6 +5,7 @@ import {
   getAllSavedLocationDB,
   getLastSavedLocationDB,
   saveLocationDB,
+  updateLocationDB,
 } from "./db-service";
 
 export async function saveLocationAsync({
@@ -66,6 +67,42 @@ export async function saveLocationAsync({
   }
 }
 
+export async function updateLocationAsync({
+  database,
+  id,
+  title,
+  level,
+  section,
+  spot,
+  comments,
+  onSuccess,
+  onError,
+}: LocationProps) {
+  try {
+    const startTime = Date.now();
+
+    await updateLocationDB(database, [
+      title || null,
+      comments || null,
+      spot || null,
+      level || null,
+      section || null,
+      id,
+    ]);
+
+    // Delay at least 1.5s for smoother UX
+    const elapsed = Date.now() - startTime;
+    await new Promise((resolve) =>
+      setTimeout(resolve, Math.max(0, 1500 - elapsed))
+    );
+
+    onSuccess?.();
+  } catch (error) {
+    console.error("updateLocationAsync error:", error);
+    onError?.(`Failed to update location spot.`);
+  }
+}
+
 export async function getLastSavedLocationAsync({
   database,
   onSuccess,
@@ -119,7 +156,15 @@ export async function deleteLocationAsync({
   onError,
 }: LocationProps) {
   try {
+    const startTime = Date.now();
+
     await deleteLocationDB(database, [id]);
+
+    // Delay at least 1.5s for smoother UX
+    const elapsed = Date.now() - startTime;
+    await new Promise((resolve) =>
+      setTimeout(resolve, Math.max(0, 1500 - elapsed))
+    );
 
     onSuccess?.();
   } catch (error) {

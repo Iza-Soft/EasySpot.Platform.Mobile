@@ -4,6 +4,7 @@ export const SQL = {
   SELECT_SEARCH_LOCATION: `SELECT * FROM locations WHERE title LIKE ? OR street LIKE ? OR city LIKE ? OR region LIKE ? OR country LIKE ? ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
   SELECT_LAST_LOCATION: `SELECT * FROM locations ORDER BY timestamp DESC LIMIT 1`,
   INSERT_LOCATION: `INSERT INTO locations (latitude, longitude, street, city, region, postalCode, country, type, title, level, section, spot, comments, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  UPDATE_LOCATION: `UPDATE Locations SET title = ?, comments = ?, spot = ?, level = ?, section = ? WHERE id = ?`,
   DROP_LOCATION_TABLE: `DROP TABLE IF EXISTS locations`,
   CREATE_LOCATION_TABLE: `CREATE TABLE IF NOT EXISTS locations (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -72,6 +72,17 @@ export const saveLocationDB = async (
   }
 };
 
+export const updateLocationDB = async (
+  db: SQLiteDatabase,
+  params: any[] = []
+) => {
+  try {
+    await db.runAsync(SQL.UPDATE_LOCATION, params);
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getLastSavedLocationDB = async (
   db: SQLiteDatabase
 ): Promise<LocationData | null> => {
