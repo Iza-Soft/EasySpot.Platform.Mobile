@@ -4,12 +4,10 @@
     "slug": "easyspot",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/easyspot-icon.png",
+    "icon": "./assets/easyspot-adaptive-icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
