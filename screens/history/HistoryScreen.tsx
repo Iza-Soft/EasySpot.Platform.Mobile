@@ -30,6 +30,8 @@ import LocationCardOptionsComponent from "../../components/LocationCardOptionsCo
 import LocationDetailsComponent, {
   LocationDetails,
 } from "../../components/modal/LocationDetailsComponent";
+import * as Clipboard from "expo-clipboard";
+import { formatAddress } from "../../utils/address";
 
 export default function HistoryScreenComponent() {
   const database = useSQLiteContext();
@@ -246,6 +248,60 @@ export default function HistoryScreenComponent() {
     />
   );
 
+  const onCopyCoordinates = (item?: CardItem | null) => {
+    if (item) {
+      const value = `${item.latitude}, ${item.longitude}`;
+      Clipboard.setStringAsync(value);
+
+      Toast.show({
+        type: "success",
+        text1: "Copied",
+        text2: "Coordinates copied to clipboard.",
+      });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to retrieve the saved location.",
+      });
+    }
+  };
+
+  const onCopyAddress = (item?: CardItem | null) => {
+    if (item) {
+      const { street, city, region, postalCode, country } = item;
+
+      // Check if any required fields are missing
+      const missingFields = [street, city, region, postalCode, country].some(
+        (field) => !field || field.trim() === ""
+      );
+
+      const address = formatAddress({
+        street: item.street,
+        city: item.city,
+        region: item.region,
+        postalCode: item.postalCode,
+        country: item.country,
+      });
+
+      Clipboard.setStringAsync(address);
+
+      Toast.show({
+        type: "success",
+        text1: "Copied",
+        text2: missingFields
+          ? "⚠️ Address copied, but some fields are missing."
+          : "Address copied to clipboard.",
+      });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Address not available.",
+      });
+    }
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <View style={styles.tabs}>
@@ -340,6 +396,8 @@ export default function HistoryScreenComponent() {
           setDetailsMode("update");
           setModalVisible(true);
         }}
+        onCopyCoordinates={() => onCopyCoordinates(selectedItem)}
+        onCopyAddress={() => onCopyAddress(selectedItem)}
       />
 
       {loading && <LoadingComponent message={loadingMessage} />}

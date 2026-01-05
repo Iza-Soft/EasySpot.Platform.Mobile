@@ -35,7 +35,8 @@ export default function LocationItemCard({
               </Text>
               <Text style={styles.address}>
                 {item.street || "Unnamed Street"},{" "}
-                {item.city || item.region || ""}, {item.country || ""}
+                {item.city || item.region || ""}, {item.postalCode || ""},{" "}
+                {item.country || ""}
               </Text>
               <Text style={styles.time}>
                 {formatDistanceToNow(new Date(item.timestamp), {

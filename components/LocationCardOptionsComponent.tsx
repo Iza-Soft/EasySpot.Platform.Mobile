@@ -21,6 +21,8 @@ export default function LocationCardOptionsComponent({
   onNavigate,
   onViewDetails,
   onUpdateDetails,
+  onCopyCoordinates,
+  onCopyAddress,
 }: any) {
   const slideAnim = useRef(new Animated.Value(screenHeight)).current; // starts off-screen
   const [isMounted, setIsMounted] = useState(false); // ✅ Track mounting state
@@ -93,6 +95,24 @@ export default function LocationCardOptionsComponent({
             <View>
               <Text style={styles.itemText}>Open in Maps</Text>
               <Text style={styles.itemSubText}>Navigate to this location</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.item} onPress={onCopyCoordinates}>
+            <Text style={styles.emoji}>📍</Text>
+            <View>
+              <Text style={styles.itemText}>Copy Coordinates</Text>
+              <Text style={styles.itemSubText}>
+                Latitude & longitude to clipboard
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.item} onPress={onCopyAddress}>
+            <Text style={styles.emoji}>📋</Text>
+            <View>
+              <Text style={styles.itemText}>Copy Address</Text>
+              <Text style={styles.itemSubText}>Copy formatted address</Text>
             </View>
           </TouchableOpacity>
 

@@ -5,6 +5,7 @@ export type CardItem = {
   street?: string;
   city?: string;
   region?: string;
+  postalCode?: string;
   country?: string;
   type: string; // 'favorite', 'parking', etc.
   title?: string;
@@ -18,4 +19,12 @@ export type CardItem = {
 export type LocationData = {
   latitude: number;
   longitude: number;
+};
+
+export type AddressParts = {
+  street?: string;
+  city?: string;
+  region?: string;
+  postalCode?: string;
+  country?: string;
 };
