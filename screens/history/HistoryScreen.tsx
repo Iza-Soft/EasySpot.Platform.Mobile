@@ -6,9 +6,12 @@ import {
   StyleSheet,
   Alert,
   TextInput,
+  TouchableOpacity,
+  Animated,
+  Easing,
 } from "react-native";
 import { colors } from "../../themes/main";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSQLiteContext } from "expo-sqlite";
 import LoadingComponent from "../../components/LoadingComponent";
 import {
@@ -20,6 +23,7 @@ import LocationCard from "../../components/LocationCard";
 import { CardItem } from "../../types/common";
 import EmptyComponent from "../../components/EmptyComponent";
 import {
+  deleteAllLocationAsync,
   deleteLocationAsync,
   getAllSavedLocationAsync,
   updateLocationAsync,
@@ -54,10 +58,40 @@ export default function HistoryScreenComponent() {
   const [page, setPage] = useState(0);
 
   const [cardOptionsVisible, setCardOptionsVisible] = useState(false);
+  const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
+  const [selectedAll, setSelectedAll] = useState(false);
+  const [selectedLocations, setSelectedLocations] = useState<number[]>([]);
+  const rotateAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     loadPage(0, true);
-  }, [searchText]);
+    Animated.timing(rotateAnim, {
+      toValue: isMultiSelectMode ? 1 : 0,
+      duration: 300,
+      easing: Easing.inOut(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+  }, [searchText, isMultiSelectMode]);
+
+  const searchRotate = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "90deg"],
+  });
+
+  const toolbarRotate = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["-90deg", "0deg"],
+  });
+
+  const searchOpacity = rotateAnim.interpolate({
+    inputRange: [0, 0.5],
+    outputRange: [1, 0],
+  });
+
+  const toolbarOpacity = rotateAnim.interpolate({
+    inputRange: [0.5, 1],
+    outputRange: [0, 1],
+  });
 
   const loadPage = async (pageToLoad: number, reset = false) => {
     await getAllSavedLocationAsync({
@@ -120,6 +154,47 @@ export default function HistoryScreenComponent() {
                 type: "success",
                 text1: "Success",
                 text2: "Location deleted successfully.",
+              });
+            },
+            onError: (message) => {
+              console.error("❌ Failed to delete the location.:", message);
+              Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: "Failed to delete the location.",
+              });
+              setLoading(false);
+            },
+          });
+        },
+      },
+    ]);
+  };
+
+  const deleteAllLocations = async () => {
+    Alert.alert("Delete", "Are you sure you want to delete all locations?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          setCardOptionsVisible(false);
+          setLoadingMessage("Deleting locations...");
+          setLoading(true);
+          await deleteAllLocationAsync({
+            database,
+            selectedLocations,
+            onSuccess: () => {
+              setLocations((prev) =>
+                prev.filter((l) => !selectedLocations.includes(l.id))
+              );
+              setSelectedLocations([]);
+              setIsMultiSelectMode(false);
+              setLoading(false);
+              Toast.show({
+                type: "success",
+                text1: "Success",
+                text2: "Locations deleted successfully.",
               });
             },
             onError: (message) => {
@@ -234,17 +309,18 @@ export default function HistoryScreenComponent() {
   const renderItem = ({ item }: { item: CardItem }) => (
     <LocationCard
       item={item}
+      isMultiSelectMode={isMultiSelectMode}
+      isSelected={selectedLocations.includes(item.id)}
       onPress={() => {
         setSelectedItem(item);
-        setCardOptionsVisible(true);
+        setCardOptionsVisible(!isMultiSelectMode);
+        if (isMultiSelectMode) {
+          toggleSelection(item.id);
+        }
       }}
-      onLongPress={() =>
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: "This feature is temporarily unavailable.",
-        })
-      }
+      onLongPress={() => {
+        setIsMultiSelectMode(true);
+      }}
     />
   );
 
@@ -288,9 +364,9 @@ export default function HistoryScreenComponent() {
 
       Toast.show({
         type: "success",
-        text1: "Copied",
+        text1: missingFields ? "⚠️ Copied" : "Copied",
         text2: missingFields
-          ? "⚠️ Address copied, but some fields are missing."
+          ? "Address copied, but some fields are missing."
           : "Address copied to clipboard.",
       });
     } else {
@@ -301,6 +377,28 @@ export default function HistoryScreenComponent() {
       });
     }
   };
+
+  const toggleSelectionAll = (selected: boolean) => {
+    setSelectedAll(selected);
+    setSelectedLocations(selected ? locations.map((item) => item.id) : []);
+  };
+
+  const toggleSelection = (id: number) => {
+    setSelectedLocations((prev) => {
+      const next = prev.includes(id)
+        ? prev.filter((x) => x !== id)
+        : [...prev, id];
+
+      setSelectedAll(
+        locations.length > 0 &&
+          locations.every((item) => next.includes(item.id))
+      );
+
+      return next;
+    });
+  };
+
+  const isDisabled = loading || selectedLocations.length === 0;
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
@@ -322,22 +420,80 @@ export default function HistoryScreenComponent() {
           </Pressable>
         ))}
       </View>
-      {/* Search field */}
       <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
-        <TextInput
-          placeholder="Search locations..."
-          value={searchText}
-          onChangeText={setSearchText} // make sure you have this state
-          style={{
-            backgroundColor: "#fff",
-            paddingHorizontal: 12,
-            paddingVertical: 8,
-            borderRadius: 8,
-            borderWidth: 1,
-            borderColor: colors.border,
-          }}
-        />
+        <View style={{ height: 48, transform: [{ perspective: 1000 }] }}>
+          <Animated.View
+            style={{
+              position: "absolute",
+              width: "100%",
+              transform: [{ rotateY: searchRotate }],
+              opacity: searchOpacity,
+            }}
+            pointerEvents={isMultiSelectMode ? "none" : "auto"}
+          >
+            <TextInput
+              placeholder="Search locations..."
+              value={searchText}
+              onChangeText={setSearchText}
+              style={{
+                backgroundColor: "#fff",
+                paddingHorizontal: 12,
+                paddingVertical: 8,
+                borderRadius: 8,
+                borderWidth: 1,
+                borderColor: colors.border,
+              }}
+            />
+          </Animated.View>
+
+          <Animated.View
+            style={{
+              position: "absolute",
+              width: "100%",
+              transform: [{ rotateY: toolbarRotate }],
+              opacity: toolbarOpacity,
+            }}
+            pointerEvents={isMultiSelectMode ? "auto" : "none"}
+          >
+            <View style={styles.container}>
+              {/* Select All */}
+              <TouchableOpacity
+                onPress={() => toggleSelectionAll(!selectedAll)}
+                style={styles.button}
+              >
+                <Text style={styles.emoji}>{selectedAll ? "☑️" : "⬜️"}</Text>
+              </TouchableOpacity>
+
+              {/* Exit */}
+              <TouchableOpacity
+                onPress={() => {
+                  setIsMultiSelectMode(false);
+                  setSelectedAll(false);
+                  setSelectedLocations([]);
+                }}
+                style={styles.button}
+              >
+                <Text style={styles.emoji}>❌</Text>
+              </TouchableOpacity>
+
+              {/* Count */}
+              <View style={styles.selectedCount}>
+                <Text>{selectedLocations.length} selected</Text>
+              </View>
+
+              {/* Delete */}
+              <TouchableOpacity
+                disabled={isDisabled}
+                onPress={isDisabled ? undefined : deleteAllLocations}
+                style={[styles.button, isDisabled && styles.buttonDisabled]}
+              >
+                <Text style={styles.emoji}>🗑️</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </View>
       </View>
+
       {filteredLocations.length === 0 ? (
         <EmptyComponent text="No locations found 📂" />
       ) : (
@@ -348,7 +504,10 @@ export default function HistoryScreenComponent() {
           contentContainerStyle={styles.list}
           ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
           onEndReached={() => {
-            if (hasMore) loadPage(page + 1);
+            if (hasMore) {
+              loadPage(page + 1);
+              setSelectedAll(false);
+            }
           }}
           showsVerticalScrollIndicator={true}
         />
@@ -407,7 +566,10 @@ export default function HistoryScreenComponent() {
 
 const styles = StyleSheet.create({
   list: {
-    padding: 16,
+    paddingTop: 0,
+    paddingRight: 16,
+    paddingBottom: 16,
+    paddingLeft: 16,
     backgroundColor: colors.bg,
   },
   tabs: {
@@ -435,5 +597,22 @@ const styles = StyleSheet.create({
   },
   tabTextSelected: {
     color: "#fff",
+  },
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  button: {
+    marginHorizontal: 8,
+  },
+  emoji: {
+    fontSize: 16,
+  },
+  selectedCount: {
+    flex: 1,
+    alignItems: "center",
+  },
+  buttonDisabled: {
+    opacity: 0.4,
   },
 });

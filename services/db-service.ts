@@ -142,3 +142,16 @@ export const deleteLocationDB = async (
     throw error;
   }
 };
+
+export const deleteAllLocationDB = async (
+  db: SQLiteDatabase,
+  params: any[] = []
+) => {
+  try {
+    const placeholders = params.map(() => "?").join(",");
+    const sql = SQL.DELETE_ALL_LOCATION.replace("?", `(${placeholders})`);
+    await db.runAsync(sql, params);
+  } catch (error) {
+    throw error;
+  }
+};

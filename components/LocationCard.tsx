@@ -5,6 +5,8 @@ import { LocationCardProps } from "../types/props";
 
 export default function LocationItemCard({
   item,
+  isMultiSelectMode,
+  isSelected,
   onPress,
   onLongPress,
 }: LocationCardProps) {
@@ -44,6 +46,9 @@ export default function LocationItemCard({
                 })}
               </Text>
             </View>
+            {isMultiSelectMode && (
+              <Text style={styles.checkbox}>{isSelected ? "☑️" : "⬜️"}</Text>
+            )}
           </View>
         </View>
       </Pressable>
@@ -68,11 +73,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    width: "100%",
   },
   leftRow: {
     flexDirection: "row",
     alignItems: "center",
     flexShrink: 1,
+    flex: 1,
   },
   textContainer: {
     marginLeft: 8,
@@ -98,5 +105,14 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.muted,
     marginTop: 2,
+  },
+  rightRow: {
+    marginLeft: 12,
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
+  checkbox: {
+    fontSize: 16,
+    marginLeft: "auto",
   },
 });

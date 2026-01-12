@@ -1,6 +1,7 @@
 import * as Location from "expo-location";
 import { LocationProps } from "../types/props";
 import {
+  deleteAllLocationDB,
   deleteLocationDB,
   getAllSavedLocationDB,
   getLastSavedLocationDB,
@@ -170,5 +171,29 @@ export async function deleteLocationAsync({
   } catch (error) {
     console.error("deleteLocation error:", error);
     onError?.(`Failed to delete location with ID = ${id}.`);
+  }
+}
+
+export async function deleteAllLocationAsync({
+  database,
+  selectedLocations,
+  onSuccess,
+  onError,
+}: LocationProps) {
+  try {
+    const startTime = Date.now();
+
+    await deleteAllLocationDB(database, selectedLocations);
+
+    // Delay at least 1.5s for smoother UX
+    const elapsed = Date.now() - startTime;
+    await new Promise((resolve) =>
+      setTimeout(resolve, Math.max(0, 1500 - elapsed))
+    );
+
+    onSuccess?.();
+  } catch (error) {
+    console.error("deleteLocation error:", error);
+    onError?.(`Failed to delete location with IDs : ${selectedLocations}.`);
   }
 }

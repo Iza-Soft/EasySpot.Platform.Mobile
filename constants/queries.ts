@@ -1,5 +1,6 @@
 export const SQL = {
   DELETE_LOCATION: `DELETE FROM locations WHERE id = ?`,
+  DELETE_ALL_LOCATION: `DELETE FROM locations WHERE id IN ?`,
   SELECT_ALL_LOCATION: `SELECT * FROM locations ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
   SELECT_SEARCH_LOCATION: `SELECT * FROM locations WHERE title LIKE ? OR street LIKE ? OR city LIKE ? OR region LIKE ? OR country LIKE ? ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
   SELECT_LAST_LOCATION: `SELECT * FROM locations ORDER BY timestamp DESC LIMIT 1`,

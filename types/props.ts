@@ -14,6 +14,7 @@ export type LocationProps<T = LocationData | CardItem[]> = {
   limit?: number;
   offset?: number;
   id?: number;
+  selectedLocations?: number[];
   action?: string;
   title?: string;
   level?: string;
@@ -32,6 +33,8 @@ export type NavigationProps = {
 
 export type LocationCardProps = {
   item: CardItem;
+  isMultiSelectMode: boolean;
+  isSelected: boolean;
   onPress: (item: CardItem) => void;
   onLongPress: (id: number) => void;
 };
