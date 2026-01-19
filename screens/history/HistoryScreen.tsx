@@ -495,7 +495,7 @@ export default function HistoryScreenComponent() {
       </View>
 
       {filteredLocations.length === 0 ? (
-        <EmptyComponent text="No locations found 📂" />
+        <EmptyComponent text="📂 No locations found" />
       ) : (
         <FlatList
           data={filteredLocations}
