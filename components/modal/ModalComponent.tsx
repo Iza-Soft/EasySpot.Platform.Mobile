@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalBox: {
+    maxHeight: "90%",
     backgroundColor: "#fff",
     padding: 20,
     borderRadius: 12,

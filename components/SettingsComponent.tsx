@@ -12,7 +12,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../themes/main";
 
 const screenHeight = Dimensions.get("window").height;
-export default function SettingsComponent({ visible, onClose }: any) {
+export default function SettingsComponent({
+  visible,
+  onClose,
+  onPrivacyView,
+  onTermsView,
+  onAboutView,
+}: any) {
   const slideAnim = useRef(new Animated.Value(screenHeight)).current; // starts off-screen
   const [isMounted, setIsMounted] = useState(false); // ✅ Track mounting state
 
@@ -58,56 +64,68 @@ export default function SettingsComponent({ visible, onClose }: any) {
           </TouchableOpacity>
         </View>
 
-        {/* App Preferences */}
+        {/* Privacy & Tearms */}
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Privacy & Terms</Text>
+
+          <TouchableOpacity style={styles.item} onPress={onPrivacyView}>
+            <Text style={styles.emoji}>🛡️</Text>
+            <Text style={styles.itemText}>Privacy policy</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.item} onPress={onTermsView}>
+            <Text style={styles.emoji}>📄</Text>
+            <Text style={styles.itemText}>Terms of service</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* About */}
+        <View style={[styles.section, { marginBottom: 20 }]}>
+          <Text style={styles.sectionTitle}>About</Text>
+
+          <TouchableOpacity style={styles.item} onPress={onAboutView}>
+            <Text style={styles.emoji}>ℹ️</Text>
+            <Text style={styles.itemText}>About Easy Spot</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* App Preferences */}
+        {/* <View style={styles.section}>
           <Text style={styles.sectionTitle}>App Preferences</Text>
 
           <TouchableOpacity style={styles.item}>
-            {/* <Ionicons name="moon-outline" size={22} color={colors.tab} /> */}
             <Text style={styles.emoji}>🌙</Text>
             <Text style={styles.itemText}>Dark Mode</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.item}>
-            {/* <Ionicons name="language-outline" size={22} color={colors.tab} /> */}
             <Text style={styles.emoji}>🌐</Text>
             <Text style={styles.itemText}>Language</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.item}>
-            {/* <Ionicons
-              name="notifications-outline"
-              size={22}
-              color={colors.tab}
-            /> */}
             <Text style={styles.emoji}>🔔</Text>
             <Text style={styles.itemText}>Notifications</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         {/* Data & Storage */}
-        <View style={styles.section}>
+        {/* <View style={styles.section}>
           <Text style={styles.sectionTitle}>Data & Storage</Text>
 
           <TouchableOpacity style={styles.item}>
-            {/* <Ionicons
-              name="cloud-upload-outline"
-              size={22}
-              color={colors.tab}
-            /> */}
             <Text style={styles.emoji}>☁️</Text>
             <Text style={styles.itemText}>Backup Data</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.item}>
-            {/* <Ionicons name="trash-outline" size={22} color={colors.tab} /> */}
             <Text style={styles.emoji}>🗑️</Text>
             <Text style={styles.itemText}>Clear Cache</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         {/* 💎 Subscription */}
-        <View style={styles.subscriptionSection}>
+        {/* <View style={styles.subscriptionSection}>
           <Text style={styles.sectionTitle}>Subscription</Text>
 
           <TouchableOpacity style={styles.subscriptionCard}>
@@ -118,15 +136,8 @@ export default function SettingsComponent({ visible, onClose }: any) {
                 justifyContent: "space-between",
               }}
             >
-              {/* Left section (star, title, and description) */}
               <View style={{ flexDirection: "column", flex: 1 }}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  {/* <Ionicons
-                    name="star"
-                    size={26}
-                    color="#FFD700"
-                    style={{ marginRight: 6 }}
-                  /> */}
                   <Text style={styles.emoji}>⭐</Text>
                   <Text style={styles.subscriptionTitle}>
                     Easy Spot Premium
@@ -138,38 +149,30 @@ export default function SettingsComponent({ visible, onClose }: any) {
                 </Text>
               </View>
 
-              {/* Right arrow */}
               <Ionicons name="chevron-forward" size={22} color={colors.tab} />
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.item}>
-            {/* <Ionicons name="wallet-outline" size={22} color={colors.tab} /> */}
             <Text style={styles.emoji}>💳</Text>
             <Text style={styles.itemText}>Manage Subscription</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         {/* About */}
-        <View style={styles.section}>
+        {/* <View style={styles.section}>
           <Text style={styles.sectionTitle}>About</Text>
 
           <TouchableOpacity style={styles.item}>
-            {/* <Ionicons
-              name="information-circle-outline"
-              size={22}
-              color={colors.tab}
-            /> */}
             <Text style={styles.emoji}>ℹ️</Text>
             <Text style={styles.itemText}>About Easy Spot</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.item}>
-            {/* <Ionicons name="mail-outline" size={22} color={colors.tab} /> */}
             <Text style={styles.emoji}>💬</Text>
             <Text style={styles.itemText}>Contact Support</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </Animated.View>
     </Pressable>
   );

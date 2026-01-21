@@ -5,7 +5,7 @@ export default function FooterComponent() {
     <View style={styles.footer}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.footerText}>
-          © 2026 EasySpot. All rights reserved.
+          © 2026 EasySpot — Developed by Ilko Adamov
         </Text>
       </View>
     </View>
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingLeft: 12,
     paddingRight: 12,
-    paddingBottom: 50,
+    paddingBottom: 60,
     alignItems: "center",
     backgroundColor: "#fff",
     borderTopWidth: 1,

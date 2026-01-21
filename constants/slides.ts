@@ -22,6 +22,13 @@ export const SLIDE_ITEMS: SlideItem[] = [
     action: "history",
     disabled: false,
   },
+  // {
+  //   emoji: "⏱️",
+  //   title: "Location Activity",
+  //   description: "View places you’ve visited over time.",
+  //   action: "location_activity",
+  //   disabled: false,
+  // },
   {
     emoji: "📤",
     title: "Share Spot",

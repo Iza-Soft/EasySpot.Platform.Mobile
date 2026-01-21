@@ -15,11 +15,19 @@ import { colors } from "../themes/main";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import SettingsComponent from "./SettingsComponent";
+import ModalComponent from "./modal/ModalComponent";
+import PrivacyPolicyScreenComponent from "../screens/legal/PrivacyPolicyScreen";
+import TermsOfServiceScreenComponent from "../screens/legal/TermsOfServiceScreen";
+import AboutScreenComponent from "../screens/about/AboutScreen";
 
 const Stack = createNativeStackNavigator();
 
 const NavigatorComponent = ({ navigation }: any) => {
   const [settingsVisible, setSettingsVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [detailsMode, setDetailsMode] = useState<"privacy" | "terms" | "about">(
+    "privacy"
+  );
 
   const HeaderMenuButton = ({ navigation }: any) => (
     <TouchableOpacity
@@ -109,7 +117,28 @@ const NavigatorComponent = ({ navigation }: any) => {
       <SettingsComponent
         visible={settingsVisible}
         onClose={() => setSettingsVisible(false)}
+        onPrivacyView={() => {
+          setModalVisible(true);
+          setDetailsMode("privacy");
+        }}
+        onTermsView={() => {
+          setModalVisible(true);
+          setDetailsMode("terms");
+        }}
+        onAboutView={() => {
+          setModalVisible(true);
+          setDetailsMode("about");
+        }}
       />
+
+      <ModalComponent
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      >
+        {detailsMode === "privacy" && <PrivacyPolicyScreenComponent />}
+        {detailsMode === "terms" && <TermsOfServiceScreenComponent />}
+        {detailsMode === "about" && <AboutScreenComponent />}
+      </ModalComponent>
     </NavigationContainer>
   );
 };
