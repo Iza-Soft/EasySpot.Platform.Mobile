@@ -34,6 +34,17 @@ export default function TermsOfServiceScreenComponent() {
       </Text>
 
       <Text style={styles.paragraph}>
+        All data saved within EasySpot remains on your device and is owned and
+        controlled by you.
+      </Text>
+
+      <Text style={styles.paragraph}>
+        Location data displayed or saved by EasySpot is based on device-provided
+        location services and user input and may be inaccurate or unavailable.
+        EasySpot does not guarantee location accuracy.
+      </Text>
+
+      <Text style={styles.paragraph}>
         You agree to use the App lawfully, responsibly, and in accordance with
         all applicable laws.
       </Text>

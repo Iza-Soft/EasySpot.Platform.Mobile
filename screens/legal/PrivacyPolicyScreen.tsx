@@ -14,19 +14,46 @@ export default function PrivacyPolicyScreenComponent() {
       </Text>
 
       <Text style={styles.heading}>📍 Information We Collect</Text>
+      <Text style={styles.paragraph}>
+        EasySpot collects only the minimum data necessary for its core
+        functionality.
+      </Text>
 
       <Text style={styles.subHeading}>Location Data</Text>
       <Text style={styles.paragraph}>
-        EasySpot uses your device’s location to:
+        EasySpot uses your device’s location to provide its core functionality,
+        including saving parking locations and helping you find your parked
+        vehicle.
       </Text>
-      <Text style={styles.listItem}>• Save parking locations</Text>
+      <Text style={styles.paragraph}>
+        The app may access the following types of location data:
+      </Text>
+      <Text style={styles.listItem}>
+        • Approximate location (ACCESS_COARSE_LOCATION) to determine your
+        general area
+      </Text>
+      <Text style={styles.listItem}>
+        • Precise location (ACCESS_FINE_LOCATION) to accurately save and
+        retrieve parking locations
+      </Text>
+      <Text style={styles.paragraph}>
+        Location data is accessed only while the app is actively in use
+        (foreground). EasySpot does not collect or access location data in the
+        background.
+      </Text>
+      <Text style={styles.paragraph}>
+        All location data is stored locally on your device and is never
+        transmitted, shared, sold, or used for advertising or analytics
+        purposes.
+      </Text>
+      {/* <Text style={styles.listItem}>• Save parking locations</Text>
       <Text style={styles.listItem}>
         • Help you find your parked vehicle later
       </Text>
       <Text style={styles.paragraph}>
         Location data is only collected when you are actively using the app. It
         is stored locally on your device and is never shared with third parties.
-      </Text>
+      </Text> */}
 
       <Text style={styles.subHeading}>Local Storage</Text>
       <Text style={styles.paragraph}>
@@ -55,6 +82,9 @@ export default function PrivacyPolicyScreenComponent() {
 
       <Text style={styles.heading}>🔐 Data Security</Text>
       <Text style={styles.paragraph}>
+        EasySpot does not transmit personal data to external servers.
+      </Text>
+      <Text style={styles.paragraph}>
         All data is stored locally on your device. While we take steps to
         protect it, you are responsible for securing access to your device.
       </Text>
@@ -70,8 +100,8 @@ export default function PrivacyPolicyScreenComponent() {
 
       <Text style={styles.heading}>⚙️ Device Permissions</Text>
       <Text style={styles.paragraph}>
-        EasySpot may request access to your device’s location. You can manage
-        these permissions in your device settings at any time.
+        EasySpot may request access to your device’s location. You can grant or
+        deny this permission and change it at any time in your device settings.
       </Text>
 
       <Text style={styles.heading}>🔄 Changes to This Policy</Text>
