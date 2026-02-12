@@ -1,8 +1,19 @@
-import React from "react";
-import { ScrollView, Text, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import {
+  ScrollView,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { colors } from "../../themes/main";
+import Checkbox from "expo-checkbox";
 
-export default function PrivacyPolicyScreenComponent() {
+export default function PrivacyPolicyScreenComponent({
+  required,
+  isChecked,
+  setIsChecked,
+}: any) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>🛡️ Privacy Policy</Text>
@@ -111,10 +122,31 @@ export default function PrivacyPolicyScreenComponent() {
       </Text>
 
       <Text style={styles.heading}>📬 Contact Us</Text>
-      <Text style={styles.paragraph}>
-        For questions about this Privacy Policy, contact the developer:
-      </Text>
-      <Text style={styles.email}>📧 ilko.z.adamov@gmail.com</Text>
+      {required ? (
+        <Text style={styles.paragraph}>
+          For questions about this Privacy Policy, contact the developer:{" "}
+          <Text style={styles.email}>📧 ilko.z.adamov@gmail.com</Text>
+        </Text>
+      ) : (
+        <>
+          <Text style={styles.paragraph}>
+            For questions about this Privacy Policy, contact the developer:
+          </Text>
+          <Text style={styles.email}>📧 ilko.z.adamov@gmail.com</Text>
+        </>
+      )}
+
+      {required && (
+        <TouchableOpacity
+          style={styles.checkboxContainer}
+          onPress={() => setIsChecked(!isChecked)}
+        >
+          <Text style={styles.emoji}>{isChecked ? "☑️" : "⬜️"}</Text>
+          <Text style={styles.checkboxText}>
+            I have read and agree to the Privacy Policy
+          </Text>
+        </TouchableOpacity>
+      )}
 
       <Text style={styles.footer}>
         © {new Date().getFullYear()} EasySpot — Developed by Ilko Adamov
@@ -166,7 +198,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   footer: {
-    marginTop: 40,
+    marginTop: 20,
     fontSize: 12,
     textAlign: "center",
     color: colors.muted,
@@ -175,5 +207,40 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 4,
     fontWeight: "500",
+    marginBottom: 20,
+  },
+  acceptButton: {
+    backgroundColor: colors.tab,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: "center",
+    marginTop: 30,
+  },
+  acceptButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  checkboxContainer: {
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  checkboxText: {
+    marginLeft: 10,
+    flex: 1,
+    fontSize: 14,
+    color: colors.text,
+    fontWeight: "500",
+  },
+  checkboxButton: {
+    width: 30,
+    height: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emoji: {
+    fontSize: 16,
   },
 });

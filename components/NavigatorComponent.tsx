@@ -13,12 +13,14 @@ import FooterComponent from "./FooterComponent";
 import HistoryScreenComponent from "../screens/history/HistoryScreen";
 import { colors } from "../themes/main";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SettingsComponent from "./SettingsComponent";
 import ModalComponent from "./modal/ModalComponent";
 import PrivacyPolicyScreenComponent from "../screens/legal/PrivacyPolicyScreen";
 import TermsOfServiceScreenComponent from "../screens/legal/TermsOfServiceScreen";
 import AboutScreenComponent from "../screens/about/AboutScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from "expo-constants";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,8 +28,49 @@ const NavigatorComponent = ({ navigation }: any) => {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [detailsMode, setDetailsMode] = useState<"privacy" | "terms" | "about">(
-    "privacy"
+    "privacy",
   );
+
+  const [policyRequired, setPolicyRequired] = useState(false);
+  const [isPrivacyChecked, setIsPrivacyChecked] = useState(false);
+  const PRIVACY_VERSION = "1.0.0";
+  const appVersion = Constants.expoConfig?.version || "1.0.0";
+
+  useEffect(() => {
+    const checkPrivacyPolicy = async () => {
+      try {
+        const acceptedVersion = await AsyncStorage.getItem(
+          "privacyAcceptedVersion",
+        );
+
+        if (acceptedVersion !== PRIVACY_VERSION) {
+          setPolicyRequired(true);
+          setModalVisible(true);
+          setDetailsMode("privacy");
+        }
+      } catch (error) {
+        console.log("Error checking privacy version:", error);
+      }
+    };
+
+    checkPrivacyPolicy();
+  }, []);
+
+  // ✅ Handle modal close
+  const handleCloseModal = async () => {
+    // If privacy is required
+    if (policyRequired) {
+      if (!isPrivacyChecked) return; // block closing
+
+      // Save version if accepted
+      await AsyncStorage.setItem("privacyAcceptedVersion", PRIVACY_VERSION);
+
+      setPolicyRequired(false);
+      setIsPrivacyChecked(false);
+    }
+
+    setModalVisible(false);
+  };
 
   const HeaderMenuButton = ({ navigation }: any) => (
     <TouchableOpacity
@@ -71,7 +114,7 @@ const NavigatorComponent = ({ navigation }: any) => {
                 <Text
                   style={{ fontSize: 12, color: colors.muted, marginLeft: 15 }}
                 >
-                  v1.0.0
+                  v{appVersion}
                 </Text>
               </View>
             ),
@@ -103,7 +146,7 @@ const NavigatorComponent = ({ navigation }: any) => {
                 <Text
                   style={{ fontSize: 12, color: colors.muted, marginLeft: 15 }}
                 >
-                  v1.0.0
+                  v{appVersion}
                 </Text>
               </View>
             ),
@@ -133,9 +176,16 @@ const NavigatorComponent = ({ navigation }: any) => {
 
       <ModalComponent
         visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+        canClose={!policyRequired || isPrivacyChecked}
+        onClose={handleCloseModal}
       >
-        {detailsMode === "privacy" && <PrivacyPolicyScreenComponent />}
+        {detailsMode === "privacy" && (
+          <PrivacyPolicyScreenComponent
+            required={policyRequired}
+            isChecked={isPrivacyChecked}
+            setIsChecked={setIsPrivacyChecked}
+          />
+        )}
         {detailsMode === "terms" && <TermsOfServiceScreenComponent />}
         {detailsMode === "about" && <AboutScreenComponent />}
       </ModalComponent>

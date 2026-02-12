@@ -9,6 +9,7 @@ interface ModalProps {
   onClose: () => void;
   children?: ReactNode;
   width?: WidthType;
+  canClose?: boolean;
 }
 
 export default function ModalComponent({
@@ -16,6 +17,7 @@ export default function ModalComponent({
   onClose,
   children,
   width = "100%",
+  canClose = true,
 }: ModalProps) {
   return (
     <Modal visible={visible} transparent animationType="fade">
@@ -23,8 +25,17 @@ export default function ModalComponent({
         <View style={[styles.modalBox, { width }]}>
           {children}
 
-          <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-            <Text style={styles.closeText}>Close</Text>
+          <TouchableOpacity
+            onPress={() => {
+              if (canClose) {
+                onClose();
+              }
+            }}
+            style={[styles.closeBtn, { opacity: canClose ? 1 : 0.4 }]}
+          >
+            <Text style={styles.closeText}>
+              {canClose ? "Close" : "Accept to continue"}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
