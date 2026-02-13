@@ -9,7 +9,7 @@ import {
 } from "../../services/location-service";
 import { useSQLiteContext } from "expo-sqlite";
 import LoadingComponent from "../../components/LoadingComponent";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   openMapsAsync,
   ShareLocationAsync,
@@ -20,6 +20,7 @@ import * as Location from "expo-location";
 import Toast from "react-native-toast-message";
 import ModalComponent from "../../components/modal/ModalComponent";
 import LocationDetailsComponent from "../../components/modal/LocationDetailsComponent";
+import { useFocusEffect } from "@react-navigation/native";
 
 export type LocationDetails = {
   id?: string;
@@ -37,6 +38,32 @@ export default function MainScreenComponent({ navigation }: any) {
   const [modalVisible, setModalVisible] = useState(false);
   const [action, setAction] = useState<undefined | string>();
 
+  const [hasSavedLocation, setHasSavedLocation] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      const checkLocation = async () => {
+        await getLastSavedLocationAsync({
+          database,
+          onSuccess: (location) => {
+            setHasSavedLocation(!!location);
+          },
+          onError: () => {
+            setHasSavedLocation(false);
+          },
+        });
+      };
+
+      checkLocation();
+    }, [database]),
+  );
+
+  const slides = SLIDE_ITEMS.map((item) =>
+    item.action === "navigate"
+      ? { ...item, disabled: !hasSavedLocation }
+      : item,
+  );
+
   const handleSaveLocation = async (data: LocationDetails) => {
     setModalVisible(false);
     setLoading(true);
@@ -52,6 +79,7 @@ export default function MainScreenComponent({ navigation }: any) {
         comments: data.comments?.trim(),
         onSuccess: () => {
           setLoading(false);
+          setHasSavedLocation(true);
           Toast.show({
             type: "success",
             text1: "Success",
@@ -83,19 +111,20 @@ export default function MainScreenComponent({ navigation }: any) {
         await getLastSavedLocationAsync({
           database,
           onSuccess: async (location) => {
-            if (location) {
-              await openMapsAsync({
-                latitude: (location as LocationData).latitude,
-                longitude: (location as LocationData).longitude,
-                map: Maps.google,
-              });
-            } else {
+            if (!location) {
               Toast.show({
                 type: "info",
                 text1: "Info",
                 text2: "No saved locations found.",
               });
+              return;
             }
+
+            await openMapsAsync({
+              latitude: (location as LocationData).latitude,
+              longitude: (location as LocationData).longitude,
+              map: Maps.google,
+            });
           },
           onError: (message) => {
             console.error("❌ Failed to retrieve location:", message);
@@ -150,7 +179,7 @@ export default function MainScreenComponent({ navigation }: any) {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={SLIDE_ITEMS}
+        data={slides}
         keyExtractor={(_, i) => String(i)}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
