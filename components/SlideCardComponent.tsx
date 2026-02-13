@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { Pressable, View, Text, StyleSheet, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../themes/main";
@@ -13,8 +13,27 @@ export function SlideCardComponent({ item, onPress }: SlideCardProps) {
   // 🔥 card pulse scale
   const pulseScale = useRef(new Animated.Value(1)).current;
 
+  // ✨ glow overlay opacity (safe with native driver)
+  const glowAnim = useRef(new Animated.Value(0)).current;
+
   // Track previous state
   const wasDisabled = useRef(item.disabled);
+
+  // Lock icon animated style
+  const lockStyle = useMemo(
+    () => ({
+      opacity: lockAnim,
+      transform: [
+        {
+          scale: lockAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0.7, 1],
+          }),
+        },
+      ],
+    }),
+    [lockAnim],
+  );
 
   // Lock icon animation
   useEffect(() => {
@@ -26,9 +45,11 @@ export function SlideCardComponent({ item, onPress }: SlideCardProps) {
     }).start();
   }, [item.disabled]);
 
-  // 🔥 Pulse when card becomes enabled
+  // Pulse & glow when card becomes enabled
   useEffect(() => {
     if (wasDisabled.current && !item.disabled) {
+      // 🔥 Pulse animation
+      pulseScale.stopAnimation();
       Animated.sequence([
         Animated.timing(pulseScale, {
           toValue: 1.03,
@@ -40,6 +61,21 @@ export function SlideCardComponent({ item, onPress }: SlideCardProps) {
           friction: 5,
           tension: 120,
           useNativeDriver: true,
+        }),
+      ]).start();
+
+      // ✨ Glow overlay animation (1 second)
+      glowAnim.setValue(0);
+      Animated.sequence([
+        Animated.timing(glowAnim, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true, // safe now
+        }),
+        Animated.timing(glowAnim, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true, // fade out
         }),
       ]).start();
     }
@@ -58,6 +94,22 @@ export function SlideCardComponent({ item, onPress }: SlideCardProps) {
           pressed && !item.disabled && { transform: [{ scale: 0.98 }] },
         ]}
       >
+        {/* Glow overlay */}
+        {!item.disabled && (
+          <Animated.View
+            pointerEvents="none"
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                borderRadius: 16,
+                borderWidth: 1,
+                borderColor: colors.tab,
+                opacity: glowAnim, // animated opacity
+              },
+            ]}
+          />
+        )}
+
         <View style={styles.cardHeader}>
           <View style={[styles.left, { opacity: contentOpacity }]}>
             <Text style={styles.emoji}>{item.emoji}</Text>
@@ -65,20 +117,7 @@ export function SlideCardComponent({ item, onPress }: SlideCardProps) {
           </View>
 
           {/* 🔒 animated lock */}
-          <Animated.View
-            style={{
-              opacity: lockAnim,
-              transform: [
-                {
-                  scale: lockAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0.7, 1],
-                  }),
-                },
-              ],
-            }}
-            pointerEvents="none"
-          >
+          <Animated.View style={lockStyle} pointerEvents="none">
             <Ionicons name="lock-closed" size={18} color={colors.muted} />
           </Animated.View>
         </View>

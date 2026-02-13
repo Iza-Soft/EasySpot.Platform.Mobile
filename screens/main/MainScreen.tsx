@@ -9,7 +9,7 @@ import {
 } from "../../services/location-service";
 import { useSQLiteContext } from "expo-sqlite";
 import LoadingComponent from "../../components/LoadingComponent";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef } from "react";
 import {
   openMapsAsync,
   ShareLocationAsync,
@@ -40,6 +40,8 @@ export default function MainScreenComponent({ navigation }: any) {
 
   const [hasSavedLocation, setHasSavedLocation] = useState(false);
 
+  const listRef = useRef<FlatList>(null);
+
   useFocusEffect(
     useCallback(() => {
       const checkLocation = async () => {
@@ -64,6 +66,8 @@ export default function MainScreenComponent({ navigation }: any) {
       : item,
   );
 
+  const navigateIndex = slides.findIndex((item) => item.action === "navigate");
+
   const handleSaveLocation = async (data: LocationDetails) => {
     setModalVisible(false);
     setLoading(true);
@@ -80,6 +84,17 @@ export default function MainScreenComponent({ navigation }: any) {
         onSuccess: () => {
           setLoading(false);
           setHasSavedLocation(true);
+
+          setTimeout(() => {
+            if (navigateIndex >= 0) {
+              listRef.current?.scrollToIndex({
+                index: navigateIndex,
+                animated: true,
+                viewPosition: 0.5, // centers card nicely
+              });
+            }
+          }, 400);
+
           Toast.show({
             type: "success",
             text1: "Success",
@@ -179,6 +194,7 @@ export default function MainScreenComponent({ navigation }: any) {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
+        ref={listRef}
         data={slides}
         keyExtractor={(_, i) => String(i)}
         contentContainerStyle={styles.listContent}
@@ -186,6 +202,15 @@ export default function MainScreenComponent({ navigation }: any) {
           <SlideCardComponent item={item} onPress={onPress} />
         )}
         ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+        // 👇 IMPORTANT — avoid scroll crash
+        onScrollToIndexFailed={(info) => {
+          setTimeout(() => {
+            listRef.current?.scrollToIndex({
+              index: info.index,
+              animated: true,
+            });
+          }, 300);
+        }}
       />
 
       {loading && <LoadingComponent message="Saving your spot…" />}
