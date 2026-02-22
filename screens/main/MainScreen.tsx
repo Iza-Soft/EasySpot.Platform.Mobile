@@ -21,6 +21,7 @@ import Toast from "react-native-toast-message";
 import ModalComponent from "../../components/modal/ModalComponent";
 import LocationDetailsComponent from "../../components/modal/LocationDetailsComponent";
 import { useFocusEffect } from "@react-navigation/native";
+import BatteryOptimizationBanner from "../../components/BatteryOptimizationBanner";
 
 export type LocationDetails = {
   id?: string;
@@ -193,6 +194,7 @@ export default function MainScreenComponent({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <BatteryOptimizationBanner />
       <FlatList
         ref={listRef}
         data={slides}

@@ -38,7 +38,7 @@ export default function LocationDetailsComponent({
   const [comments, setComments] = useState(initialData.comments || "");
 
   const [showDetails, setShowDetails] = useState(
-    mode === "edit" ? false : true
+    mode === "edit" ? false : true,
   );
 
   function handleSave() {
@@ -52,7 +52,7 @@ export default function LocationDetailsComponent({
     maxLength: number,
     setter?: (v: string) => void,
     placeholder?: string | undefined,
-    width?: DimensionValue
+    width?: DimensionValue,
   ) {
     return (
       <View>
@@ -94,7 +94,7 @@ export default function LocationDetailsComponent({
         title,
         25,
         isEdit ? setTitle : undefined,
-        "E.g. Home, Work, Gym"
+        "E.g. Home, Work, Gym",
       )}
       {action === "parking" && mode !== "view" && mode !== "update" && (
         <TouchableOpacity
@@ -113,21 +113,21 @@ export default function LocationDetailsComponent({
             level,
             5,
             isEdit ? setLevel : undefined,
-            "E.g. -3, 1, P2"
+            "E.g. -3, 1, P2",
           )}
           {renderInput(
             "Section",
             section,
             10,
             isEdit ? setSection : undefined,
-            "E.g. A, Green Zone, B-West"
+            "E.g. A, Green Zone, B-West",
           )}
           {renderInput(
             "Spot",
             spot,
             10,
             isEdit ? setSpot : undefined,
-            "E.g. 123, B19, P3-027"
+            "E.g. 123, B19, P3-027",
           )}
         </>
       )}
@@ -155,7 +155,7 @@ export default function LocationDetailsComponent({
           onPress={handleSave}
           style={{
             backgroundColor: colors.tab,
-            padding: 12,
+            padding: 14,
             borderRadius: 8,
             marginBottom: 8,
           }}

@@ -54,7 +54,7 @@ export default function App() {
               duration: 1600,
               easing: Easing.linear,
               useNativeDriver: true,
-            })
+            }),
           ).start();
 
           const timer = setTimeout(async () => {
@@ -87,7 +87,7 @@ export default function App() {
           setDbError(true);
           setIsReady(false);
         }
-      })()
+      })(),
     );
   }, []);
 
