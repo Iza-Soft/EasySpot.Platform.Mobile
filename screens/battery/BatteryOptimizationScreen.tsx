@@ -3,7 +3,7 @@ import { Text, ScrollView, StyleSheet } from "react-native";
 import { checkBatteryOptimizations } from "../../utils/deviceUtils";
 import { colors } from "../../themes/main";
 
-const BatteryOptimizationScreen = () => {
+const BatteryOptimizationScreenComponent = () => {
   const [deviceInfo, setDeviceInfo] = useState<any>(null);
 
   useEffect(() => {
@@ -244,4 +244,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BatteryOptimizationScreen;
+export default BatteryOptimizationScreenComponent;

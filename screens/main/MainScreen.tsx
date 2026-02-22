@@ -21,7 +21,13 @@ import Toast from "react-native-toast-message";
 import ModalComponent from "../../components/modal/ModalComponent";
 import LocationDetailsComponent from "../../components/modal/LocationDetailsComponent";
 import { useFocusEffect } from "@react-navigation/native";
-import BatteryOptimizationBanner from "../../components/BatteryOptimizationBanner";
+import BatteryOptimizationBannerComponent from "../../components/BatteryOptimizationBannerComponent";
+import BatteryOptimizationScreenComponent from "../battery/BatteryOptimizationScreen";
+import { useBatteryBannerLogic } from "../../hook/useBatteryBannerLogic";
+
+// -------- TODO: ASK FOR NOTIFICATION PERMISSION ----------
+// import { useNotifications } from "../../hook/useNotifications";
+// -------- TODO: ASK FOR NOTIFICATION PERMISSION ----------
 
 export type LocationDetails = {
   id?: string;
@@ -35,11 +41,16 @@ export type LocationDetails = {
 export default function MainScreenComponent({ navigation }: any) {
   const database = useSQLiteContext();
   const [loading, setLoading] = useState(false);
-
+  const [batteryModalVisible, setBatteryModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [action, setAction] = useState<undefined | string>();
 
   const [hasSavedLocation, setHasSavedLocation] = useState(false);
+
+  // -------- TODO: ASK FOR NOTIFICATION PERMISSION ----------
+  // const { requestNotificationPermission, checkNotificationPermission } =
+  //   useNotifications();
+  // -------- TODO: ASK FOR NOTIFICATION PERMISSION ----------
 
   const listRef = useRef<FlatList>(null);
 
@@ -72,6 +83,16 @@ export default function MainScreenComponent({ navigation }: any) {
   const handleSaveLocation = async (data: LocationDetails) => {
     setModalVisible(false);
     setLoading(true);
+
+    // -------- TODO: ASK FOR NOTIFICATION PERMISSION ----------
+    // if (action === "parking") {
+    //   const hasPermission = await checkNotificationPermission();
+    //   if (!hasPermission) {
+    //     await requestNotificationPermission(true);
+    //   }
+    //   console.log(hasPermission);
+    // }
+    // -------- TODO: ASK FOR NOTIFICATION PERMISSION ----------
 
     (async () => {
       await saveLocationAsync({
@@ -192,9 +213,27 @@ export default function MainScreenComponent({ navigation }: any) {
     }
   };
 
+  const {
+    shouldShowBanner,
+    deviceInfo,
+    handleDismiss,
+    handleInstructionsOpened,
+  } = useBatteryBannerLogic();
+
+  const handleInstructionsPress = () => {
+    handleInstructionsOpened();
+    setBatteryModalVisible(true);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <BatteryOptimizationBanner />
+      {shouldShowBanner && deviceInfo && (
+        <BatteryOptimizationBannerComponent
+          deviceInfo={deviceInfo}
+          onInstructionsPress={handleInstructionsPress}
+          onDismiss={handleDismiss}
+        />
+      )}
       <FlatList
         ref={listRef}
         data={slides}
@@ -236,6 +275,13 @@ export default function MainScreenComponent({ navigation }: any) {
             setModalVisible(false);
           }}
         />
+      </ModalComponent>
+
+      <ModalComponent
+        visible={batteryModalVisible}
+        onClose={() => setBatteryModalVisible(false)}
+      >
+        <BatteryOptimizationScreenComponent />
       </ModalComponent>
     </SafeAreaView>
   );
