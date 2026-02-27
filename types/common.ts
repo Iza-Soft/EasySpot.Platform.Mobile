@@ -17,6 +17,7 @@ export type CardItem = {
 };
 
 export type LocationData = {
+  id: number;
   latitude: number;
   longitude: number;
 };

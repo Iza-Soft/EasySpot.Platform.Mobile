@@ -9,7 +9,7 @@ import {
 } from "../../services/location-service";
 import { useSQLiteContext } from "expo-sqlite";
 import LoadingComponent from "../../components/LoadingComponent";
-import { useCallback, useState, useRef } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import {
   openMapsAsync,
   ShareLocationAsync,
@@ -24,6 +24,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import BatteryOptimizationBannerComponent from "../../components/BatteryOptimizationBannerComponent";
 import BatteryOptimizationScreenComponent from "../battery/BatteryOptimizationScreen";
 import { useBatteryBannerLogic } from "../../hook/useBatteryBannerLogic";
+import ParkingNativeService from "../../native/ParkingModule";
 
 // -------- TODO: ASK FOR NOTIFICATION PERMISSION ----------
 // import { useNotifications } from "../../hook/useNotifications";
@@ -72,6 +73,13 @@ export default function MainScreenComponent({ navigation }: any) {
     }, [database]),
   );
 
+  useEffect(() => {
+    const initNative = async () => {
+      await ParkingNativeService.initialize();
+    };
+    initNative();
+  }, []);
+
   const slides = SLIDE_ITEMS.map((item) =>
     item.action === "navigate"
       ? { ...item, disabled: !hasSavedLocation }
@@ -107,6 +115,20 @@ export default function MainScreenComponent({ navigation }: any) {
           setLoading(false);
           setHasSavedLocation(true);
 
+          Toast.show({
+            type: "success",
+            text1: "Success",
+            text2:
+              action === "favorites"
+                ? "Favorite location saved successfully."
+                : "Parking location saved successfully.",
+            onHide: () => {
+              if (action === "parking") {
+                handleParkingTimer(data);
+              }
+            },
+          });
+
           setTimeout(() => {
             if (navigateIndex >= 0) {
               listRef.current?.scrollToIndex({
@@ -116,15 +138,6 @@ export default function MainScreenComponent({ navigation }: any) {
               });
             }
           }, 400);
-
-          Toast.show({
-            type: "success",
-            text1: "Success",
-            text2:
-              action === "favorites"
-                ? "Favorite location saved successfully."
-                : "Parking location saved successfully.",
-          });
         },
         onError: (message) => {
           setLoading(false);
@@ -137,6 +150,44 @@ export default function MainScreenComponent({ navigation }: any) {
         },
       });
     })();
+  };
+
+  const handleParkingTimer = async (data: LocationDetails) => {
+    await getLastSavedLocationAsync({
+      database,
+      onSuccess: async (location) => {
+        if (location) {
+          const scheduled = await ParkingNativeService.scheduleReminder(
+            (location as LocationData).id,
+            data.title?.trim() || "Parking spot",
+            2,
+            1,
+          );
+
+          if (scheduled) {
+            Toast.show({
+              type: "info",
+              text1: "Parking Reminder",
+              text2: `You will receive a notification 1 minute before your parking expires.`,
+            });
+          } else {
+            Toast.show({
+              type: "error",
+              text1: "Parking Reminder not started",
+              text2: "Restart app & check notification permissions.",
+            });
+          }
+        }
+      },
+      onError: (message) => {
+        console.error("Failed to get last location:", message);
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Failed to retrieve the saved location.",
+        });
+      },
+    });
   };
 
   const onPress = (action: string) => {
