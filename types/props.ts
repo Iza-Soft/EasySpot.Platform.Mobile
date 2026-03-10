@@ -1,7 +1,7 @@
 import { SQLiteDatabase } from "expo-sqlite";
 import { SlideItem } from "./slides";
 import { Maps } from "../constants/maps";
-import { CardItem, LocationData } from "./common";
+import { CardItem, LocationData, SchedulerData } from "./common";
 
 export type SlideCardProps = {
   item: SlideItem;
@@ -37,4 +37,11 @@ export type LocationCardProps = {
   isSelected: boolean;
   onPress: (item: CardItem) => void;
   onLongPress: (id: number) => void;
+};
+
+export type SchedulerProps<T = SchedulerData> = {
+  database: SQLiteDatabase;
+  data: T;
+  onSuccess?: (data: T) => void;
+  onError?: (message: string) => void;
 };

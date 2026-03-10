@@ -15,7 +15,7 @@ import {
   ShareLocationAsync,
 } from "../../services/navigation-service";
 import { Maps } from "../../constants/maps";
-import { LocationData } from "../../types/common";
+import { LocationData, SchedulerData } from "../../types/common";
 import * as Location from "expo-location";
 import Toast from "react-native-toast-message";
 import ModalComponent from "../../components/modal/ModalComponent";
@@ -25,10 +25,9 @@ import BatteryOptimizationBannerComponent from "../../components/BatteryOptimiza
 import BatteryOptimizationScreenComponent from "../battery/BatteryOptimizationScreen";
 import { useBatteryBannerLogic } from "../../hook/useBatteryBannerLogic";
 import ParkingNativeService from "../../native/ParkingModule";
-
-// -------- TODO: ASK FOR NOTIFICATION PERMISSION ----------
-// import { useNotifications } from "../../hook/useNotifications";
-// -------- TODO: ASK FOR NOTIFICATION PERMISSION ----------
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { saveSchedulerAsync } from "../../services/scheduler-service";
+import { REMINDER_CONFIG } from "../../config/reminder.config";
 
 export type LocationDetails = {
   id?: string;
@@ -47,11 +46,6 @@ export default function MainScreenComponent({ navigation }: any) {
   const [action, setAction] = useState<undefined | string>();
 
   const [hasSavedLocation, setHasSavedLocation] = useState(false);
-
-  // -------- TODO: ASK FOR NOTIFICATION PERMISSION ----------
-  // const { requestNotificationPermission, checkNotificationPermission } =
-  //   useNotifications();
-  // -------- TODO: ASK FOR NOTIFICATION PERMISSION ----------
 
   const listRef = useRef<FlatList>(null);
 
@@ -92,16 +86,6 @@ export default function MainScreenComponent({ navigation }: any) {
     setModalVisible(false);
     setLoading(true);
 
-    // -------- TODO: ASK FOR NOTIFICATION PERMISSION ----------
-    // if (action === "parking") {
-    //   const hasPermission = await checkNotificationPermission();
-    //   if (!hasPermission) {
-    //     await requestNotificationPermission(true);
-    //   }
-    //   console.log(hasPermission);
-    // }
-    // -------- TODO: ASK FOR NOTIFICATION PERMISSION ----------
-
     (async () => {
       await saveLocationAsync({
         database,
@@ -111,9 +95,22 @@ export default function MainScreenComponent({ navigation }: any) {
         section: data.section?.trim(),
         spot: data.spot?.trim(),
         comments: data.comments?.trim(),
-        onSuccess: () => {
+        onSuccess: async () => {
           setLoading(false);
           setHasSavedLocation(true);
+
+          const reminder_enabled =
+            await AsyncStorage.getItem("@reminder_enabled");
+
+          const reminderEnabled = reminder_enabled
+            ? JSON.parse(reminder_enabled)
+            : false;
+
+          let scheduled = false;
+
+          if (reminderEnabled) {
+            scheduled = await handleParkingTimer(data);
+          }
 
           Toast.show({
             type: "success",
@@ -121,12 +118,9 @@ export default function MainScreenComponent({ navigation }: any) {
             text2:
               action === "favorites"
                 ? "Favorite location saved successfully."
-                : "Parking location saved successfully.",
-            onHide: () => {
-              if (action === "parking") {
-                handleParkingTimer(data);
-              }
-            },
+                : scheduled
+                  ? "You'll be notified 10 minutes before your parking expires."
+                  : "Parking location saved successfully.",
           });
 
           setTimeout(() => {
@@ -152,41 +146,64 @@ export default function MainScreenComponent({ navigation }: any) {
     })();
   };
 
-  const handleParkingTimer = async (data: LocationDetails) => {
-    await getLastSavedLocationAsync({
-      database,
-      onSuccess: async (location) => {
-        if (location) {
-          const scheduled = await ParkingNativeService.scheduleReminder(
-            (location as LocationData).id,
-            data.title?.trim() || "Parking spot",
-            2,
-            1,
-          );
+  const handleParkingTimer = async (
+    data: LocationDetails,
+  ): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+      getLastSavedLocationAsync({
+        database,
+        onSuccess: async (location) => {
+          if (location) {
+            const now = Date.now();
+            const durationMinutes = REMINDER_CONFIG.DEFAULT_DURATION_MINUTES;
 
-          if (scheduled) {
-            Toast.show({
-              type: "info",
-              text1: "Parking Reminder",
-              text2: `You will receive a notification 1 minute before your parking expires.`,
+            const schedulerData: SchedulerData = {
+              locationId: (location as LocationData).id,
+              startTime: now,
+              durationMinutes: durationMinutes,
+              endTime: now + durationMinutes * 60 * 1000,
+              notifyBeforeMinutes:
+                REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
+            };
+
+            await saveSchedulerAsync({
+              database: database,
+              data: schedulerData,
+              onSuccess: async (savedData) => {
+                console.log("✅ Scheduler saved:", savedData);
+                try {
+                  const scheduled = await ParkingNativeService.scheduleReminder(
+                    savedData.locationId,
+                    data.title?.trim() || "Parking spot",
+                    savedData.durationMinutes,
+                    savedData.notifyBeforeMinutes,
+                  );
+                  resolve(scheduled);
+                } catch (error) {
+                  console.error("Failed to schedule reminder:", error);
+                  reject(error);
+                }
+              },
+              onError: (message) => {
+                console.error("❌ Error:", message);
+                reject(new Error(message));
+              },
             });
           } else {
-            Toast.show({
-              type: "error",
-              text1: "Parking Reminder not started",
-              text2: "Restart app & check notification permissions.",
-            });
+            // Ако няма location, връщаме false
+            resolve(false);
           }
-        }
-      },
-      onError: (message) => {
-        console.error("Failed to get last location:", message);
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: "Failed to retrieve the saved location.",
-        });
-      },
+        },
+        onError: (message) => {
+          console.error("Failed to get last location:", message);
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: "Failed to retrieve the saved location.",
+          });
+          reject(new Error(message));
+        },
+      });
     });
   };
 

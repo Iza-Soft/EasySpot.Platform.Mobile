@@ -29,3 +29,13 @@ export type AddressParts = {
   postalCode?: string;
   country?: string;
 };
+
+export type SchedulerData = {
+  locationId: number;
+  startTime: number;
+  durationMinutes: number;
+  endTime: number;
+  notifyBeforeMinutes: number;
+  notificationSent?: boolean;
+  isActive?: boolean;
+};
