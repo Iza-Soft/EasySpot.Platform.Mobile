@@ -119,7 +119,7 @@ export default function MainScreenComponent({ navigation }: any) {
               action === "favorites"
                 ? "Favorite location saved successfully."
                 : scheduled
-                  ? "You'll be notified 10 minutes before your parking expires."
+                  ? `You'll be notified ${REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES} minutes before your parking expires.`
                   : "Parking location saved successfully.",
           });
 
