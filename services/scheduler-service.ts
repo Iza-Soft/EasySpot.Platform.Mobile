@@ -1,5 +1,7 @@
-import { SchedulerProps } from "../types/props";
+import { SchedulerData } from "../types/common";
+import { SchedulerProps, setupSchedulerProps } from "../types/props";
 import { saveSchedulerDB } from "./db-service";
+import ParkingNativeService from "../native/ParkingModule";
 
 export async function saveSchedulerAsync({
   database,
@@ -58,3 +60,47 @@ export async function saveSchedulerAsync({
     onError?.(errorMessage);
   }
 }
+
+export const setupSchedulerAsync = async ({
+  database,
+  locationId,
+  title,
+  durationMinutes,
+  notifyBeforeMinutes,
+}: setupSchedulerProps): Promise<boolean> => {
+  const now = Date.now();
+
+  const schedulerData: SchedulerData = {
+    locationId: locationId,
+    startTime: now,
+    durationMinutes: durationMinutes,
+    endTime: now + durationMinutes * 60 * 1000,
+    notifyBeforeMinutes: notifyBeforeMinutes,
+  };
+
+  return new Promise((resolve, reject) => {
+    saveSchedulerAsync({
+      database,
+      data: schedulerData,
+      onSuccess: async (savedData) => {
+        console.log("✅ Scheduler saved:", savedData);
+        try {
+          const scheduled = await ParkingNativeService.scheduleReminder(
+            savedData.locationId,
+            title,
+            savedData.durationMinutes,
+            savedData.notifyBeforeMinutes,
+          );
+          resolve(scheduled);
+        } catch (error) {
+          console.error("Failed to schedule reminder:", error);
+          reject(error);
+        }
+      },
+      onError: (message) => {
+        console.error("❌ Error:", message);
+        reject(new Error(message));
+      },
+    });
+  });
+};

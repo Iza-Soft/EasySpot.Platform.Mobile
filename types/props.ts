@@ -45,3 +45,11 @@ export type SchedulerProps<T = SchedulerData> = {
   onSuccess?: (data: T) => void;
   onError?: (message: string) => void;
 };
+
+export type setupSchedulerProps = {
+  database: SQLiteDatabase;
+  locationId: number;
+  title: string;
+  durationMinutes: number;
+  notifyBeforeMinutes: number;
+};

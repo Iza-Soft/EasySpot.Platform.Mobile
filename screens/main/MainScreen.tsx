@@ -26,7 +26,10 @@ import BatteryOptimizationScreenComponent from "../battery/BatteryOptimizationSc
 import { useBatteryBannerLogic } from "../../hook/useBatteryBannerLogic";
 import ParkingNativeService from "../../native/ParkingModule";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { saveSchedulerAsync } from "../../services/scheduler-service";
+import {
+  setupSchedulerAsync,
+  saveSchedulerAsync,
+} from "../../services/scheduler-service";
 import { REMINDER_CONFIG } from "../../config/reminder.config";
 
 export type LocationDetails = {
@@ -154,43 +157,20 @@ export default function MainScreenComponent({ navigation }: any) {
         database,
         onSuccess: async (location) => {
           if (location) {
-            const now = Date.now();
-            const durationMinutes = REMINDER_CONFIG.DEFAULT_DURATION_MINUTES;
-
-            const schedulerData: SchedulerData = {
-              locationId: (location as LocationData).id,
-              startTime: now,
-              durationMinutes: durationMinutes,
-              endTime: now + durationMinutes * 60 * 1000,
-              notifyBeforeMinutes:
-                REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
-            };
-
-            await saveSchedulerAsync({
-              database: database,
-              data: schedulerData,
-              onSuccess: async (savedData) => {
-                console.log("✅ Scheduler saved:", savedData);
-                try {
-                  const scheduled = await ParkingNativeService.scheduleReminder(
-                    savedData.locationId,
-                    data.title?.trim() || "Parking spot",
-                    savedData.durationMinutes,
-                    savedData.notifyBeforeMinutes,
-                  );
-                  resolve(scheduled);
-                } catch (error) {
-                  console.error("Failed to schedule reminder:", error);
-                  reject(error);
-                }
-              },
-              onError: (message) => {
-                console.error("❌ Error:", message);
-                reject(new Error(message));
-              },
-            });
+            try {
+              const scheduled = await setupSchedulerAsync({
+                database: database,
+                locationId: (location as LocationData).id,
+                title: data.title?.trim() || "Parking spot",
+                durationMinutes: REMINDER_CONFIG.DEFAULT_DURATION_MINUTES,
+                notifyBeforeMinutes:
+                  REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
+              });
+              resolve(scheduled);
+            } catch (error) {
+              reject(error);
+            }
           } else {
-            // Ако няма location, връщаме false
             resolve(false);
           }
         },
