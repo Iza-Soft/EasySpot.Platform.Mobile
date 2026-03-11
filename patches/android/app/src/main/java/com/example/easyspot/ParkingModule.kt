@@ -46,6 +46,7 @@ class ParkingModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
             val reminderTime = endTimeMillis - (remindBeforeMinutes * 60 * 1000)
             
             Log.d("ParkingModule", "Scheduling reminder for: ${java.util.Date(reminderTime)}")
+            Log.d("ParkingModule", "⏰ Remind before: $remindBeforeMinutes minutes")
             
             if (reminderTime <= System.currentTimeMillis()) {
                 promise.reject("INVALID_TIME", "Reminder time must be in the future")
@@ -57,6 +58,7 @@ class ParkingModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
                 putExtra("title", title)
                 putExtra("type", "parking_reminder")
                 putExtra("reminderTime", reminderTime)
+                putExtra("remindBeforeMinutes", remindBeforeMinutes)
             }
             
             val pendingIntent = PendingIntent.getBroadcast(

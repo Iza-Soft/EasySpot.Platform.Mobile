@@ -16,8 +16,10 @@ class ParkingReceiver : BroadcastReceiver() {
             val locationId = intent.getIntExtra("locationId", 0)
             val title = intent.getStringExtra("title") ?: "Parking spot"
             val type = intent.getStringExtra("type") ?: "parking_reminder"
+            val remindBeforeMinutes = intent.getIntExtra("remindBeforeMinutes", 10)
             
             Log.d("ParkingReceiver", "📱 Received alarm for location $locationId")
+            Log.d("ParkingReceiver", "⏰ Remind before minutes: $remindBeforeMinutes")
             
             // Отваряне на приложението
             val openIntent = Intent(context, MainActivity::class.java).apply {
@@ -36,8 +38,8 @@ class ParkingReceiver : BroadcastReceiver() {
             
             // Създаване на нотификация
             val notification = NotificationCompat.Builder(context, "parking_channel")
-                .setContentTitle("⏰ Паркингът ви изтича скоро!")
-                .setContentText("$title - остават 10 минути")
+                .setContentTitle("⏰ Your parking is expiring soon!")
+                .setContentText("$title - $remindBeforeMinutes minutes left")
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)

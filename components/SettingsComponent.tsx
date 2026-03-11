@@ -13,6 +13,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../themes/main";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNotifications } from "../hook/useNotifications";
 
 const screenHeight = Dimensions.get("window").height;
 export default function SettingsComponent({
@@ -26,6 +27,19 @@ export default function SettingsComponent({
   const slideAnim = useRef(new Animated.Value(screenHeight)).current; // starts off-screen
   const [isMounted, setIsMounted] = useState(false); // ✅ Track mounting state
   const [reminderEnabled, setReminderEnabled] = useState(false);
+  const { requestNotificationPermission, checkNotificationPermission } =
+    useNotifications();
+
+  const onReminderValueToggle = async (value: boolean) => {
+    if (value) {
+      const hasPermission = await checkNotificationPermission();
+      if (!hasPermission) {
+        value = await requestNotificationPermission(true);
+      }
+    }
+    await AsyncStorage.setItem("@reminder_enabled", JSON.stringify(value));
+    setReminderEnabled(value);
+  };
 
   const loadSettings = async () => {
     const reminder_enabled = await AsyncStorage.getItem("@reminder_enabled");
@@ -89,13 +103,16 @@ export default function SettingsComponent({
             </View>
             <Switch
               value={reminderEnabled} // ← false по подразбиране
-              onValueChange={async (value) => {
-                await AsyncStorage.setItem(
-                  "@reminder_enabled",
-                  JSON.stringify(value),
-                );
-                setReminderEnabled(value);
-              }}
+              onValueChange={async (value) =>
+                await onReminderValueToggle(value)
+              }
+              // onValueChange={async (value) => {
+              //   await AsyncStorage.setItem(
+              //     "@reminder_enabled",
+              //     JSON.stringify(value),
+              //   );
+              //   setReminderEnabled(value);
+              // }}
               trackColor={{ false: "#767577", true: colors.tab }}
               thumbColor={reminderEnabled ? "#fff" : "#f4f3f4"}
               ios_backgroundColor="#3e3e3e"

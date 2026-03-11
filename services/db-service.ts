@@ -40,30 +40,30 @@ export async function openPersistentDB(): Promise<SQLiteDatabase> {
 export const createDBifNeeded = async (db: SQLiteDatabase) => {
   //await db.execAsync(SQL.DROP_LOCATION_TABLE); - DO NOT USE DROP IN PRODUCTION
 
-  const DATABASE_VERSION = 1;
+  const DATABASE_VERSION = 2;
 
   const row = await db.getFirstAsync<{ user_version: number }>(
-    "PRAGMA user_version"
+    "PRAGMA user_version",
   );
   const currentDbVersion = row?.user_version ?? 0;
 
   if (currentDbVersion >= DATABASE_VERSION) return;
 
-  if (currentDbVersion === 0) {
+  if (currentDbVersion < 1) {
     await db.execAsync(SQL.CREATE_LOCATION_TABLE);
+  }
+
+  if (currentDbVersion < 2) {
+    await db.execAsync(SQL.CREATE_SCHEDULER_TABLE);
   }
 
   await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
   console.log("✅ Database migrated to version", DATABASE_VERSION);
-
-  // console.log("Checking database...");
-  // await db.execAsync(SQL.CREATE_LOCATION_TABLE);
-  // console.log("✅ Database initialized and ready.");
 };
 
 export const saveLocationDB = async (
   db: SQLiteDatabase,
-  params: any[] = []
+  params: any[] = [],
 ) => {
   try {
     await db.runAsync(SQL.INSERT_LOCATION, params);
@@ -74,7 +74,7 @@ export const saveLocationDB = async (
 
 export const updateLocationDB = async (
   db: SQLiteDatabase,
-  params: any[] = []
+  params: any[] = [],
 ) => {
   try {
     await db.runAsync(SQL.UPDATE_LOCATION, params);
@@ -84,11 +84,11 @@ export const updateLocationDB = async (
 };
 
 export const getLastSavedLocationDB = async (
-  db: SQLiteDatabase
+  db: SQLiteDatabase,
 ): Promise<LocationData | null> => {
   try {
     const result = await db.getFirstAsync<LocationData>(
-      SQL.SELECT_LAST_LOCATION
+      SQL.SELECT_LAST_LOCATION,
     );
     return result || null;
   } catch (error) {
@@ -100,7 +100,7 @@ export const getAllSavedLocationDB = async (
   db: SQLiteDatabase,
   searchText?: string | undefined,
   limit?: number,
-  offset?: number
+  offset?: number,
 ): Promise<CardItem[] | null> => {
   try {
     if (limit == undefined || offset == undefined) {
@@ -134,7 +134,7 @@ export const getAllSavedLocationDB = async (
 
 export const deleteLocationDB = async (
   db: SQLiteDatabase,
-  params: any[] = []
+  params: any[] = [],
 ) => {
   try {
     await db.runAsync(SQL.DELETE_LOCATION, params);
@@ -145,12 +145,27 @@ export const deleteLocationDB = async (
 
 export const deleteAllLocationDB = async (
   db: SQLiteDatabase,
-  params: any[] = []
+  params: any[] = [],
 ) => {
   try {
     const placeholders = params.map(() => "?").join(",");
     const sql = SQL.DELETE_ALL_LOCATION.replace("?", `(${placeholders})`);
     await db.runAsync(sql, params);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const saveSchedulerDB = async (
+  db: SQLiteDatabase,
+  params: any[],
+): Promise<SQLite.SQLiteRunResult> => {
+  try {
+    if (params.length !== 7) {
+      throw new Error(`Expected 7 params, got ${params.length}`);
+    }
+
+    return await db.runAsync(SQL.INSERT_SCHEDULER, params);
   } catch (error) {
     throw error;
   }
