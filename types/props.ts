@@ -1,7 +1,7 @@
 import { SQLiteDatabase } from "expo-sqlite";
 import { SlideItem } from "./slides";
 import { Maps } from "../constants/maps";
-import { CardItem, LocationData, SchedulerData } from "./common";
+import { CardItem, LocationData, Scheduler, SchedulerData } from "./common";
 
 export type SlideCardProps = {
   item: SlideItem;
@@ -46,10 +46,22 @@ export type SchedulerProps<T = SchedulerData> = {
   onError?: (message: string) => void;
 };
 
-export type setupSchedulerProps = {
+export type SetupSchedulerProps = {
   database: SQLiteDatabase;
   locationId: number;
   title: string;
   durationMinutes: number;
   notifyBeforeMinutes: number;
+};
+
+export type UpdateSchedulerProps = {
+  database: SQLiteDatabase;
+  id: number;
+  onSuccess?: () => void;
+  onError?: (message: string) => void;
+};
+
+export type TimerProps = {
+  database: SQLiteDatabase;
+  scheduler: Scheduler | null | undefined;
 };

@@ -126,6 +126,7 @@ export const getAllSavedLocationDB = async (
       limit,
       offset,
     ]);
+
     return result || null;
   } catch (error) {
     throw error;
@@ -166,6 +167,17 @@ export const saveSchedulerDB = async (
     }
 
     return await db.runAsync(SQL.INSERT_SCHEDULER, params);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateSchedulerDB = async (
+  db: SQLiteDatabase,
+  params: any[] = [],
+) => {
+  try {
+    await db.runAsync(SQL.UPDATE_SCHEDULER, params);
   } catch (error) {
     throw error;
   }

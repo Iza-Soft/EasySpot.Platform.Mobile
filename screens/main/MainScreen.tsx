@@ -15,7 +15,7 @@ import {
   ShareLocationAsync,
 } from "../../services/navigation-service";
 import { Maps } from "../../constants/maps";
-import { LocationData, SchedulerData } from "../../types/common";
+import { LocationData } from "../../types/common";
 import * as Location from "expo-location";
 import Toast from "react-native-toast-message";
 import ModalComponent from "../../components/modal/ModalComponent";

@@ -1,6 +1,10 @@
 import { SchedulerData } from "../types/common";
-import { SchedulerProps, setupSchedulerProps } from "../types/props";
-import { saveSchedulerDB } from "./db-service";
+import {
+  SchedulerProps,
+  SetupSchedulerProps,
+  UpdateSchedulerProps,
+} from "../types/props";
+import { saveSchedulerDB, updateSchedulerDB } from "./db-service";
 import ParkingNativeService from "../native/ParkingModule";
 
 export async function saveSchedulerAsync({
@@ -67,7 +71,7 @@ export const setupSchedulerAsync = async ({
   title,
   durationMinutes,
   notifyBeforeMinutes,
-}: setupSchedulerProps): Promise<boolean> => {
+}: SetupSchedulerProps): Promise<boolean> => {
   const now = Date.now();
 
   const schedulerData: SchedulerData = {
@@ -104,3 +108,19 @@ export const setupSchedulerAsync = async ({
     });
   });
 };
+
+export async function updateSchedulerAsync({
+  database,
+  id,
+  onSuccess,
+  onError,
+}: UpdateSchedulerProps) {
+  try {
+    await updateSchedulerDB(database, [Date.now(), id]);
+
+    onSuccess?.();
+  } catch (error) {
+    console.error("updateSchedulerAsync error:", error);
+    onError?.(`Failed to update scheduler.`);
+  }
+}

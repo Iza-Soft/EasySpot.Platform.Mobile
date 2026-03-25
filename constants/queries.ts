@@ -1,6 +1,10 @@
 export const SQL = {
-  SELECT_ALL_LOCATION: `SELECT * FROM locations ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
-  SELECT_SEARCH_LOCATION: `SELECT * FROM locations WHERE title LIKE ? OR street LIKE ? OR city LIKE ? OR region LIKE ? OR country LIKE ? ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
+  SELECT_ALL_LOCATION: `SELECT locations.*, schedulers.id as schedulerId, schedulers.locationId, schedulers.startTime, schedulers.durationMinutes, schedulers.endTime, schedulers.notifyBeforeMinutes, schedulers.notificationSent, schedulers.isActive 
+      FROM locations LEFT JOIN schedulers ON locations.id = schedulers.locationId 
+      ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
+  SELECT_SEARCH_LOCATION: `SELECT locations.*, schedulers.id as schedulerId, chedulers.locationId, schedulers.startTime, schedulers.durationMinutes, schedulers.endTime, schedulers.notifyBeforeMinutes, schedulers.notificationSent, schedulers.isActive 
+      FROM locations LEFT JOIN schedulers ON locations.id = schedulers.locationId 
+      WHERE title LIKE ? OR street LIKE ? OR city LIKE ? OR region LIKE ? OR country LIKE ? ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
   SELECT_LAST_LOCATION: `SELECT * FROM locations ORDER BY timestamp DESC LIMIT 1`,
   INSERT_LOCATION: `INSERT INTO locations (latitude, longitude, street, city, region, postalCode, country, type, title, level, section, spot, comments, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   UPDATE_LOCATION: `UPDATE Locations SET title = ?, comments = ?, spot = ?, level = ?, section = ? WHERE id = ?`,
@@ -25,6 +29,7 @@ export const SQL = {
         timestamp TEXT NOT NULL
       );`,
   INSERT_SCHEDULER: `INSERT INTO schedulers (locationId, startTime, durationMinutes, endTime, notifyBeforeMinutes, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+  UPDATE_SCHEDULER: `UPDATE schedulers SET isActive = 0, updatedAt = ? WHERE id = ?`,
   CREATE_SCHEDULER_TABLE: `CREATE TABLE IF NOT EXISTS schedulers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         locationId INTEGER NOT NULL,
