@@ -109,6 +109,27 @@ export const setupSchedulerAsync = async ({
   });
 };
 
+export const cancelSchedulerAsync = async ({
+  locationId,
+  onSuccess,
+  onError,
+}: {
+  locationId: number;
+  onSuccess?: (result: any) => void;
+  onError?: (message: string) => void;
+}) => {
+  try {
+    const result = await ParkingNativeService.cancelReminder(locationId);
+    console.log(`Reminder cancelled for location ${locationId}:`, result);
+    onSuccess?.(result);
+  } catch (error) {
+    console.error("Failed to cancel reminder:", error);
+    onError?.(
+      error instanceof Error ? error.message : "Failed to cancel reminder",
+    );
+  }
+};
+
 export async function updateSchedulerAsync({
   database,
   id,

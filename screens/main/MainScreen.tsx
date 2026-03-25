@@ -26,10 +26,7 @@ import BatteryOptimizationScreenComponent from "../battery/BatteryOptimizationSc
 import { useBatteryBannerLogic } from "../../hook/useBatteryBannerLogic";
 import ParkingNativeService from "../../native/ParkingModule";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  setupSchedulerAsync,
-  saveSchedulerAsync,
-} from "../../services/scheduler-service";
+import { setupSchedulerAsync } from "../../services/scheduler-service";
 import { REMINDER_CONFIG } from "../../config/reminder.config";
 
 export type LocationDetails = {

@@ -36,6 +36,7 @@ import LocationDetailsComponent, {
 } from "../../components/modal/LocationDetailsComponent";
 import * as Clipboard from "expo-clipboard";
 import { formatAddress } from "../../utils/address";
+import { cancelSchedulerAsync } from "../../services/scheduler-service";
 
 export default function HistoryScreenComponent() {
   const database = useSQLiteContext();
@@ -47,7 +48,7 @@ export default function HistoryScreenComponent() {
   const [searchText, setSearchText] = useState<string | undefined>();
   const [modalVisible, setModalVisible] = useState(false);
   const [detailsMode, setDetailsMode] = useState<"edit" | "view" | "update">(
-    "view"
+    "view",
   );
   const [selectedItem, setSelectedItem] = useState<CardItem | null>(null);
   const [loadingMessage, setLoadingMessage] =
@@ -135,6 +136,15 @@ export default function HistoryScreenComponent() {
   };
 
   const deleteLocation = async (id: number | undefined) => {
+    if (!id) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Invalid location ID",
+      });
+      return;
+    }
+
     Alert.alert("Delete", "Are you sure you want to delete this location?", [
       { text: "Cancel", style: "cancel" },
       {
@@ -144,28 +154,47 @@ export default function HistoryScreenComponent() {
           setCardOptionsVisible(false);
           setLoadingMessage("Deleting location...");
           setLoading(true);
-          await deleteLocationAsync({
-            database,
-            id,
-            onSuccess: () => {
-              setLocations((prev) => prev.filter((l) => l.id !== id));
-              setLoading(false);
-              Toast.show({
-                type: "success",
-                text1: "Success",
-                text2: "Location deleted successfully.",
-              });
-            },
-            onError: (message) => {
-              console.error("❌ Failed to delete the location.:", message);
-              Toast.show({
-                type: "error",
-                text1: "Error",
-                text2: "Failed to delete the location.",
-              });
-              setLoading(false);
-            },
-          });
+
+          try {
+            await deleteLocationAsync({
+              database,
+              id,
+              onSuccess: async () => {
+                setLocations((prev) => prev.filter((l) => l.id !== id));
+                try {
+                  await cancelSchedulerAsync({
+                    locationId: id,
+                    onSuccess: () => {
+                      console.log("Reminder cancelled successfully");
+                    },
+                    onError: (message) => {
+                      console.error("Error cancelling reminder:", message);
+                    },
+                  });
+                } catch (reminderError) {
+                  console.error("Failed to cancel reminder:", reminderError);
+                }
+
+                Toast.show({
+                  type: "success",
+                  text1: "Success",
+                  text2: "Location deleted successfully.",
+                });
+              },
+              onError: (message) => {
+                throw new Error(message);
+              },
+            });
+          } catch (error) {
+            console.error("❌ Failed to delete location:", error);
+            Toast.show({
+              type: "error",
+              text1: "Error",
+              text2: "Failed to delete the location.",
+            });
+          } finally {
+            setLoading(false);
+          }
         },
       },
     ]);
@@ -186,7 +215,7 @@ export default function HistoryScreenComponent() {
             selectedLocations,
             onSuccess: () => {
               setLocations((prev) =>
-                prev.filter((l) => !selectedLocations.includes(l.id))
+                prev.filter((l) => !selectedLocations.includes(l.id)),
               );
               setSelectedLocations([]);
               setIsMultiSelectMode(false);
@@ -263,8 +292,8 @@ export default function HistoryScreenComponent() {
                     spot: data.spot?.trim(),
                     comments: data.comments?.trim(),
                   }
-                : item
-            )
+                : item,
+            ),
           );
           setSelectedItem((prev) =>
             prev
@@ -276,7 +305,7 @@ export default function HistoryScreenComponent() {
                   spot: data.spot?.trim(),
                   comments: data.comments?.trim(),
                 }
-              : prev
+              : prev,
           );
           setLoading(false);
           Toast.show({
@@ -349,7 +378,7 @@ export default function HistoryScreenComponent() {
 
       // Check if any required fields are missing
       const missingFields = [street, city, region, postalCode, country].some(
-        (field) => !field || field.trim() === ""
+        (field) => !field || field.trim() === "",
       );
 
       const address = formatAddress({
@@ -391,7 +420,7 @@ export default function HistoryScreenComponent() {
 
       setSelectedAll(
         locations.length > 0 &&
-          locations.every((item) => next.includes(item.id))
+          locations.every((item) => next.includes(item.id)),
       );
 
       return next;

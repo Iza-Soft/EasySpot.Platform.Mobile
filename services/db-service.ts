@@ -49,6 +49,9 @@ export const createDBifNeeded = async (db: SQLiteDatabase) => {
 
   if (currentDbVersion >= DATABASE_VERSION) return;
 
+  await db.execAsync("PRAGMA foreign_keys = ON;");
+  console.log("✅ Foreign keys enabled");
+
   if (currentDbVersion < 1) {
     await db.execAsync(SQL.CREATE_LOCATION_TABLE);
   }
@@ -66,6 +69,11 @@ export const saveLocationDB = async (
   params: any[] = [],
 ) => {
   try {
+    const pragmaResult = await db.getFirstAsync<{ foreign_keys: number }>(
+      "PRAGMA foreign_keys;",
+    );
+    console.log("Foreign keys enabled:", pragmaResult?.foreign_keys === 1);
+
     await db.runAsync(SQL.INSERT_LOCATION, params);
   } catch (error) {
     throw error;
