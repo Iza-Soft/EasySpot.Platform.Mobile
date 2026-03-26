@@ -108,7 +108,7 @@ export default function MainScreenComponent({ navigation }: any) {
 
           let scheduled = false;
 
-          if (reminderEnabled) {
+          if (action === "parking" && reminderEnabled) {
             scheduled = await handleParkingTimer(data);
           }
 

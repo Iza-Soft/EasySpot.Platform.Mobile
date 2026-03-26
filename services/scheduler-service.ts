@@ -130,6 +130,27 @@ export const cancelSchedulerAsync = async ({
   }
 };
 
+export const hasSchedulerAsync = async ({
+  locationId,
+  onSuccess,
+  onError,
+}: {
+  locationId: number;
+  onSuccess?: (hasActiveReminder: boolean) => void;
+  onError?: (message: string) => void;
+}) => {
+  try {
+    const hasActiveReminder =
+      await ParkingNativeService.hasActiveReminder(locationId);
+    onSuccess?.(hasActiveReminder);
+  } catch (error) {
+    console.error("Failed to check active reminder:", error);
+    onError?.(
+      error instanceof Error ? error.message : "Failed to check reminder",
+    );
+  }
+};
+
 export async function updateSchedulerAsync({
   database,
   id,

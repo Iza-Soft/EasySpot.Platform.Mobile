@@ -15,8 +15,15 @@ export default function LocationItemCard({
   onLongPress,
 }: LocationCardProps) {
   const database = useSQLiteContext();
+
+  const shouldShowTimer = item.type === "parking";
+
   const scheduler = useMemo<Scheduler | null>(() => {
-    if (item.schedulerId !== undefined && item.schedulerId !== null) {
+    if (
+      shouldShowTimer &&
+      item.schedulerId !== undefined &&
+      item.schedulerId !== null
+    ) {
       return {
         id: item.schedulerId,
         locationId: item.locationId,
@@ -30,6 +37,7 @@ export default function LocationItemCard({
     }
     return null;
   }, [
+    shouldShowTimer,
     item.schedulerId,
     item.locationId,
     item.startTime,
@@ -41,9 +49,9 @@ export default function LocationItemCard({
   ]);
 
   const timer = useTimer({ database, scheduler });
-  const hasActiveTimer = scheduler && scheduler.isActive;
-  console.log(timer);
-  console.log(hasActiveTimer);
+  const hasActiveTimer =
+    item.isActive !== null || (scheduler && scheduler.isActive);
+
   return (
     <>
       <Pressable
@@ -72,7 +80,7 @@ export default function LocationItemCard({
                     addSuffix: true,
                   })}
                 </Text>
-                {item.isActive !== null && (
+                {shouldShowTimer && hasActiveTimer && (
                   <View style={styles.timerInline}>
                     <Text
                       style={[

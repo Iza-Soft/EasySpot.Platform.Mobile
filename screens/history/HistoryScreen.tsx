@@ -36,7 +36,10 @@ import LocationDetailsComponent, {
 } from "../../components/modal/LocationDetailsComponent";
 import * as Clipboard from "expo-clipboard";
 import { formatAddress } from "../../utils/address";
-import { cancelSchedulerAsync } from "../../services/scheduler-service";
+import {
+  cancelSchedulerAsync,
+  hasSchedulerAsync,
+} from "../../services/scheduler-service";
 
 export default function HistoryScreenComponent() {
   const database = useSQLiteContext();
@@ -156,23 +159,45 @@ export default function HistoryScreenComponent() {
           setLoading(true);
 
           try {
+            // First, check if there is an active reminder
+            let hasActiveReminder = false;
+
+            await hasSchedulerAsync({
+              locationId: id,
+              onSuccess: (hasActive) => {
+                hasActiveReminder = hasActive;
+                console.log(`Location ${id} has active reminder:`, hasActive);
+              },
+              onError: (message) => {
+                console.error("Failed to check active reminder:", message);
+              },
+            });
+
             await deleteLocationAsync({
               database,
               id,
               onSuccess: async () => {
                 setLocations((prev) => prev.filter((l) => l.id !== id));
-                try {
-                  await cancelSchedulerAsync({
-                    locationId: id,
-                    onSuccess: () => {
-                      console.log("Reminder cancelled successfully");
-                    },
-                    onError: (message) => {
-                      console.error("Error cancelling reminder:", message);
-                    },
-                  });
-                } catch (reminderError) {
-                  console.error("Failed to cancel reminder:", reminderError);
+
+                // Cancel a reminder only if there is an active one
+                if (hasActiveReminder) {
+                  try {
+                    await cancelSchedulerAsync({
+                      locationId: id,
+                      onSuccess: () => {
+                        console.log("Reminder cancelled successfully");
+                      },
+                      onError: (message) => {
+                        console.error("Error cancelling reminder:", message);
+                      },
+                    });
+                  } catch (reminderError) {
+                    console.error("Failed to cancel reminder:", reminderError);
+                  }
+                } else {
+                  console.log(
+                    `No active reminder found for location ${id}, skipping cancellation`,
+                  );
                 }
 
                 Toast.show({
@@ -201,44 +226,126 @@ export default function HistoryScreenComponent() {
   };
 
   const deleteAllLocations = async () => {
-    Alert.alert("Delete", "Are you sure you want to delete all locations?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: async () => {
-          setCardOptionsVisible(false);
-          setLoadingMessage("Deleting locations...");
-          setLoading(true);
-          await deleteAllLocationAsync({
-            database,
-            selectedLocations,
-            onSuccess: () => {
-              setLocations((prev) =>
-                prev.filter((l) => !selectedLocations.includes(l.id)),
+    if (selectedLocations.length === 0) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "No locations selected",
+      });
+      return;
+    }
+
+    Alert.alert(
+      "Delete",
+      "Are you sure you want to delete all selected locations?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            setCardOptionsVisible(false);
+            setLoadingMessage("Deleting locations...");
+            setLoading(true);
+
+            try {
+              // Parallel check of all reminders
+              const checkPromises = selectedLocations.map(
+                async (locationId) => {
+                  const hasActive = await new Promise<boolean>((resolve) => {
+                    hasSchedulerAsync({
+                      locationId,
+                      onSuccess: resolve,
+                      onError: () => resolve(false),
+                    });
+                  });
+                  return { locationId, hasActive };
+                },
               );
-              setSelectedLocations([]);
-              setIsMultiSelectMode(false);
-              setLoading(false);
-              Toast.show({
-                type: "success",
-                text1: "Success",
-                text2: "Locations deleted successfully.",
+
+              const reminderStatuses = await Promise.all(checkPromises);
+              const activeRemindersMap = new Map(
+                reminderStatuses.map(({ locationId, hasActive }) => [
+                  locationId,
+                  hasActive,
+                ]),
+              );
+
+              const activeLocations = reminderStatuses
+                .filter(({ hasActive }) => hasActive)
+                .map(({ locationId }) => locationId);
+
+              console.log(
+                `Locations with active reminders: ${activeLocations.length}`,
+              );
+
+              // Delete locations
+              await deleteAllLocationAsync({
+                database,
+                selectedLocations,
+                onSuccess: async () => {
+                  // Cancel reminders for active ones only
+                  if (activeLocations.length > 0) {
+                    const cancelPromises = activeLocations.map(
+                      async (locationId) => {
+                        try {
+                          await cancelSchedulerAsync({
+                            locationId,
+                            onSuccess: () => {
+                              console.log(
+                                `Reminder cancelled for location ${locationId}`,
+                              );
+                            },
+                            onError: (message) => {
+                              console.warn(
+                                `Failed to cancel reminder for location ${locationId}:`,
+                                message,
+                              );
+                            },
+                          });
+                        } catch (reminderError) {
+                          console.warn(
+                            `Error cancelling reminder for location ${locationId}:`,
+                            reminderError,
+                          );
+                        }
+                      },
+                    );
+
+                    await Promise.allSettled(cancelPromises);
+                  }
+
+                  setLocations((prev) =>
+                    prev.filter((l) => !selectedLocations.includes(l.id)),
+                  );
+                  setSelectedLocations([]);
+                  setIsMultiSelectMode(false);
+                  setLoading(false);
+
+                  Toast.show({
+                    type: "success",
+                    text1: "Success",
+                    text2: `${selectedLocations.length} location(s) deleted successfully.`,
+                  });
+                },
+                onError: (message) => {
+                  throw new Error(message);
+                },
               });
-            },
-            onError: (message) => {
-              console.error("❌ Failed to delete the location.:", message);
+            } catch (error) {
+              console.error("❌ Failed to delete locations:", error);
               Toast.show({
                 type: "error",
                 text1: "Error",
-                text2: "Failed to delete the location.",
+                text2: "Failed to delete the locations.",
               });
+            } finally {
               setLoading(false);
-            },
-          });
+            }
+          },
         },
-      },
-    ]);
+      ],
+    );
   };
 
   const shareLocation = async (coordinates?: {
