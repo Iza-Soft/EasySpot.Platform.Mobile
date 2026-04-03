@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -10,10 +10,13 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../themes/main";
+import { CardItem, Scheduler } from "../types/common";
+import { useSQLiteContext } from "expo-sqlite";
+import { useTimer } from "../hook/useTimer";
 
 const screenHeight = Dimensions.get("window").height;
 export default function LocationCardOptionsComponent({
-  title,
+  item,
   visible,
   onClose,
   onShare,
@@ -24,8 +27,41 @@ export default function LocationCardOptionsComponent({
   onCopyCoordinates,
   onCopyAddress,
 }: any) {
-  const slideAnim = useRef(new Animated.Value(screenHeight)).current; // starts off-screen
-  const [isMounted, setIsMounted] = useState(false); // ✅ Track mounting state
+  const database = useSQLiteContext();
+  const slideAnim = useRef(new Animated.Value(screenHeight)).current;
+  const [isMounted, setIsMounted] = useState(false);
+
+  const shouldShowActiveTimer = (item as CardItem)?.type === "parking";
+
+  const scheduler = useMemo<Scheduler | null>(() => {
+    if ((item as CardItem) === null) return null;
+
+    if (
+      shouldShowActiveTimer &&
+      (item as CardItem).schedulerId !== undefined &&
+      (item as CardItem).schedulerId !== null
+    ) {
+      return {
+        id: (item as CardItem).schedulerId,
+        locationId: (item as CardItem).locationId,
+        startTime: (item as CardItem).startTime,
+        durationMinutes: (item as CardItem).durationMinutes,
+        endTime: (item as CardItem).endTime,
+        notifyBeforeMinutes: (item as CardItem).notifyBeforeMinutes,
+        notificationSent: (item as CardItem).notificationSent,
+        isActive: (item as CardItem).isActive,
+      };
+    }
+    return null;
+  }, [item as CardItem]);
+
+  const timer = useTimer({ database, scheduler });
+
+  const hasActiveTimer = Boolean(
+    (item as CardItem)?.isActive !== null &&
+    (scheduler?.isActive ?? false) &&
+    !timer.isExpired,
+  );
 
   useEffect(() => {
     if (visible) {
@@ -63,7 +99,9 @@ export default function LocationCardOptionsComponent({
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>{title?.trim() || "(No title)"}</Text>
+          <Text style={styles.headerText}>
+            {(item as CardItem).title?.trim() || "(No title)"}
+          </Text>
           <TouchableOpacity onPress={onClose}>
             <Ionicons name="close" size={28} color={colors.tab} />
           </TouchableOpacity>
@@ -128,6 +166,45 @@ export default function LocationCardOptionsComponent({
               </Text>
             </View>
           </TouchableOpacity>
+
+          {/* REMINDER */}
+          {shouldShowActiveTimer && hasActiveTimer && (
+            <>
+              <Text style={[styles.sectionTitle, { marginTop: 12 }]}>
+                Reminder
+              </Text>
+
+              <TouchableOpacity
+                style={styles.item}
+                onPress={() => {
+                  console.log("Extend by 1 hour !!!");
+                }}
+              >
+                <Text style={styles.emoji}>➕</Text>
+                <View>
+                  <Text style={styles.itemText}>Extend by 1 hour</Text>
+                  <Text style={styles.itemSubText}>
+                    Add more time to your parking
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.item}
+                onPress={() => {
+                  console.log("Stop timer !!!");
+                }}
+              >
+                <Text style={styles.emoji}>🛑</Text>
+                <View>
+                  <Text style={styles.itemText}>Stop timer</Text>
+                  <Text style={styles.itemSubText}>
+                    Disable timer and notifications
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </>
+          )}
 
           {/* DANGER ZONE */}
           <Text

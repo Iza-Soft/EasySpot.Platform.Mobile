@@ -25,7 +25,6 @@ import BatteryOptimizationBannerComponent from "../../components/BatteryOptimiza
 import BatteryOptimizationScreenComponent from "../battery/BatteryOptimizationScreen";
 import { useBatteryBannerLogic } from "../../hook/useBatteryBannerLogic";
 import ParkingNativeService from "../../native/ParkingModule";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setupSchedulerAsync } from "../../services/scheduler-service";
 import { REMINDER_CONFIG } from "../../config/reminder.config";
 
@@ -36,6 +35,7 @@ export type LocationDetails = {
   section?: string;
   spot?: string;
   comments?: string;
+  timerEnabled?: boolean;
 };
 
 export default function MainScreenComponent({ navigation }: any) {
@@ -99,16 +99,9 @@ export default function MainScreenComponent({ navigation }: any) {
           setLoading(false);
           setHasSavedLocation(true);
 
-          const reminder_enabled =
-            await AsyncStorage.getItem("@reminder_enabled");
-
-          const reminderEnabled = reminder_enabled
-            ? JSON.parse(reminder_enabled)
-            : false;
-
           let scheduled = false;
 
-          if (action === "parking" && reminderEnabled) {
+          if (action === "parking" && data.timerEnabled) {
             scheduled = await handleParkingTimer(data);
           }
 

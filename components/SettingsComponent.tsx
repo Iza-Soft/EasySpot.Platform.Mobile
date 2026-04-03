@@ -106,17 +106,9 @@ export default function SettingsComponent({
               onValueChange={async (value) =>
                 await onReminderValueToggle(value)
               }
-              // onValueChange={async (value) => {
-              //   await AsyncStorage.setItem(
-              //     "@reminder_enabled",
-              //     JSON.stringify(value),
-              //   );
-              //   setReminderEnabled(value);
-              // }}
               trackColor={{ false: "#767577", true: colors.tab }}
               thumbColor={reminderEnabled ? "#fff" : "#f4f3f4"}
               ios_backgroundColor="#3e3e3e"
-              //style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.3 }] }}
             />
           </View>
         </View>

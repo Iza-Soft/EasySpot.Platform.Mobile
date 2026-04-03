@@ -4,9 +4,11 @@ import {
   TextInput,
   TouchableOpacity,
   DimensionValue,
+  Switch,
 } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { colors } from "../../themes/main";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export type LocationDetails = {
   id?: string;
@@ -15,6 +17,7 @@ export type LocationDetails = {
   section?: string;
   spot?: string;
   comments?: string;
+  timerEnabled?: boolean;
 };
 
 type Props = {
@@ -36,14 +39,44 @@ export default function LocationDetailsComponent({
   const [section, setSection] = useState(initialData.section || "");
   const [spot, setSpot] = useState(initialData.spot || "");
   const [comments, setComments] = useState(initialData.comments || "");
+  const [reminderEnabled, setReminderEnabled] = useState(false);
 
   const [showDetails, setShowDetails] = useState(
     mode === "edit" ? false : true,
   );
 
+  const [isTimerEnabled, setIsTimerEnabled] = useState(
+    initialData.timerEnabled ?? false,
+  );
+
+  useEffect(() => {
+    const checkReminderStatus = async () => {
+      try {
+        const reminder_enabled =
+          await AsyncStorage.getItem("@reminder_enabled");
+        setReminderEnabled(
+          reminder_enabled ? JSON.parse(reminder_enabled) : false,
+        );
+      } catch (error) {
+        console.error("Error reading reminder status:", error);
+        setReminderEnabled(false);
+      }
+    };
+
+    checkReminderStatus();
+  }, []);
+
   function handleSave() {
     if (!onSubmit) return;
-    onSubmit({ ...initialData, title, level, section, spot, comments });
+    onSubmit({
+      ...initialData,
+      title,
+      level,
+      section,
+      spot,
+      comments,
+      timerEnabled: isTimerEnabled,
+    });
   }
 
   function renderInput(
@@ -131,6 +164,34 @@ export default function LocationDetailsComponent({
           )}
         </>
       )}
+      {reminderEnabled &&
+        action === "parking" &&
+        mode !== "view" &&
+        mode !== "update" && (
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 12,
+              paddingVertical: 2,
+            }}
+          >
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+            >
+              <Text style={{ fontSize: 16 }}>🔔</Text>
+              <Text style={{ color: colors.text }}>Parking reminder</Text>
+            </View>
+
+            <Switch
+              value={isTimerEnabled}
+              onValueChange={setIsTimerEnabled}
+              trackColor={{ false: "#767577", true: colors.tab }}
+              thumbColor={isTimerEnabled ? "#f4f3f4" : "#f4f3f4"}
+            />
+          </View>
+        )}
       <Text style={{ marginBottom: 4 }}>Comments</Text>
       <TextInput
         placeholder="E.g. Opposite the blue column, beside motorcycle spaces"

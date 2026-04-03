@@ -672,7 +672,7 @@ export default function HistoryScreenComponent() {
       </ModalComponent>
 
       <LocationCardOptionsComponent
-        title={selectedItem?.title ?? "(No title)"}
+        item={selectedItem}
         visible={cardOptionsVisible}
         onClose={() => setCardOptionsVisible(false)}
         onShare={() =>
