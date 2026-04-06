@@ -31,7 +31,9 @@ export default function LocationCardOptionsComponent({
   const slideAnim = useRef(new Animated.Value(screenHeight)).current;
   const [isMounted, setIsMounted] = useState(false);
 
-  const shouldShowActiveTimer = (item as CardItem)?.type === "parking";
+  const shouldShowActiveTimer =
+    (item as CardItem)?.isActive !== null &&
+    (item as CardItem)?.type === "parking";
 
   const scheduler = useMemo<Scheduler | null>(() => {
     if ((item as CardItem) === null) return null;
@@ -58,9 +60,7 @@ export default function LocationCardOptionsComponent({
   const timer = useTimer({ database, scheduler });
 
   const hasActiveTimer = Boolean(
-    (item as CardItem)?.isActive !== null &&
-    (scheduler?.isActive ?? false) &&
-    !timer.isExpired,
+    (scheduler?.isActive ?? false) && !timer.isExpired,
   );
 
   useEffect(() => {
@@ -168,37 +168,99 @@ export default function LocationCardOptionsComponent({
           </TouchableOpacity>
 
           {/* REMINDER */}
-          {shouldShowActiveTimer && hasActiveTimer && (
+          {shouldShowActiveTimer && (
             <>
-              <Text style={[styles.sectionTitle, { marginTop: 12 }]}>
-                Reminder
-              </Text>
+              <View style={styles.reminderHeader}>
+                <Text style={[styles.sectionTitle, { marginTop: 12 }]}>
+                  Reminder
+                </Text>
+
+                <View style={styles.timerInline}>
+                  <Text
+                    style={[
+                      styles.timerTextInline,
+                      timer.isExpired && styles.expiredTimer,
+                    ]}
+                  >
+                    ⏱️ {timer.formattedTime}
+                  </Text>
+                  {timer.isExpired ? (
+                    <Text style={styles.expiredTextInline}>(Expired)</Text>
+                  ) : (
+                    <Text style={styles.remainingTextInline}>(remaining)</Text>
+                  )}
+                </View>
+              </View>
 
               <TouchableOpacity
-                style={styles.item}
-                onPress={() => {
+                style={[
+                  styles.item,
+                  !hasActiveTimer && styles.disabledItem, // Добави стил за disabled
+                ]}
+                onPress={(event) => {
+                  event.stopPropagation();
+                  if (!hasActiveTimer) return;
                   console.log("Extend by 1 hour !!!");
                 }}
+                activeOpacity={!hasActiveTimer ? 1 : 0.2}
               >
-                <Text style={styles.emoji}>➕</Text>
+                <Text
+                  style={[styles.emoji, !hasActiveTimer && styles.disabledText]}
+                >
+                  ➕
+                </Text>
                 <View>
-                  <Text style={styles.itemText}>Extend by 1 hour</Text>
-                  <Text style={styles.itemSubText}>
+                  <Text
+                    style={[
+                      styles.itemText,
+                      !hasActiveTimer && styles.disabledText,
+                    ]}
+                  >
+                    Extend by 1 hour
+                  </Text>
+                  <Text
+                    style={[
+                      styles.itemSubText,
+                      !hasActiveTimer && styles.disabledText,
+                    ]}
+                  >
                     Add more time to your parking
                   </Text>
                 </View>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={styles.item}
-                onPress={() => {
+                style={[
+                  styles.item,
+                  !hasActiveTimer && styles.disabledItem, // Добави стил за disabled
+                ]}
+                onPress={(event) => {
+                  event.stopPropagation();
+                  if (!hasActiveTimer) return;
                   console.log("Stop timer !!!");
                 }}
+                activeOpacity={!hasActiveTimer ? 1 : 0.2}
               >
-                <Text style={styles.emoji}>🛑</Text>
+                <Text
+                  style={[styles.emoji, !hasActiveTimer && styles.disabledText]}
+                >
+                  🛑
+                </Text>
                 <View>
-                  <Text style={styles.itemText}>Stop timer</Text>
-                  <Text style={styles.itemSubText}>
+                  <Text
+                    style={[
+                      styles.itemText,
+                      !hasActiveTimer && styles.disabledText,
+                    ]}
+                  >
+                    Stop timer
+                  </Text>
+                  <Text
+                    style={[
+                      styles.itemSubText,
+                      !hasActiveTimer && styles.disabledText,
+                    ]}
+                  >
                     Disable timer and notifications
                   </Text>
                 </View>
@@ -287,4 +349,37 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   itemSubText: { fontSize: 12, color: colors.muted, marginLeft: 10 },
+  reminderHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  timerInline: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  timerTextInline: {
+    fontSize: 13,
+    color: colors.primary,
+    fontWeight: "600",
+  },
+  expiredTimer: {
+    color: "#dc2626",
+  },
+  expiredTextInline: {
+    fontSize: 11,
+    color: "#dc2626",
+    marginLeft: 4,
+  },
+  remainingTextInline: {
+    fontSize: 11,
+    color: colors.muted,
+    marginLeft: 4,
+  },
+  disabledItem: {
+    opacity: 0.5,
+  },
+  disabledText: {
+    color: colors.muted || "#999",
+  },
 });
