@@ -26,6 +26,7 @@ export default function LocationCardOptionsComponent({
   onUpdateDetails,
   onCopyCoordinates,
   onCopyAddress,
+  onAdjustParkingDuration,
 }: any) {
   const database = useSQLiteContext();
   const slideAnim = useRef(new Animated.Value(screenHeight)).current;
@@ -200,14 +201,14 @@ export default function LocationCardOptionsComponent({
                 onPress={(event) => {
                   event.stopPropagation();
                   if (!hasActiveTimer) return;
-                  console.log("Extend by 1 hour !!!");
+                  onAdjustParkingDuration();
                 }}
                 activeOpacity={!hasActiveTimer ? 1 : 0.2}
               >
                 <Text
                   style={[styles.emoji, !hasActiveTimer && styles.disabledText]}
                 >
-                  ➕
+                  🔀
                 </Text>
                 <View>
                   <Text
@@ -216,7 +217,8 @@ export default function LocationCardOptionsComponent({
                       !hasActiveTimer && styles.disabledText,
                     ]}
                   >
-                    Extend by 1 hour
+                    {/* Adjust parking time */}
+                    Parking duration
                   </Text>
                   <Text
                     style={[
@@ -224,44 +226,7 @@ export default function LocationCardOptionsComponent({
                       !hasActiveTimer && styles.disabledText,
                     ]}
                   >
-                    Add more time to your parking
-                  </Text>
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.item,
-                  !hasActiveTimer && styles.disabledItem, // Добави стил за disabled
-                ]}
-                onPress={(event) => {
-                  event.stopPropagation();
-                  if (!hasActiveTimer) return;
-                  console.log("Stop timer !!!");
-                }}
-                activeOpacity={!hasActiveTimer ? 1 : 0.2}
-              >
-                <Text
-                  style={[styles.emoji, !hasActiveTimer && styles.disabledText]}
-                >
-                  🛑
-                </Text>
-                <View>
-                  <Text
-                    style={[
-                      styles.itemText,
-                      !hasActiveTimer && styles.disabledText,
-                    ]}
-                  >
-                    Stop timer
-                  </Text>
-                  <Text
-                    style={[
-                      styles.itemSubText,
-                      !hasActiveTimer && styles.disabledText,
-                    ]}
-                  >
-                    Disable timer and notifications
+                    Choose a different parking duration
                   </Text>
                 </View>
               </TouchableOpacity>

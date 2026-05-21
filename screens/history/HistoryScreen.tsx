@@ -39,7 +39,10 @@ import { formatAddress } from "../../utils/address";
 import {
   cancelSchedulerAsync,
   hasSchedulerAsync,
+  rescheduleReminderAsync,
 } from "../../services/scheduler-service";
+import AdjustParkTimeComponent from "../../components/modal/AdjustParkTimeComponent";
+import { REMINDER_CONFIG } from "../../config/reminder.config";
 
 export default function HistoryScreenComponent() {
   const database = useSQLiteContext();
@@ -53,6 +56,7 @@ export default function HistoryScreenComponent() {
   const [detailsMode, setDetailsMode] = useState<"edit" | "view" | "update">(
     "view",
   );
+  const [parkTimeMode, setParkTimeMode] = useState<"adjust">();
   const [selectedItem, setSelectedItem] = useState<CardItem | null>(null);
   const [loadingMessage, setLoadingMessage] =
     useState<string>("Loading history…");
@@ -437,6 +441,85 @@ export default function HistoryScreenComponent() {
     })();
   };
 
+  const handleUpdateReminder = async (minutes: number) => {
+    console.log("Selected time in minutes:", minutes);
+    setModalVisible(false);
+    setLoading(true);
+    setLoadingMessage("Updating reminder...");
+
+    try {
+      let hasActiveReminder = false;
+
+      await hasSchedulerAsync({
+        locationId: selectedItem!.id,
+        onSuccess: (hasActive) => {
+          hasActiveReminder = hasActive;
+        },
+        onError: (message) => {
+          console.error("❌ Failed to check active reminder:", message);
+        },
+      });
+
+      if (!hasActiveReminder) {
+        console.log(
+          `No active reminder found for location ${selectedItem!.id}`,
+        );
+        return;
+      }
+
+      // Cancel native reminder
+      await cancelSchedulerAsync({
+        locationId: selectedItem!.id,
+        onSuccess: () => console.log("✅ Old reminder cancelled"),
+        onError: (message) => console.error("❌ Failed to cancel:", message),
+      });
+
+      // Update DB + schedule new native reminder
+      const scheduled = await rescheduleReminderAsync({
+        database,
+        locationId: selectedItem!.id,
+        title: selectedItem!.title ?? "Parking reminder",
+        durationMinutes: minutes,
+        notifyBeforeMinutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
+      });
+
+      if (scheduled) {
+        const now = Date.now();
+        const updatedFields = {
+          startTime: now,
+          durationMinutes: minutes,
+          endTime: now + minutes * 60 * 1000,
+          notifyBeforeMinutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
+        };
+
+        setLocations((prev) =>
+          prev.map((item) =>
+            item.id === selectedItem!.id ? { ...item, ...updatedFields } : item,
+          ),
+        );
+
+        setSelectedItem((prev) =>
+          prev ? { ...prev, ...updatedFields } : prev,
+        );
+
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: "Parking reminder updated successfully.",
+        });
+      }
+    } catch (error) {
+      console.error("❌ handleUpdateReminder error:", error);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to update the reminder.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredLocations =
     selectedTab === "all"
       ? locations
@@ -653,22 +736,33 @@ export default function HistoryScreenComponent() {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
       >
-        <LocationDetailsComponent
-          mode={detailsMode}
-          action={selectedItem?.type}
-          initialData={{
-            title: selectedItem?.title ? selectedItem?.title?.trim() : "",
-            level: selectedItem?.level ? selectedItem?.level?.trim() : "",
-            section: selectedItem?.section ? selectedItem?.section?.trim() : "",
-            spot: selectedItem?.spot ? selectedItem?.spot?.trim() : "",
-            comments: selectedItem?.comments
-              ? selectedItem?.comments?.trim()
-              : "",
-          }}
-          onSubmit={(data) => {
-            handleUpdateLocation(data);
-          }}
-        />
+        {parkTimeMode === "adjust" ? (
+          <AdjustParkTimeComponent
+            onSubmit={(minutes) => {
+              console.log(selectedItem);
+              handleUpdateReminder(minutes);
+            }}
+          />
+        ) : (
+          <LocationDetailsComponent
+            mode={detailsMode}
+            action={selectedItem?.type}
+            initialData={{
+              title: selectedItem?.title ? selectedItem?.title?.trim() : "",
+              level: selectedItem?.level ? selectedItem?.level?.trim() : "",
+              section: selectedItem?.section
+                ? selectedItem?.section?.trim()
+                : "",
+              spot: selectedItem?.spot ? selectedItem?.spot?.trim() : "",
+              comments: selectedItem?.comments
+                ? selectedItem?.comments?.trim()
+                : "",
+            }}
+            onSubmit={(data) => {
+              handleUpdateLocation(data);
+            }}
+          />
+        )}
       </ModalComponent>
 
       <LocationCardOptionsComponent
@@ -684,15 +778,21 @@ export default function HistoryScreenComponent() {
         onDelete={() => deleteLocation(selectedItem?.id)}
         onNavigate={() => openInMaps(selectedItem)}
         onViewDetails={() => {
+          setParkTimeMode(undefined);
           setDetailsMode("view");
           setModalVisible(true);
         }}
         onUpdateDetails={() => {
+          setParkTimeMode(undefined);
           setDetailsMode("update");
           setModalVisible(true);
         }}
         onCopyCoordinates={() => onCopyCoordinates(selectedItem)}
         onCopyAddress={() => onCopyAddress(selectedItem)}
+        onAdjustParkingDuration={() => {
+          setParkTimeMode("adjust");
+          setModalVisible(true);
+        }}
       />
 
       {loading && <LoadingComponent message={loadingMessage} />}

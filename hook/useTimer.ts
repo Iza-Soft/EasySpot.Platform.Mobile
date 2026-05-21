@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { updateSchedulerAsync } from "../services/scheduler-service";
+import { deactivateSchedulerAsync } from "../services/scheduler-service";
 import { TimerProps } from "../types/props";
 
 interface TimerState {
@@ -19,7 +19,7 @@ export const useTimer = ({ database, scheduler }: TimerProps) => {
     isWarning: false,
   });
 
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const hasNotifiedExpireRef = useRef<boolean>(false);
 
   const formatTime = (seconds: number): string => {
@@ -34,7 +34,7 @@ export const useTimer = ({ database, scheduler }: TimerProps) => {
   };
 
   const deactivateScheduler = async (schedulerId: number) => {
-    await updateSchedulerAsync({
+    await deactivateSchedulerAsync({
       database,
       id: schedulerId, // ID на scheduler-а
       onSuccess: () => {

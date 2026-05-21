@@ -180,12 +180,23 @@ export const saveSchedulerDB = async (
   }
 };
 
-export const updateSchedulerDB = async (
+export const deactivateSchedulerDB = async (
   db: SQLiteDatabase,
   params: any[] = [],
 ) => {
   try {
-    await db.runAsync(SQL.UPDATE_SCHEDULER, params);
+    await db.runAsync(SQL.DEACTIVATE_SCHEDULER, params);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const reactivateSchedulerDB = async (
+  db: SQLiteDatabase,
+  params: any[],
+) => {
+  try {
+    await db.runAsync(SQL.REACTIVATE_SCHEDULER, params);
   } catch (error) {
     throw error;
   }

@@ -4,7 +4,11 @@ import {
   SetupSchedulerProps,
   UpdateSchedulerProps,
 } from "../types/props";
-import { saveSchedulerDB, updateSchedulerDB } from "./db-service";
+import {
+  saveSchedulerDB,
+  deactivateSchedulerDB,
+  reactivateSchedulerDB,
+} from "./db-service";
 import ParkingNativeService from "../native/ParkingModule";
 
 export async function saveSchedulerAsync({
@@ -151,18 +155,52 @@ export const hasSchedulerAsync = async ({
   }
 };
 
-export async function updateSchedulerAsync({
+export async function deactivateSchedulerAsync({
   database,
   id,
   onSuccess,
   onError,
 }: UpdateSchedulerProps) {
   try {
-    await updateSchedulerDB(database, [Date.now(), id]);
+    await deactivateSchedulerDB(database, [Date.now(), id]);
 
     onSuccess?.();
   } catch (error) {
-    console.error("updateSchedulerAsync error:", error);
-    onError?.(`Failed to update scheduler.`);
+    console.error("deactivateSchedulerAsync error:", error);
+    onError?.(`Failed to deactivate scheduler.`);
   }
 }
+
+export const rescheduleReminderAsync = async ({
+  database,
+  locationId,
+  title,
+  durationMinutes,
+  notifyBeforeMinutes,
+}: SetupSchedulerProps): Promise<boolean> => {
+  try {
+    const now = Date.now();
+    const endTime = now + durationMinutes * 60 * 1000;
+
+    await reactivateSchedulerDB(database, [
+      now,
+      durationMinutes,
+      endTime,
+      notifyBeforeMinutes,
+      now,
+      locationId,
+    ]);
+
+    const scheduled = await ParkingNativeService.scheduleReminder(
+      locationId,
+      title,
+      durationMinutes,
+      notifyBeforeMinutes,
+    );
+
+    return scheduled;
+  } catch (error) {
+    console.error("❌ rescheduleReminderAsync error:", error);
+    throw error;
+  }
+};

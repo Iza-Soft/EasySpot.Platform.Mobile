@@ -29,7 +29,8 @@ export const SQL = {
         timestamp TEXT NOT NULL
       );`,
   INSERT_SCHEDULER: `INSERT INTO schedulers (locationId, startTime, durationMinutes, endTime, notifyBeforeMinutes, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-  UPDATE_SCHEDULER: `UPDATE schedulers SET isActive = 0, updatedAt = ? WHERE id = ?`,
+  DEACTIVATE_SCHEDULER: `UPDATE schedulers SET isActive = 0, updatedAt = ? WHERE id = ?`,
+  REACTIVATE_SCHEDULER: `UPDATE schedulers SET startTime = ?, durationMinutes = ?, endTime = ?, notifyBeforeMinutes = ?, updatedAt = ? WHERE locationId = ?`,
   CREATE_SCHEDULER_TABLE: `CREATE TABLE IF NOT EXISTS schedulers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         locationId INTEGER NOT NULL,
