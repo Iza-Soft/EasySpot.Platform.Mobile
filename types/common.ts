@@ -14,9 +14,18 @@ export type CardItem = {
   spot?: string;
   comments?: string;
   timestamp: string;
+  schedulerId: number;
+  locationId: number;
+  startTime: number;
+  durationMinutes: number;
+  endTime: number;
+  notifyBeforeMinutes: number;
+  notificationSent?: boolean;
+  isActive?: boolean;
 };
 
 export type LocationData = {
+  id: number;
   latitude: number;
   longitude: number;
 };
@@ -27,4 +36,18 @@ export type AddressParts = {
   region?: string;
   postalCode?: string;
   country?: string;
+};
+
+export type SchedulerData = {
+  locationId: number;
+  startTime: number;
+  durationMinutes: number;
+  endTime: number;
+  notifyBeforeMinutes: number;
+  notificationSent?: boolean;
+  isActive?: boolean;
+};
+
+export type Scheduler = SchedulerData & {
+  id: number;
 };

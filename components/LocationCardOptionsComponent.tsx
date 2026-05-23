@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -10,10 +10,13 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../themes/main";
+import { CardItem, Scheduler } from "../types/common";
+import { useSQLiteContext } from "expo-sqlite";
+import { useTimer } from "../hook/useTimer";
 
 const screenHeight = Dimensions.get("window").height;
 export default function LocationCardOptionsComponent({
-  title,
+  item,
   visible,
   onClose,
   onShare,
@@ -23,9 +26,43 @@ export default function LocationCardOptionsComponent({
   onUpdateDetails,
   onCopyCoordinates,
   onCopyAddress,
+  onAdjustParkingDuration,
 }: any) {
-  const slideAnim = useRef(new Animated.Value(screenHeight)).current; // starts off-screen
-  const [isMounted, setIsMounted] = useState(false); // ✅ Track mounting state
+  const database = useSQLiteContext();
+  const slideAnim = useRef(new Animated.Value(screenHeight)).current;
+  const [isMounted, setIsMounted] = useState(false);
+
+  const shouldShowActiveTimer =
+    (item as CardItem)?.isActive !== null &&
+    (item as CardItem)?.type === "parking";
+
+  const scheduler = useMemo<Scheduler | null>(() => {
+    if ((item as CardItem) === null) return null;
+
+    if (
+      shouldShowActiveTimer &&
+      (item as CardItem).schedulerId !== undefined &&
+      (item as CardItem).schedulerId !== null
+    ) {
+      return {
+        id: (item as CardItem).schedulerId,
+        locationId: (item as CardItem).locationId,
+        startTime: (item as CardItem).startTime,
+        durationMinutes: (item as CardItem).durationMinutes,
+        endTime: (item as CardItem).endTime,
+        notifyBeforeMinutes: (item as CardItem).notifyBeforeMinutes,
+        notificationSent: (item as CardItem).notificationSent,
+        isActive: (item as CardItem).isActive,
+      };
+    }
+    return null;
+  }, [item as CardItem]);
+
+  const timer = useTimer({ database, scheduler });
+
+  const hasActiveTimer = Boolean(
+    (scheduler?.isActive ?? false) && !timer.isExpired,
+  );
 
   useEffect(() => {
     if (visible) {
@@ -63,7 +100,9 @@ export default function LocationCardOptionsComponent({
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>{title?.trim() || "(No title)"}</Text>
+          <Text style={styles.headerText}>
+            {(item as CardItem).title?.trim() || "(No title)"}
+          </Text>
           <TouchableOpacity onPress={onClose}>
             <Ionicons name="close" size={28} color={colors.tab} />
           </TouchableOpacity>
@@ -128,6 +167,71 @@ export default function LocationCardOptionsComponent({
               </Text>
             </View>
           </TouchableOpacity>
+
+          {/* REMINDER */}
+          {shouldShowActiveTimer && (
+            <>
+              <View style={styles.reminderHeader}>
+                <Text style={[styles.sectionTitle, { marginTop: 12 }]}>
+                  Reminder
+                </Text>
+
+                <View style={styles.timerInline}>
+                  <Text
+                    style={[
+                      styles.timerTextInline,
+                      timer.isExpired && styles.expiredTimer,
+                    ]}
+                  >
+                    ⏱️ {timer.formattedTime}
+                  </Text>
+                  {timer.isExpired ? (
+                    <Text style={styles.expiredTextInline}>(Expired)</Text>
+                  ) : (
+                    <Text style={styles.remainingTextInline}>(remaining)</Text>
+                  )}
+                </View>
+              </View>
+
+              <TouchableOpacity
+                style={[
+                  styles.item,
+                  !hasActiveTimer && styles.disabledItem, // Добави стил за disabled
+                ]}
+                onPress={(event) => {
+                  event.stopPropagation();
+                  if (!hasActiveTimer) return;
+                  onAdjustParkingDuration();
+                }}
+                activeOpacity={!hasActiveTimer ? 1 : 0.2}
+              >
+                <Text
+                  style={[styles.emoji, !hasActiveTimer && styles.disabledText]}
+                >
+                  🔀
+                </Text>
+                <View>
+                  <Text
+                    style={[
+                      styles.itemText,
+                      !hasActiveTimer && styles.disabledText,
+                    ]}
+                  >
+                    {/* Adjust parking time */}
+                    Parking duration
+                  </Text>
+                  <Text
+                    style={[
+                      styles.itemSubText,
+                      !hasActiveTimer && styles.disabledText,
+                    ]}
+                  >
+                    Choose a different parking duration
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </>
+          )}
 
           {/* DANGER ZONE */}
           <Text
@@ -210,4 +314,37 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   itemSubText: { fontSize: 12, color: colors.muted, marginLeft: 10 },
+  reminderHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  timerInline: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  timerTextInline: {
+    fontSize: 13,
+    color: colors.primary,
+    fontWeight: "600",
+  },
+  expiredTimer: {
+    color: "#dc2626",
+  },
+  expiredTextInline: {
+    fontSize: 11,
+    color: "#dc2626",
+    marginLeft: 4,
+  },
+  remainingTextInline: {
+    fontSize: 11,
+    color: colors.muted,
+    marginLeft: 4,
+  },
+  disabledItem: {
+    opacity: 0.5,
+  },
+  disabledText: {
+    color: colors.muted || "#999",
+  },
 });

@@ -9,7 +9,7 @@ import {
 } from "../../services/location-service";
 import { useSQLiteContext } from "expo-sqlite";
 import LoadingComponent from "../../components/LoadingComponent";
-import { useCallback, useState, useRef } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import {
   openMapsAsync,
   ShareLocationAsync,
@@ -21,6 +21,12 @@ import Toast from "react-native-toast-message";
 import ModalComponent from "../../components/modal/ModalComponent";
 import LocationDetailsComponent from "../../components/modal/LocationDetailsComponent";
 import { useFocusEffect } from "@react-navigation/native";
+import BatteryOptimizationBannerComponent from "../../components/BatteryOptimizationBannerComponent";
+import BatteryOptimizationScreenComponent from "../battery/BatteryOptimizationScreen";
+import { useBatteryBannerLogic } from "../../hook/useBatteryBannerLogic";
+import ParkingNativeService from "../../native/ParkingModule";
+import { setupSchedulerAsync } from "../../services/scheduler-service";
+import { REMINDER_CONFIG } from "../../config/reminder.config";
 
 export type LocationDetails = {
   id?: string;
@@ -29,12 +35,13 @@ export type LocationDetails = {
   section?: string;
   spot?: string;
   comments?: string;
+  timerEnabled?: boolean;
 };
 
 export default function MainScreenComponent({ navigation }: any) {
   const database = useSQLiteContext();
   const [loading, setLoading] = useState(false);
-
+  const [batteryModalVisible, setBatteryModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [action, setAction] = useState<undefined | string>();
 
@@ -60,6 +67,13 @@ export default function MainScreenComponent({ navigation }: any) {
     }, [database]),
   );
 
+  useEffect(() => {
+    const initNative = async () => {
+      await ParkingNativeService.initialize();
+    };
+    initNative();
+  }, []);
+
   const slides = SLIDE_ITEMS.map((item) =>
     item.action === "navigate"
       ? { ...item, disabled: !hasSavedLocation }
@@ -81,9 +95,26 @@ export default function MainScreenComponent({ navigation }: any) {
         section: data.section?.trim(),
         spot: data.spot?.trim(),
         comments: data.comments?.trim(),
-        onSuccess: () => {
+        onSuccess: async () => {
           setLoading(false);
           setHasSavedLocation(true);
+
+          let scheduled = false;
+
+          if (action === "parking" && data.timerEnabled) {
+            scheduled = await handleParkingTimer(data);
+          }
+
+          Toast.show({
+            type: "success",
+            text1: "Success",
+            text2:
+              action === "favorites"
+                ? "Favorite location saved successfully."
+                : scheduled
+                  ? `You'll be notified ${REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES} minutes before your parking expires.`
+                  : "Parking location saved successfully.",
+          });
 
           setTimeout(() => {
             if (navigateIndex >= 0) {
@@ -94,15 +125,6 @@ export default function MainScreenComponent({ navigation }: any) {
               });
             }
           }, 400);
-
-          Toast.show({
-            type: "success",
-            text1: "Success",
-            text2:
-              action === "favorites"
-                ? "Favorite location saved successfully."
-                : "Parking location saved successfully.",
-          });
         },
         onError: (message) => {
           setLoading(false);
@@ -115,6 +137,44 @@ export default function MainScreenComponent({ navigation }: any) {
         },
       });
     })();
+  };
+
+  const handleParkingTimer = async (
+    data: LocationDetails,
+  ): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+      getLastSavedLocationAsync({
+        database,
+        onSuccess: async (location) => {
+          if (location) {
+            try {
+              const scheduled = await setupSchedulerAsync({
+                database: database,
+                locationId: (location as LocationData).id,
+                title: data.title?.trim() || "Parking spot",
+                durationMinutes: REMINDER_CONFIG.DEFAULT_DURATION_MINUTES,
+                notifyBeforeMinutes:
+                  REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
+              });
+              resolve(scheduled);
+            } catch (error) {
+              reject(error);
+            }
+          } else {
+            resolve(false);
+          }
+        },
+        onError: (message) => {
+          console.error("Failed to get last location:", message);
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: "Failed to retrieve the saved location.",
+          });
+          reject(new Error(message));
+        },
+      });
+    });
   };
 
   const onPress = (action: string) => {
@@ -191,8 +251,27 @@ export default function MainScreenComponent({ navigation }: any) {
     }
   };
 
+  const {
+    shouldShowBanner,
+    deviceInfo,
+    handleDismiss,
+    handleInstructionsOpened,
+  } = useBatteryBannerLogic();
+
+  const handleInstructionsPress = () => {
+    handleInstructionsOpened();
+    setBatteryModalVisible(true);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      {shouldShowBanner && deviceInfo && (
+        <BatteryOptimizationBannerComponent
+          deviceInfo={deviceInfo}
+          onInstructionsPress={handleInstructionsPress}
+          onDismiss={handleDismiss}
+        />
+      )}
       <FlatList
         ref={listRef}
         data={slides}
@@ -234,6 +313,13 @@ export default function MainScreenComponent({ navigation }: any) {
             setModalVisible(false);
           }}
         />
+      </ModalComponent>
+
+      <ModalComponent
+        visible={batteryModalVisible}
+        onClose={() => setBatteryModalVisible(false)}
+      >
+        <BatteryOptimizationScreenComponent />
       </ModalComponent>
     </SafeAreaView>
   );

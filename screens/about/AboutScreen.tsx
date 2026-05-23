@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   footer: {
-    marginTop: 40,
+    marginTop: 20,
     fontSize: 12,
     textAlign: "center",
     color: colors.muted,

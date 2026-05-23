@@ -11,7 +11,13 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourcompany.easyspot",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "EasySpot needs your location to save your parking spot.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "EasySpot needs your location to save your parking spot.",
+        "NSUserTrackingUsageDescription": "This identifier will be used to deliver personalized ads to you."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -27,7 +33,8 @@
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.RECEIVE_BOOT_COMPLETED",
         "android.permission.WAKE_LOCK",
-        "android.permission.FOREGROUND_SERVICE"
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.POST_NOTIFICATIONS"
       ]
     },
     "web": {

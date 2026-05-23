@@ -21,15 +21,17 @@ import TermsOfServiceScreenComponent from "../screens/legal/TermsOfServiceScreen
 import AboutScreenComponent from "../screens/about/AboutScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
+import BatteryOptimizationScreenComponent from "../screens/battery/BatteryOptimizationScreen";
+import { useBatteryBannerLogic } from "../hook/useBatteryBannerLogic";
 
 const Stack = createNativeStackNavigator();
 
 const NavigatorComponent = ({ navigation }: any) => {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [detailsMode, setDetailsMode] = useState<"privacy" | "terms" | "about">(
-    "privacy",
-  );
+  const [detailsMode, setDetailsMode] = useState<
+    "privacy" | "terms" | "about" | "battery"
+  >("privacy");
 
   const [policyRequired, setPolicyRequired] = useState(false);
   const [isPrivacyChecked, setIsPrivacyChecked] = useState(false);
@@ -80,6 +82,8 @@ const NavigatorComponent = ({ navigation }: any) => {
       <Ionicons name="menu" size={28} color={colors.tab} />
     </TouchableOpacity>
   );
+
+  const { handleInstructionsOpened } = useBatteryBannerLogic();
 
   return (
     <NavigationContainer>
@@ -172,6 +176,11 @@ const NavigatorComponent = ({ navigation }: any) => {
           setModalVisible(true);
           setDetailsMode("about");
         }}
+        onBatteryOptimizationView={async () => {
+          setModalVisible(true);
+          setDetailsMode("battery");
+          handleInstructionsOpened();
+        }}
       />
 
       <ModalComponent
@@ -188,6 +197,7 @@ const NavigatorComponent = ({ navigation }: any) => {
         )}
         {detailsMode === "terms" && <TermsOfServiceScreenComponent />}
         {detailsMode === "about" && <AboutScreenComponent />}
+        {detailsMode === "battery" && <BatteryOptimizationScreenComponent />}
       </ModalComponent>
     </NavigationContainer>
   );

@@ -1,11 +1,15 @@
 export const SQL = {
-  DELETE_LOCATION: `DELETE FROM locations WHERE id = ?`,
-  DELETE_ALL_LOCATION: `DELETE FROM locations WHERE id IN ?`,
-  SELECT_ALL_LOCATION: `SELECT * FROM locations ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
-  SELECT_SEARCH_LOCATION: `SELECT * FROM locations WHERE title LIKE ? OR street LIKE ? OR city LIKE ? OR region LIKE ? OR country LIKE ? ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
+  SELECT_ALL_LOCATION: `SELECT locations.*, schedulers.id as schedulerId, schedulers.locationId, schedulers.startTime, schedulers.durationMinutes, schedulers.endTime, schedulers.notifyBeforeMinutes, schedulers.notificationSent, schedulers.isActive 
+      FROM locations LEFT JOIN schedulers ON locations.id = schedulers.locationId 
+      ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
+  SELECT_SEARCH_LOCATION: `SELECT locations.*, schedulers.id as schedulerId, chedulers.locationId, schedulers.startTime, schedulers.durationMinutes, schedulers.endTime, schedulers.notifyBeforeMinutes, schedulers.notificationSent, schedulers.isActive 
+      FROM locations LEFT JOIN schedulers ON locations.id = schedulers.locationId 
+      WHERE title LIKE ? OR street LIKE ? OR city LIKE ? OR region LIKE ? OR country LIKE ? ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
   SELECT_LAST_LOCATION: `SELECT * FROM locations ORDER BY timestamp DESC LIMIT 1`,
   INSERT_LOCATION: `INSERT INTO locations (latitude, longitude, street, city, region, postalCode, country, type, title, level, section, spot, comments, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   UPDATE_LOCATION: `UPDATE Locations SET title = ?, comments = ?, spot = ?, level = ?, section = ? WHERE id = ?`,
+  DELETE_LOCATION: `DELETE FROM locations WHERE id = ?`,
+  DELETE_ALL_LOCATION: `DELETE FROM locations WHERE id IN ?`,
   DROP_LOCATION_TABLE: `DROP TABLE IF EXISTS locations`,
   CREATE_LOCATION_TABLE: `CREATE TABLE IF NOT EXISTS locations (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,5 +27,21 @@ export const SQL = {
         spot TEXT,
         comments TEXT,
         timestamp TEXT NOT NULL
+      );`,
+  INSERT_SCHEDULER: `INSERT INTO schedulers (locationId, startTime, durationMinutes, endTime, notifyBeforeMinutes, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+  DEACTIVATE_SCHEDULER: `UPDATE schedulers SET isActive = 0, updatedAt = ? WHERE id = ?`,
+  REACTIVATE_SCHEDULER: `UPDATE schedulers SET startTime = ?, durationMinutes = ?, endTime = ?, notifyBeforeMinutes = ?, updatedAt = ? WHERE locationId = ?`,
+  CREATE_SCHEDULER_TABLE: `CREATE TABLE IF NOT EXISTS schedulers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        locationId INTEGER NOT NULL,
+        startTime INTEGER NOT NULL,
+        durationMinutes INTEGER NOT NULL,
+        endTime INTEGER NOT NULL,
+        notifyBeforeMinutes INTEGER NOT NULL,
+        notificationSent INTEGER DEFAULT 0 CHECK (notificationSent IN (0, 1)),
+        isActive INTEGER DEFAULT 1 CHECK (isActive IN (0, 1)),
+        createdAt INTEGER NOT NULL,
+        updatedAt INTEGER NOT NULL,
+        FOREIGN KEY (locationId) REFERENCES locations(id) ON DELETE CASCADE
       );`,
 };

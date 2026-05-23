@@ -36,6 +36,13 @@ import LocationDetailsComponent, {
 } from "../../components/modal/LocationDetailsComponent";
 import * as Clipboard from "expo-clipboard";
 import { formatAddress } from "../../utils/address";
+import {
+  cancelSchedulerAsync,
+  hasSchedulerAsync,
+  rescheduleReminderAsync,
+} from "../../services/scheduler-service";
+import AdjustParkTimeComponent from "../../components/modal/AdjustParkTimeComponent";
+import { REMINDER_CONFIG } from "../../config/reminder.config";
 
 export default function HistoryScreenComponent() {
   const database = useSQLiteContext();
@@ -47,8 +54,9 @@ export default function HistoryScreenComponent() {
   const [searchText, setSearchText] = useState<string | undefined>();
   const [modalVisible, setModalVisible] = useState(false);
   const [detailsMode, setDetailsMode] = useState<"edit" | "view" | "update">(
-    "view"
+    "view",
   );
+  const [parkTimeMode, setParkTimeMode] = useState<"adjust">();
   const [selectedItem, setSelectedItem] = useState<CardItem | null>(null);
   const [loadingMessage, setLoadingMessage] =
     useState<string>("Loading history…");
@@ -135,6 +143,15 @@ export default function HistoryScreenComponent() {
   };
 
   const deleteLocation = async (id: number | undefined) => {
+    if (!id) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Invalid location ID",
+      });
+      return;
+    }
+
     Alert.alert("Delete", "Are you sure you want to delete this location?", [
       { text: "Cancel", style: "cancel" },
       {
@@ -144,72 +161,195 @@ export default function HistoryScreenComponent() {
           setCardOptionsVisible(false);
           setLoadingMessage("Deleting location...");
           setLoading(true);
-          await deleteLocationAsync({
-            database,
-            id,
-            onSuccess: () => {
-              setLocations((prev) => prev.filter((l) => l.id !== id));
-              setLoading(false);
-              Toast.show({
-                type: "success",
-                text1: "Success",
-                text2: "Location deleted successfully.",
-              });
-            },
-            onError: (message) => {
-              console.error("❌ Failed to delete the location.:", message);
-              Toast.show({
-                type: "error",
-                text1: "Error",
-                text2: "Failed to delete the location.",
-              });
-              setLoading(false);
-            },
-          });
+
+          try {
+            // First, check if there is an active reminder
+            let hasActiveReminder = false;
+
+            await hasSchedulerAsync({
+              locationId: id,
+              onSuccess: (hasActive) => {
+                hasActiveReminder = hasActive;
+                console.log(`Location ${id} has active reminder:`, hasActive);
+              },
+              onError: (message) => {
+                console.error("Failed to check active reminder:", message);
+              },
+            });
+
+            await deleteLocationAsync({
+              database,
+              id,
+              onSuccess: async () => {
+                setLocations((prev) => prev.filter((l) => l.id !== id));
+
+                // Cancel a reminder only if there is an active one
+                if (hasActiveReminder) {
+                  try {
+                    await cancelSchedulerAsync({
+                      locationId: id,
+                      onSuccess: () => {
+                        console.log("Reminder cancelled successfully");
+                      },
+                      onError: (message) => {
+                        console.error("Error cancelling reminder:", message);
+                      },
+                    });
+                  } catch (reminderError) {
+                    console.error("Failed to cancel reminder:", reminderError);
+                  }
+                } else {
+                  console.log(
+                    `No active reminder found for location ${id}, skipping cancellation`,
+                  );
+                }
+
+                Toast.show({
+                  type: "success",
+                  text1: "Success",
+                  text2: "Location deleted successfully.",
+                });
+              },
+              onError: (message) => {
+                throw new Error(message);
+              },
+            });
+          } catch (error) {
+            console.error("❌ Failed to delete location:", error);
+            Toast.show({
+              type: "error",
+              text1: "Error",
+              text2: "Failed to delete the location.",
+            });
+          } finally {
+            setLoading(false);
+          }
         },
       },
     ]);
   };
 
   const deleteAllLocations = async () => {
-    Alert.alert("Delete", "Are you sure you want to delete all locations?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: async () => {
-          setCardOptionsVisible(false);
-          setLoadingMessage("Deleting locations...");
-          setLoading(true);
-          await deleteAllLocationAsync({
-            database,
-            selectedLocations,
-            onSuccess: () => {
-              setLocations((prev) =>
-                prev.filter((l) => !selectedLocations.includes(l.id))
+    if (selectedLocations.length === 0) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "No locations selected",
+      });
+      return;
+    }
+
+    Alert.alert(
+      "Delete",
+      "Are you sure you want to delete all selected locations?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            setCardOptionsVisible(false);
+            setLoadingMessage("Deleting locations...");
+            setLoading(true);
+
+            try {
+              // Parallel check of all reminders
+              const checkPromises = selectedLocations.map(
+                async (locationId) => {
+                  const hasActive = await new Promise<boolean>((resolve) => {
+                    hasSchedulerAsync({
+                      locationId,
+                      onSuccess: resolve,
+                      onError: () => resolve(false),
+                    });
+                  });
+                  return { locationId, hasActive };
+                },
               );
-              setSelectedLocations([]);
-              setIsMultiSelectMode(false);
-              setLoading(false);
-              Toast.show({
-                type: "success",
-                text1: "Success",
-                text2: "Locations deleted successfully.",
+
+              const reminderStatuses = await Promise.all(checkPromises);
+              const activeRemindersMap = new Map(
+                reminderStatuses.map(({ locationId, hasActive }) => [
+                  locationId,
+                  hasActive,
+                ]),
+              );
+
+              const activeLocations = reminderStatuses
+                .filter(({ hasActive }) => hasActive)
+                .map(({ locationId }) => locationId);
+
+              console.log(
+                `Locations with active reminders: ${activeLocations.length}`,
+              );
+
+              // Delete locations
+              await deleteAllLocationAsync({
+                database,
+                selectedLocations,
+                onSuccess: async () => {
+                  // Cancel reminders for active ones only
+                  if (activeLocations.length > 0) {
+                    const cancelPromises = activeLocations.map(
+                      async (locationId) => {
+                        try {
+                          await cancelSchedulerAsync({
+                            locationId,
+                            onSuccess: () => {
+                              console.log(
+                                `Reminder cancelled for location ${locationId}`,
+                              );
+                            },
+                            onError: (message) => {
+                              console.warn(
+                                `Failed to cancel reminder for location ${locationId}:`,
+                                message,
+                              );
+                            },
+                          });
+                        } catch (reminderError) {
+                          console.warn(
+                            `Error cancelling reminder for location ${locationId}:`,
+                            reminderError,
+                          );
+                        }
+                      },
+                    );
+
+                    await Promise.allSettled(cancelPromises);
+                  }
+
+                  setLocations((prev) =>
+                    prev.filter((l) => !selectedLocations.includes(l.id)),
+                  );
+                  setSelectedLocations([]);
+                  setIsMultiSelectMode(false);
+                  setLoading(false);
+
+                  Toast.show({
+                    type: "success",
+                    text1: "Success",
+                    text2: `${selectedLocations.length} location(s) deleted successfully.`,
+                  });
+                },
+                onError: (message) => {
+                  throw new Error(message);
+                },
               });
-            },
-            onError: (message) => {
-              console.error("❌ Failed to delete the location.:", message);
+            } catch (error) {
+              console.error("❌ Failed to delete locations:", error);
               Toast.show({
                 type: "error",
                 text1: "Error",
-                text2: "Failed to delete the location.",
+                text2: "Failed to delete the locations.",
               });
+            } finally {
               setLoading(false);
-            },
-          });
+            }
+          },
         },
-      },
-    ]);
+      ],
+    );
   };
 
   const shareLocation = async (coordinates?: {
@@ -263,8 +403,8 @@ export default function HistoryScreenComponent() {
                     spot: data.spot?.trim(),
                     comments: data.comments?.trim(),
                   }
-                : item
-            )
+                : item,
+            ),
           );
           setSelectedItem((prev) =>
             prev
@@ -276,7 +416,7 @@ export default function HistoryScreenComponent() {
                   spot: data.spot?.trim(),
                   comments: data.comments?.trim(),
                 }
-              : prev
+              : prev,
           );
           setLoading(false);
           Toast.show({
@@ -299,6 +439,85 @@ export default function HistoryScreenComponent() {
         },
       });
     })();
+  };
+
+  const handleUpdateReminder = async (minutes: number) => {
+    console.log("Selected time in minutes:", minutes);
+    setModalVisible(false);
+    setLoading(true);
+    setLoadingMessage("Updating reminder...");
+
+    try {
+      let hasActiveReminder = false;
+
+      await hasSchedulerAsync({
+        locationId: selectedItem!.id,
+        onSuccess: (hasActive) => {
+          hasActiveReminder = hasActive;
+        },
+        onError: (message) => {
+          console.error("❌ Failed to check active reminder:", message);
+        },
+      });
+
+      if (!hasActiveReminder) {
+        console.log(
+          `No active reminder found for location ${selectedItem!.id}`,
+        );
+        return;
+      }
+
+      // Cancel native reminder
+      await cancelSchedulerAsync({
+        locationId: selectedItem!.id,
+        onSuccess: () => console.log("✅ Old reminder cancelled"),
+        onError: (message) => console.error("❌ Failed to cancel:", message),
+      });
+
+      // Update DB + schedule new native reminder
+      const scheduled = await rescheduleReminderAsync({
+        database,
+        locationId: selectedItem!.id,
+        title: selectedItem!.title ?? "Parking reminder",
+        durationMinutes: minutes,
+        notifyBeforeMinutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
+      });
+
+      if (scheduled) {
+        const now = Date.now();
+        const updatedFields = {
+          startTime: now,
+          durationMinutes: minutes,
+          endTime: now + minutes * 60 * 1000,
+          notifyBeforeMinutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
+        };
+
+        setLocations((prev) =>
+          prev.map((item) =>
+            item.id === selectedItem!.id ? { ...item, ...updatedFields } : item,
+          ),
+        );
+
+        setSelectedItem((prev) =>
+          prev ? { ...prev, ...updatedFields } : prev,
+        );
+
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: "Parking reminder updated successfully.",
+        });
+      }
+    } catch (error) {
+      console.error("❌ handleUpdateReminder error:", error);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to update the reminder.",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const filteredLocations =
@@ -349,7 +568,7 @@ export default function HistoryScreenComponent() {
 
       // Check if any required fields are missing
       const missingFields = [street, city, region, postalCode, country].some(
-        (field) => !field || field.trim() === ""
+        (field) => !field || field.trim() === "",
       );
 
       const address = formatAddress({
@@ -391,7 +610,7 @@ export default function HistoryScreenComponent() {
 
       setSelectedAll(
         locations.length > 0 &&
-          locations.every((item) => next.includes(item.id))
+          locations.every((item) => next.includes(item.id)),
       );
 
       return next;
@@ -517,26 +736,37 @@ export default function HistoryScreenComponent() {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
       >
-        <LocationDetailsComponent
-          mode={detailsMode}
-          action={selectedItem?.type}
-          initialData={{
-            title: selectedItem?.title ? selectedItem?.title?.trim() : "",
-            level: selectedItem?.level ? selectedItem?.level?.trim() : "",
-            section: selectedItem?.section ? selectedItem?.section?.trim() : "",
-            spot: selectedItem?.spot ? selectedItem?.spot?.trim() : "",
-            comments: selectedItem?.comments
-              ? selectedItem?.comments?.trim()
-              : "",
-          }}
-          onSubmit={(data) => {
-            handleUpdateLocation(data);
-          }}
-        />
+        {parkTimeMode === "adjust" ? (
+          <AdjustParkTimeComponent
+            onSubmit={(minutes) => {
+              console.log(selectedItem);
+              handleUpdateReminder(minutes);
+            }}
+          />
+        ) : (
+          <LocationDetailsComponent
+            mode={detailsMode}
+            action={selectedItem?.type}
+            initialData={{
+              title: selectedItem?.title ? selectedItem?.title?.trim() : "",
+              level: selectedItem?.level ? selectedItem?.level?.trim() : "",
+              section: selectedItem?.section
+                ? selectedItem?.section?.trim()
+                : "",
+              spot: selectedItem?.spot ? selectedItem?.spot?.trim() : "",
+              comments: selectedItem?.comments
+                ? selectedItem?.comments?.trim()
+                : "",
+            }}
+            onSubmit={(data) => {
+              handleUpdateLocation(data);
+            }}
+          />
+        )}
       </ModalComponent>
 
       <LocationCardOptionsComponent
-        title={selectedItem?.title ?? "(No title)"}
+        item={selectedItem}
         visible={cardOptionsVisible}
         onClose={() => setCardOptionsVisible(false)}
         onShare={() =>
@@ -548,15 +778,21 @@ export default function HistoryScreenComponent() {
         onDelete={() => deleteLocation(selectedItem?.id)}
         onNavigate={() => openInMaps(selectedItem)}
         onViewDetails={() => {
+          setParkTimeMode(undefined);
           setDetailsMode("view");
           setModalVisible(true);
         }}
         onUpdateDetails={() => {
+          setParkTimeMode(undefined);
           setDetailsMode("update");
           setModalVisible(true);
         }}
         onCopyCoordinates={() => onCopyCoordinates(selectedItem)}
         onCopyAddress={() => onCopyAddress(selectedItem)}
+        onAdjustParkingDuration={() => {
+          setParkTimeMode("adjust");
+          setModalVisible(true);
+        }}
       />
 
       {loading && <LoadingComponent message={loadingMessage} />}

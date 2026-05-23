@@ -7,9 +7,13 @@ import {
   Animated,
   Dimensions,
   Pressable,
+  Switch,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../themes/main";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNotifications } from "../hook/useNotifications";
 
 const screenHeight = Dimensions.get("window").height;
 export default function SettingsComponent({
@@ -18,11 +22,35 @@ export default function SettingsComponent({
   onPrivacyView,
   onTermsView,
   onAboutView,
+  onBatteryOptimizationView,
 }: any) {
   const slideAnim = useRef(new Animated.Value(screenHeight)).current; // starts off-screen
   const [isMounted, setIsMounted] = useState(false); // ✅ Track mounting state
+  const [reminderEnabled, setReminderEnabled] = useState(false);
+  const { requestNotificationPermission, checkNotificationPermission } =
+    useNotifications();
+
+  const onReminderValueToggle = async (value: boolean) => {
+    if (value) {
+      const hasPermission = await checkNotificationPermission();
+      if (!hasPermission) {
+        value = await requestNotificationPermission(true);
+      }
+    }
+    await AsyncStorage.setItem("@reminder_enabled", JSON.stringify(value));
+    setReminderEnabled(value);
+  };
+
+  const loadSettings = async () => {
+    const reminder_enabled = await AsyncStorage.getItem("@reminder_enabled");
+    if (reminder_enabled) {
+      setReminderEnabled(JSON.parse(reminder_enabled));
+    }
+  };
 
   useEffect(() => {
+    loadSettings();
+
     if (visible) {
       setIsMounted(true); // ✅ Mount when visible becomes true
 
@@ -64,6 +92,27 @@ export default function SettingsComponent({
           </TouchableOpacity>
         </View>
 
+        {/* App Preferences */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>App Preferences</Text>
+
+          <View style={styles.itemWithSwitch}>
+            <View style={styles.itemLeft}>
+              <Text style={styles.emoji}>🔔</Text>
+              <Text style={styles.itemText}>Reminder</Text>
+            </View>
+            <Switch
+              value={reminderEnabled} // ← false по подразбиране
+              onValueChange={async (value) =>
+                await onReminderValueToggle(value)
+              }
+              trackColor={{ false: "#767577", true: colors.tab }}
+              thumbColor={reminderEnabled ? "#fff" : "#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
+            />
+          </View>
+        </View>
+
         {/* Privacy & Tearms */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Privacy & Terms</Text>
@@ -76,6 +125,18 @@ export default function SettingsComponent({
           <TouchableOpacity style={styles.item} onPress={onTermsView}>
             <Text style={styles.emoji}>📄</Text>
             <Text style={styles.itemText}>Terms of service</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Device Settings</Text>
+
+          <TouchableOpacity
+            style={styles.item}
+            onPress={onBatteryOptimizationView}
+          >
+            <Text style={styles.emoji}>⚡</Text>
+            <Text style={styles.itemText}>Battery optimization</Text>
           </TouchableOpacity>
         </View>
 
@@ -215,6 +276,16 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.text,
     marginBottom: 10,
+  },
+  itemWithSwitch: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+  },
+  itemLeft: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   item: {
     flexDirection: "row",
