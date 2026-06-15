@@ -281,7 +281,11 @@
     "segment_1h": "1h",
     "segment_2h": "2h",
     "segment_4h": "4h",
-    "segment_other": "Other"
+    "segment_other": "Other",
+    "label_1h": "1 hour",
+    "label_2h": "2 hours",
+    "label_4h": "4 hours",
+    "hours_short": "h"
   },
   "notifications": {
     "disabled_title": "🔔 Notifications disabled",

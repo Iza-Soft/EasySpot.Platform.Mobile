@@ -2,7 +2,7 @@ import { StyleSheet, View, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../../themes/main";
 //import { SLIDE_ITEMS } from "../../constants/slides";
-import { useSlideItems } from "../../constants/slides";
+import { useSlideItems } from "../../hook/slides";
 import { SlideCardComponent } from "../../components/SlideCardComponent";
 import {
   getLastSavedLocationAsync,

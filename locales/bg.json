@@ -272,7 +272,7 @@
     "description_highlight": "15 мин.",
     "description_after": " преди края.",
     "selected": "Избрано",
-    "reminder_at": "Напомняне в",
+    "reminder_at": "Напомняне след",
     "hours": "часа",
     "min": "мин",
     "custom": "Друго",
@@ -281,7 +281,11 @@
     "segment_1h": "1ч",
     "segment_2h": "2ч",
     "segment_4h": "4ч",
-    "segment_other": "Друго"
+    "segment_other": "Друго",
+    "label_1h": "1 час",
+    "label_2h": "2 часа",
+    "label_4h": "4 часа",
+    "hours_short": "ч"
   },
   "notifications": {
     "disabled_title": "🔔 Известията са изключени",

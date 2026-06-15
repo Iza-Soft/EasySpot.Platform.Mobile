@@ -62,18 +62,24 @@ export default function AdjustParkTimeComponent({
     if (totalMins <= 0) return localize("adjust_park_time.no_reminder");
     const h = Math.floor(totalMins / 60);
     const m = totalMins % 60;
-    return h > 0 ? `${h}h ${m}min` : `${m}min`;
+    return h > 0
+      ? `${h}${localize("adjust_park_time.hours_short")} ${m}${localize("adjust_park_time.min")}`
+      : `${m}${localize("adjust_park_time.min")}`;
   };
 
   const getSelectedLabel = () => {
     if (!isOther) {
       const h = HOUR_OPTIONS[selectedIndex];
-      return `${h} hour${h > 1 ? "s" : ""}`;
+      return h === 1
+        ? localize("adjust_park_time.label_1h")
+        : h === 2
+          ? localize("adjust_park_time.label_2h")
+          : localize("adjust_park_time.label_4h");
     }
     const h = parseInt(customHours || "0");
     const m = parseInt(customMinutes || "0");
     return h || m
-      ? `${h}h ${String(m).padStart(2, "0")}min`
+      ? `${h}${localize("adjust_park_time.hours_short")} ${String(m).padStart(2, "0")}${localize("adjust_park_time.min")}`
       : localize("adjust_park_time.custom");
   };
 
@@ -83,6 +89,11 @@ export default function AdjustParkTimeComponent({
     }
     return HOUR_OPTIONS[selectedIndex] * 60;
   };
+
+  const isValidInput =
+    !isOther ||
+    parseInt(customHours || "0") > 0 ||
+    parseInt(customMinutes || "0") >= 16;
 
   return (
     <View style={styles.container}>
@@ -184,8 +195,12 @@ export default function AdjustParkTimeComponent({
       </View>
 
       <TouchableOpacity
-        style={styles.confirmButton}
+        style={[
+          styles.confirmButton,
+          !isValidInput && styles.confirmButtonDisabled,
+        ]}
         onPress={() => onSubmit(getTotalMinutes())}
+        disabled={!isValidInput}
       >
         <Text style={styles.confirmText}>
           {localize("adjust_park_time.confirm")}
@@ -307,5 +322,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: colors.textOnDark,
+  },
+  confirmButtonDisabled: {
+    backgroundColor: colors.muted,
+    opacity: 0.5,
   },
 });
