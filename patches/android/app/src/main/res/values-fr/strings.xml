@@ -1,4 +1,4 @@
 <resources>
-  <string name="notification_title">⏰ Your parking is expiring soon!</string>
-  <string name="notification_body">%1$s - %2$d minutes left</string>
+  <string name="notification_title">⏰ Votre stationnement expire bientôt!</string>
+  <string name="notification_body">%1$s - %2$d minutes restantes</string>
 </resources>
