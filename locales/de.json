@@ -1,0 +1,304 @@
+{
+  "common": {
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "save": "Speichern",
+    "update": "Aktualisieren",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "info": "Info",
+    "close": "Schließen",
+    "accept_to_continue": "Akzeptieren um fortzufahren",
+    "no_title": "(Kein Titel)",
+    "unnamed_street": "Unbenannte Straße",
+    "coming_soon": "Diese Funktion kommt bald!",
+    "footer": "© {{year}} EasySpot — Entwickelt von Ilko Adamov"
+  },
+  "battery_banner": {
+    "title": "Akku-Optimierung erforderlich",
+    "subtitle": "Ihr {{manufacturer}}-Gerät benötigt spezielle Akku-Einstellungen für zuverlässige Parkerinnerungen.",
+    "instructions": "Anleitung",
+    "dismiss": "Schließen"
+  },
+  "battery_screen": {
+    "title": "⚙️ Akku-Einstellungen",
+    "your_device": "Ihr Gerät: {{manufacturer}} {{model}}",
+    "description": "{{manufacturer}} verwendet aggressives Akkumanagement, das EasySpot daran hindern kann, Parkerinnerungen zu senden. Für zuverlässige Erinnerungen müssen Sie die Einstellungen ändern.",
+    "how_to_setup": "Wie einrichten?",
+    "follow_steps": "Folgen Sie diesen Schritten für Ihr Gerät:",
+    "steps": {
+      "1": "1. Telefoneinstellungen öffnen",
+      "2": "2. Zu Akku oder Akkuverwaltung gehen",
+      "3": "3. EasySpot in der App-Liste finden",
+      "4": "4. Erlauben:",
+      "4a": " • Automatischer Start",
+      "4b": " • Im Hintergrund ausführen",
+      "4c": " • Keine Akkubeschränkungen",
+      "5": "5. App in den letzten Apps fixieren"
+    },
+    "footer_warning": "⚠️ Wichtig: Akku-Optimierung beeinflusst Hintergrunderinnerungen",
+    "footer_without": "• Ohne Einrichtung: Erinnerungen funktionieren NUR wenn die App geöffnet ist",
+    "footer_with": "• Mit Einrichtung: Erinnerungen funktionieren auch wenn die App geschlossen ist",
+    "manufacturers": {
+      "huawei": {
+        "title": "📱 Anleitung für Huawei:",
+        "steps": {
+          "1": "1. Einstellungen öffnen",
+          "2": "2. Akku → App-Start",
+          "3": "3. EasySpot finden",
+          "4": "4. Erlauben:",
+          "4a": " • Automatischer Start",
+          "4b": " • Sekundärer Start",
+          "4c": " • App sperren",
+          "5": "5. Danach erneut testen"
+        }
+      },
+      "xiaomi": {
+        "title": "📱 Anleitung für Xiaomi:",
+        "steps": {
+          "1": "1. Einstellungen öffnen",
+          "2": "2. Akku & Leistung",
+          "3": "3. App-Akkuverwaltung",
+          "4": "4. EasySpot auswählen",
+          "5": "5. Wählen:",
+          "5a": " • Keine Einschränkungen",
+          "5b": " • Automatischen Start erlauben",
+          "6": "6. App auch in letzten Apps sperren"
+        }
+      },
+      "oneplus": {
+        "title": "📱 Anleitung für OnePlus:",
+        "steps": {
+          "1": "1. Einstellungen öffnen",
+          "2": "2. Akku → Akku-Optimierung",
+          "3": "3. EasySpot finden",
+          "4": "4. \"Nicht optimieren\" auswählen",
+          "5": "5. Auch: Einstellungen → Apps → EasySpot",
+          "6": "6. \"Automatischen Start\" erlauben"
+        }
+      },
+      "samsung": {
+        "title": "📱 Anleitung für Samsung:",
+        "steps": {
+          "1": "1. Einstellungen öffnen",
+          "2": "2. Gerätewartung → Akku",
+          "3": "3. App-Energieverwaltung → Schlafende Apps",
+          "4": "4. EasySpot aus der Liste entfernen",
+          "5": "5. Auch: Einstellungen → Apps → EasySpot",
+          "6": "6. Akku → \"Nicht eingeschränkt\" wählen"
+        }
+      },
+      "default": {
+        "title": "📱 Anleitung für Ihr Gerät:",
+        "steps": {
+          "1": "1. Einstellungen öffnen",
+          "2": "2. Akku → Akku-Optimierung",
+          "3": "3. EasySpot finden",
+          "4": "4. \"Nicht optimieren\" oder \"Keine Einschränkungen\" wählen",
+          "5": "5. Falls \"Automatischer Start\" vorhanden, aktivieren"
+        }
+      }
+    }
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "sections": {
+      "preferences": "App-Einstellungen",
+      "privacy": "Datenschutz & Bedingungen",
+      "device": "Geräteeinstellungen",
+      "about": "Über"
+    },
+    "items": {
+      "reminder": "Erinnerung",
+      "privacy_policy": "Datenschutzrichtlinie",
+      "terms_of_service": "Nutzungsbedingungen",
+      "battery_optimization": "Akku-Optimierung",
+      "about": "Über Easy Spot"
+    }
+  },
+  "privacy": {
+    "title": "🛡️ Datenschutzrichtlinie",
+    "effective_date": "Gültig ab: Januar 2026",
+    "agree_checkbox": "Ich habe die Datenschutzrichtlinie gelesen und stimme zu"
+  },
+  "terms": {
+    "title": "📄 Nutzungsbedingungen",
+    "effective_date": "Gültig ab: Januar 2026"
+  },
+  "about": {
+    "title": "ℹ️ Über EasySpot",
+    "tagline": "Ihr persönlicher Standort-Assistent.",
+    "description": "EasySpot hilft Ihnen, die Orte, die Ihnen wichtig sind, einfach und privat zu speichern, zu verwalten und zu teilen.",
+    "can_do": "Mit EasySpot können Sie:",
+    "features": {
+      "parking": "• Den Parkplatz Ihres Autos speichern, damit Sie nie vergessen wo Sie geparkt haben",
+      "favorites": "• Lieblingsplätze wie Kinos, Einkaufszentren, Restaurants und mehr speichern",
+      "share": "• Standorte einfach mit Freunden und Familie über beliebte Messaging-Apps teilen"
+    },
+    "privacy_note": "Alle Ihre Daten werden lokal auf Ihrem Gerät gespeichert und geben Ihnen volle Kontrolle über Ihre Informationen.",
+    "closing": "Ob Sie den Weg zu Ihrem Auto suchen oder jemandem sagen, wo Sie sich treffen, EasySpot macht alltägliche Ausflüge einfacher."
+  },
+  "slides": {
+    "parking": {
+      "title": "Parkplatz markieren",
+      "description": "Speichern Sie den Standort Ihres Autos mit einem Tipp."
+    },
+    "navigate": {
+      "title": "Zurücknavigieren",
+      "description": "Karten mit Ihrem letzten gespeicherten Ort öffnen."
+    },
+    "history": {
+      "title": "Verlauf anzeigen",
+      "description": "Ihre zuvor gespeicherten Orte anzeigen."
+    },
+    "share": {
+      "title": "Ort teilen",
+      "description": "Standort an Freunde oder Familie senden."
+    },
+    "favorites": {
+      "title": "Lieblingsplätze",
+      "description": "Lieblingsstandorte für schnellen Zugriff speichern."
+    }
+  },
+  "main": {
+    "saving": "Ort wird gespeichert…",
+    "no_saved_locations": "Keine gespeicherten Orte gefunden.",
+    "location_permission_denied": "Standortberechtigung nicht erteilt. Bitte in den Einstellungen aktivieren.",
+    "errors": {
+      "save_failed": "Ort konnte nicht gespeichert werden.",
+      "retrieve_failed": "Gespeicherter Ort konnte nicht abgerufen werden.",
+      "share_failed": "Aktueller Standort konnte nicht geteilt werden."
+    },
+    "success": {
+      "favorite_saved": "Lieblingsort erfolgreich gespeichert.",
+      "parking_saved": "Parkplatz erfolgreich gespeichert.",
+      "parking_with_reminder": "Sie werden {{minutes}} Minuten vor Ablauf Ihres Parktickets benachrichtigt."
+    }
+  },
+  "location_details": {
+    "title": "Ortsdetails",
+    "fields": {
+      "title": "Titel",
+      "level": "Ebene",
+      "section": "Bereich",
+      "spot": "Platz",
+      "comments": "Kommentare"
+    },
+    "placeholders": {
+      "title": "Z.B. Zuhause, Arbeit, Fitnessstudio",
+      "level": "Z.B. -3, 1, P2",
+      "section": "Z.B. A, Grüne Zone, B-West",
+      "spot": "Z.B. 123, B19, P3-027",
+      "comments": "Z.B. Gegenüber der blauen Säule, neben den Motorradstellplätzen"
+    },
+    "add_details": "+ Weitere Details hinzufügen (optional)",
+    "hide_details": "- Weitere Details hinzufügen (optional)",
+    "parking_reminder": "Parkerinnerung"
+  },
+  "history": {
+    "loading": "Verlauf wird geladen…",
+    "deleting_location": "Ort wird gelöscht...",
+    "deleting_locations": "Orte werden gelöscht...",
+    "updating_reminder": "Erinnerung wird aktualisiert...",
+    "update_location": "Ort wird aktualisiert...",
+    "share_location": "Ort wird geteilt...",
+    "no_locations": "📂 Keine Orte gefunden",
+    "search_placeholder": "Orte suchen...",
+    "selected_count": "{{count}} ausgewählt",
+    "tabs": {
+      "all": "Alle",
+      "favorites": "Favoriten",
+      "parking": "Parken"
+    },
+    "delete_confirm_title": "Löschen",
+    "delete_confirm_message": "Möchten Sie diesen Ort wirklich löschen?",
+    "delete_all_confirm_message": "Möchten Sie alle ausgewählten Orte wirklich löschen?",
+    "errors": {
+      "no_locations_selected": "Keine Orte ausgewählt",
+      "invalid_id": "Ungültige Orts-ID",
+      "delete_failed": "Ort konnte nicht gelöscht werden.",
+      "delete_all_failed": "Orte konnten nicht gelöscht werden.",
+      "share_failed": "Ort konnte nicht geteilt werden.",
+      "location_not_found": "Gespeicherter Ort konnte nicht abgerufen werden.",
+      "update_failed": "Ort konnte nicht aktualisiert werden.",
+      "reminder_update_failed": "Erinnerung konnte nicht aktualisiert werden.",
+      "address_not_available": "Adresse nicht verfügbar."
+    },
+    "success": {
+      "location_deleted": "Ort erfolgreich gelöscht.",
+      "locations_deleted": "{{count}} Ort(e) erfolgreich gelöscht.",
+      "favorite_updated": "Lieblingsort erfolgreich aktualisiert.",
+      "parking_updated": "Parkplatz erfolgreich aktualisiert.",
+      "reminder_updated": "Parkerinnerung erfolgreich aktualisiert.",
+      "coordinates_copied": "Koordinaten in die Zwischenablage kopiert.",
+      "address_copied": "Adresse in die Zwischenablage kopiert.",
+      "address_copied_missing": "Adresse kopiert, aber einige Felder fehlen."
+    }
+  },
+  "card_options": {
+    "sections": {
+      "location_tools": "Ortswerkzeuge",
+      "share": "Teilen",
+      "reminder": "Erinnerung",
+      "danger_zone": "Gefahrenzone"
+    },
+    "actions": {
+      "view_details": "Details anzeigen",
+      "view_details_sub": "Gespeicherte Ortsdetails anzeigen",
+      "edit_details": "Details bearbeiten",
+      "edit_details_sub": "Gespeicherte Details ändern",
+      "open_maps": "In Karten öffnen",
+      "open_maps_sub": "Zu diesem Ort navigieren",
+      "copy_coordinates": "Koordinaten kopieren",
+      "copy_coordinates_sub": "Breiten- und Längengrad in Zwischenablage",
+      "copy_address": "Adresse kopieren",
+      "copy_address_sub": "Formatierte Adresse kopieren",
+      "share_location": "Ort teilen",
+      "share_location_sub": "Diesen Ort über Apps senden",
+      "parking_duration": "Parkdauer",
+      "parking_duration_sub": "Eine andere Parkdauer wählen",
+      "delete_location": "Ort löschen",
+      "delete_location_sub": "Diesen Ort dauerhaft entfernen"
+    },
+    "timer": {
+      "remaining": "(verbleibend)",
+      "expired": "(Abgelaufen)"
+    }
+  },
+  "adjust_park_time": {
+    "header": "Parkdauer",
+    "description_before": "Wählen Sie wie lange Sie brauchen. Wir erinnern Sie ",
+    "description_highlight": "15 Min. vorher",
+    "description_after": ".",
+    "selected": "Ausgewählt",
+    "reminder_at": "Erinnerung um",
+    "hours": "Stunden",
+    "hours_short": "Std",
+    "min": "Min",
+    "custom": "Benutzerdefiniert",
+    "no_reminder": "—",
+    "confirm": "{{label}} festlegen",
+    "segment_1h": "1Std",
+    "segment_2h": "2Std",
+    "segment_4h": "4Std",
+    "segment_other": "Andere",
+    "label_1h": "1 Stunde",
+    "label_2h": "2 Stunden",
+    "label_4h": "4 Stunden"
+  },
+  "notifications": {
+    "disabled_title": "🔔 Benachrichtigungen deaktiviert",
+    "disabled_message": "Tippen Sie hier, um die Einstellungen zu öffnen und Benachrichtigungen zu aktivieren."
+  },
+  "navigation": {
+    "share_message": "📍 Mein aktueller Standort: {{url}}",
+    "share_title": "Mein aktueller Standort"
+  },
+  "timer": {
+    "expired": "Abgelaufen"
+  },
+  "app": {
+    "getting_ready": "Wird vorbereitet...",
+    "db_error": "EasySpot ist auf ein kleines Problem gestoßen! Versuchen Sie, die App erneut zu öffnen 🚧"
+  }
+}
