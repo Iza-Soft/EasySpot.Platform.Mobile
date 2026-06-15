@@ -2,6 +2,7 @@ import { Linking, Share } from "react-native";
 import { NavigationProps } from "../types/props";
 import { Maps, MapUrl } from "../constants/maps";
 import * as Location from "expo-location";
+import i18n from "../i18n";
 
 export async function openMapsAsync(navigation: NavigationProps) {
   const { latitude, longitude, map } = navigation;
@@ -17,13 +18,13 @@ export async function openMapsAsync(navigation: NavigationProps) {
       throw new Error(`Unsupported map provider: ${map}`);
   }
   await Linking.openURL(url).catch((err) =>
-    console.error("❌ Failed to open Google Maps:", err)
+    console.error("❌ Failed to open Google Maps:", err),
   );
 }
 
 export async function ShareLocationAsync(
   map: Maps,
-  coordinates?: { latitude: number | undefined; longitude: number | undefined }
+  coordinates?: { latitude: number | undefined; longitude: number | undefined },
 ) {
   // const loc = await Location.getCurrentPositionAsync({});
   // const { latitude, longitude } = loc.coords;
@@ -52,11 +53,11 @@ export async function ShareLocationAsync(
       throw new Error(`Unsupported map provider: ${map}`);
   }
 
-  const message = `📍 Here's my current location: ${url}`;
+  const message = i18n.t("navigation.share_message", { url });
 
   await Share.share({
     message,
     url,
-    title: "My Current Location",
+    title: i18n.t("navigation.share_title"),
   });
 }

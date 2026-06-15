@@ -1,7 +1,8 @@
 import { StyleSheet, View, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../../themes/main";
-import { SLIDE_ITEMS } from "../../constants/slides";
+//import { SLIDE_ITEMS } from "../../constants/slides";
+import { useSlideItems } from "../../constants/slides";
 import { SlideCardComponent } from "../../components/SlideCardComponent";
 import {
   getLastSavedLocationAsync,
@@ -27,6 +28,7 @@ import { useBatteryBannerLogic } from "../../hook/useBatteryBannerLogic";
 import ParkingNativeService from "../../native/ParkingModule";
 import { setupSchedulerAsync } from "../../services/scheduler-service";
 import { REMINDER_CONFIG } from "../../config/reminder.config";
+import { useTranslation } from "react-i18next";
 
 export type LocationDetails = {
   id?: string;
@@ -40,6 +42,8 @@ export type LocationDetails = {
 
 export default function MainScreenComponent({ navigation }: any) {
   const database = useSQLiteContext();
+  const { t: localize } = useTranslation();
+  const SLIDE_ITEMS = useSlideItems();
   const [loading, setLoading] = useState(false);
   const [batteryModalVisible, setBatteryModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -107,13 +111,15 @@ export default function MainScreenComponent({ navigation }: any) {
 
           Toast.show({
             type: "success",
-            text1: "Success",
+            text1: localize("common.success"),
             text2:
               action === "favorites"
-                ? "Favorite location saved successfully."
+                ? localize("main.success.favorite_saved")
                 : scheduled
-                  ? `You'll be notified ${REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES} minutes before your parking expires.`
-                  : "Parking location saved successfully.",
+                  ? localize("main.success.parking_with_reminder", {
+                      minutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
+                    })
+                  : localize("main.success.parking_saved"),
           });
 
           setTimeout(() => {
@@ -131,8 +137,8 @@ export default function MainScreenComponent({ navigation }: any) {
           console.error("❌ Failed to save location:", message);
           Toast.show({
             type: "error",
-            text1: "Error",
-            text2: "Failed to save location.",
+            text1: localize("common.error"),
+            text2: localize("main.errors.save_failed"),
           });
         },
       });
@@ -168,8 +174,8 @@ export default function MainScreenComponent({ navigation }: any) {
           console.error("Failed to get last location:", message);
           Toast.show({
             type: "error",
-            text1: "Error",
-            text2: "Failed to retrieve the saved location.",
+            text1: localize("common.error"),
+            text2: localize("main.errors.retrieve_failed"),
           });
           reject(new Error(message));
         },
@@ -189,8 +195,8 @@ export default function MainScreenComponent({ navigation }: any) {
             if (!location) {
               Toast.show({
                 type: "info",
-                text1: "Info",
-                text2: "No saved locations found.",
+                text1: localize("common.info"),
+                text2: localize("main.no_saved_locations"),
               });
               return;
             }
@@ -205,8 +211,8 @@ export default function MainScreenComponent({ navigation }: any) {
             console.error("❌ Failed to retrieve location:", message);
             Toast.show({
               type: "error",
-              text1: "Error",
-              text2: "Failed to retrieve the saved location.",
+              text1: localize("common.error"),
+              text2: localize("main.errors.retrieve_failed"),
             });
           },
         });
@@ -223,9 +229,8 @@ export default function MainScreenComponent({ navigation }: any) {
             setLoading(false);
             Toast.show({
               type: "info",
-              text1: "Info",
-              text2:
-                "Location permission not granted. Please enable it in settings.",
+              text1: localize("common.info"),
+              text2: localize("main.location_permission_denied"),
             });
             return;
           }
@@ -235,8 +240,8 @@ export default function MainScreenComponent({ navigation }: any) {
           console.error("❌ Share current location failed:", err);
           Toast.show({
             type: "error",
-            text1: "Error",
-            text2: "Failed to share your current location.",
+            text1: localize("common.error"),
+            text2: localize("main.errors.share_failed"),
           });
         } finally {
           setLoading(false);
@@ -245,8 +250,8 @@ export default function MainScreenComponent({ navigation }: any) {
     } else {
       Toast.show({
         type: "info",
-        text1: "Info",
-        text2: "This feature is coming soon!",
+        text1: localize("common.info"),
+        text2: localize("common.coming_soon"),
       });
     }
   };
@@ -292,7 +297,7 @@ export default function MainScreenComponent({ navigation }: any) {
         }}
       />
 
-      {loading && <LoadingComponent message="Saving your spot…" />}
+      {loading && <LoadingComponent message={localize("main.saving")} />}
 
       <ModalComponent
         visible={modalVisible}

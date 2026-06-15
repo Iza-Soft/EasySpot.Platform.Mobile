@@ -1,0 +1,301 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "save": "Save",
+    "update": "Update",
+    "error": "Error",
+    "success": "Success",
+    "info": "Info",
+    "close": "Close",
+    "accept_to_continue": "Accept to continue",
+    "no_title": "(No title)",
+    "unnamed_street": "Unnamed Street",
+    "coming_soon": "This feature is coming soon!",
+    "footer": "© {{year}} EasySpot — Developed by Ilko Adamov"
+  },
+  "battery_banner": {
+    "title": "Battery Optimization Needed",
+    "subtitle": "Your {{manufacturer}} device needs special battery settings for reliable parking reminders.",
+    "instructions": "Instructions",
+    "dismiss": "Dismiss"
+  },
+  "battery_screen": {
+    "title": "⚙️ Battery settings",
+    "your_device": "Your device: {{manufacturer}} {{model}}",
+    "description": "{{manufacturer}} There is aggressive battery management that may prevent EasySpot to send parking reminder. To get reliable reminders, you need to change the settings.",
+    "how_to_setup": "How to set up?",
+    "follow_steps": "Follow these steps for your device:",
+    "steps": {
+      "1": "1. Open Phone Settings",
+      "2": "2. Go to Battery or Battery Management",
+      "3": "3. Find EasySpot in the list of applications",
+      "4": "4. Allow:",
+      "4a": " • Automatic start",
+      "4b": " • Working in background mode",
+      "4c": " • No battery limitations",
+      "5": "5. Lock the app in Recent Apps"
+    },
+    "footer_warning": "⚠️ Critical: Battery optimization affects background reminders",
+    "footer_without": "• Without setup: Reminders work ONLY when app is open",
+    "footer_with": "• With setup: Reminders work even when app is closed",
+    "manufacturers": {
+      "huawei": {
+        "title": "📱 Instructions for Huawei:",
+        "steps": {
+          "1": "1. Open Settings",
+          "2": "2. Battery → App Launch",
+          "3": "3. Find EasySpot",
+          "4": "4. Allow:",
+          "4a": " • Auto-launch",
+          "4b": " • Secondary launch",
+          "4c": " • Lock app",
+          "5": "5. Then test again"
+        }
+      },
+      "xiaomi": {
+        "title": "📱 Instructions for Xiaomi:",
+        "steps": {
+          "1": "1. Open Settings",
+          "2": "2. Battery & Performance",
+          "3": "3. App Battery Management",
+          "4": "4. Select EasySpot",
+          "5": "5. Choose:",
+          "5a": " • No restrictions",
+          "5b": " • Allow auto-start",
+          "6": "6. Also lock the app in Recent apps"
+        }
+      },
+      "oneplus": {
+        "title": "📱 Instructions for OnePlus:",
+        "steps": {
+          "1": "1. Open Settings",
+          "2": "2. Battery → Battery Optimization",
+          "3": "3. Find EasySpot",
+          "4": "4. Select \"Don't optimize\"",
+          "5": "5. Also: Settings → Apps → EasySpot",
+          "6": "6. Allow \"Auto-start\""
+        }
+      },
+      "samsung": {
+        "title": "📱 Instructions for Samsung:",
+        "steps": {
+          "1": "1. Open Settings",
+          "2": "2. Device Care → Battery",
+          "3": "3. App power management → Sleeping apps",
+          "4": "4. Remove EasySpot from the list",
+          "5": "5. Also: Settings → Apps → EasySpot",
+          "6": "6. Battery → Select \"Unrestricted\""
+        }
+      },
+      "default": {
+        "title": "📱 Instructions for your device:",
+        "steps": {
+          "1": "1. Open Settings",
+          "2": "2. Battery → Battery Optimization",
+          "3": "3. Find EasySpot",
+          "4": "4. Select \"Don't optimize\" or \"No restrictions\"",
+          "5": "5. If you have an \"Auto-start\" setting, enable it"
+        }
+      }
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "sections": {
+      "preferences": "App Preferences",
+      "privacy": "Privacy & Terms",
+      "device": "Device Settings",
+      "about": "About"
+    },
+    "items": {
+      "reminder": "Reminder",
+      "privacy_policy": "Privacy policy",
+      "terms_of_service": "Terms of service",
+      "battery_optimization": "Battery optimization",
+      "about": "About Easy Spot"
+    }
+  },
+  "privacy": {
+    "title": "🛡️ Privacy Policy",
+    "effective_date": "Effective Date: January 2026",
+    "agree_checkbox": "I have read and agree to the Privacy Policy"
+  },
+  "terms": {
+    "title": "📄 Terms of Service",
+    "effective_date": "Effective Date: January 2026"
+  },
+  "about": {
+    "title": "ℹ️ About EasySpot",
+    "tagline": "Your personal location assistant.",
+    "description": "EasySpot helps you save, manage, and share the places that matter most to you — simply and privately.",
+    "can_do": "With EasySpot, you can:",
+    "features": {
+      "parking": "• Save your car's parking location so you never forget where you parked",
+      "favorites": "• Store favorite places like cinemas, malls, restaurants, and more",
+      "share": "• Share locations easily with friends and family through popular messaging apps"
+    },
+    "privacy_note": "All your data is stored locally on your device, giving you full control over your information and ensuring your locations stay private.",
+    "closing": "Whether you're finding your way back to your car or letting someone know where to meet, EasySpot makes everyday outings easier and stress-free."
+  },
+  "slides": {
+    "parking": {
+      "title": "Mark Parking Spot",
+      "description": "Save your car's location with one tap."
+    },
+    "navigate": {
+      "title": "Navigate Back",
+      "description": "Open maps with your last saved spot."
+    },
+    "history": {
+      "title": "View History",
+      "description": "See your previously saved locations."
+    },
+    "share": {
+      "title": "Share Spot",
+      "description": "Send your location to friends or family."
+    },
+    "favorites": {
+      "title": "Favorite Spots",
+      "description": "Save your favorite locations for quick access."
+    }
+  },
+  "main": {
+    "saving": "Saving your spot…",
+    "no_saved_locations": "No saved locations found.",
+    "location_permission_denied": "Location permission not granted. Please enable it in settings.",
+    "errors": {
+      "save_failed": "Failed to save location.",
+      "retrieve_failed": "Failed to retrieve the saved location.",
+      "share_failed": "Failed to share your current location."
+    },
+    "success": {
+      "favorite_saved": "Favorite location saved successfully.",
+      "parking_saved": "Parking location saved successfully.",
+      "parking_with_reminder": "You'll be notified {{minutes}} minutes before your parking expires."
+    }
+  },
+  "location_details": {
+    "title": "Location Details",
+    "fields": {
+      "title": "Title",
+      "level": "Level",
+      "section": "Section",
+      "spot": "Spot",
+      "comments": "Comments"
+    },
+    "placeholders": {
+      "title": "E.g. Home, Work, Gym",
+      "level": "E.g. -3, 1, P2",
+      "section": "E.g. A, Green Zone, B-West",
+      "spot": "E.g. 123, B19, P3-027",
+      "comments": "E.g. Opposite the blue column, beside motorcycle spaces"
+    },
+    "add_details": "+ Add more details (optional)",
+    "hide_details": "- Add more details (optional)",
+    "parking_reminder": "Parking reminder"
+  },
+  "history": {
+    "loading": "Loading history…",
+    "deleting_location": "Deleting location...",
+    "deleting_locations": "Deleting locations...",
+    "updating_reminder": "Updating reminder...",
+    "update_location": "Update location...",
+    "share_location": "Share location...",
+    "no_locations": "📂 No locations found",
+    "search_placeholder": "Search locations...",
+    "selected_count": "{{count}} selected",
+    "tabs": {
+      "0": "All",
+      "1": "Favorites",
+      "2": "Parking"
+    },
+    "delete_confirm_title": "Delete",
+    "delete_confirm_message": "Are you sure you want to delete this location?",
+    "delete_all_confirm_message": "Are you sure you want to delete all selected locations?",
+    "errors": {
+      "no_locations_selected": "No locations selected",
+      "invalid_id": "Invalid location ID",
+      "delete_failed": "Failed to delete the location.",
+      "delete_all_failed": "Failed to delete the locations.",
+      "share_failed": "Failed to share the location.",
+      "location_not_found": "Failed to retrieve the saved location.",
+      "update_failed": "Failed to update location.",
+      "reminder_update_failed": "Failed to update the reminder.",
+      "address_not_available": "Address not available."
+    },
+    "success": {
+      "location_deleted": "Location deleted successfully.",
+      "locations_deleted": "{{count}} location(s) deleted successfully.",
+      "favorite_updated": "Favorite location updated successfully.",
+      "parking_updated": "Parking location updated successfully.",
+      "reminder_updated": "Parking reminder updated successfully.",
+      "copied": "Copied",
+      "coordinates_copied": "Coordinates copied to clipboard.",
+      "address_copied": "Address copied to clipboard.",
+      "address_copied_missing": "Address copied, but some fields are missing."
+    }
+  },
+  "card_options": {
+    "sections": {
+      "location_tools": "Location Tools",
+      "share": "Share",
+      "reminder": "Reminder",
+      "danger_zone": "Danger Zone"
+    },
+    "actions": {
+      "view_details": "View Details",
+      "view_details_sub": "See saved location details",
+      "edit_details": "Edit Details",
+      "edit_details_sub": "Modify saved location details",
+      "open_maps": "Open in Maps",
+      "open_maps_sub": "Navigate to this location",
+      "copy_coordinates": "Copy Coordinates",
+      "copy_coordinates_sub": "Latitude & longitude to clipboard",
+      "copy_address": "Copy Address",
+      "copy_address_sub": "Copy formatted address",
+      "share_location": "Share Location",
+      "share_location_sub": "Send this location via apps",
+      "parking_duration": "Parking duration",
+      "parking_duration_sub": "Choose a different parking duration",
+      "delete_location": "Delete Location",
+      "delete_location_sub": "Remove this location permanently"
+    },
+    "timer": {
+      "remaining": "(remaining)",
+      "expired": "(Expired)"
+    }
+  },
+  "adjust_park_time": {
+    "header": "Parking duration",
+    "description_before": "Choose how long you need. We'll remind you ",
+    "description_highlight": "15 min",
+    "description_after": " before time runs out.",
+    "selected": "Selected",
+    "reminder_at": "Reminder at",
+    "hours": "hours",
+    "min": "min",
+    "custom": "Custom",
+    "no_reminder": "—",
+    "confirm": "Apply",
+    "segment_1h": "1h",
+    "segment_2h": "2h",
+    "segment_4h": "4h",
+    "segment_other": "Other"
+  },
+  "notifications": {
+    "disabled_title": "🔔 Notifications disabled",
+    "disabled_message": "Tap here to open settings and enable notifications."
+  },
+  "timer": {
+    "expired": "Expired"
+  },
+  "navigation": {
+    "share_message": "📍 Here's my current location: {{url}}",
+    "share_title": "My Current Location"
+  },
+  "app": {
+    "getting_ready": "Getting ready...",
+    "db_error": "Easy Spot hit a small bump! Try reopening the app 🚧"
+  }
+}

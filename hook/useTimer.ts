@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { deactivateSchedulerAsync } from "../services/scheduler-service";
 import { TimerProps } from "../types/props";
+import { useTranslation } from "react-i18next";
 
 interface TimerState {
   remainingTime: number | null;
@@ -11,6 +12,8 @@ interface TimerState {
 }
 
 export const useTimer = ({ database, scheduler }: TimerProps) => {
+  const { t: localize } = useTranslation();
+
   const [timerState, setTimerState] = useState<TimerState>({
     remainingTime: null,
     isExpired: false,
@@ -54,7 +57,7 @@ export const useTimer = ({ database, scheduler }: TimerProps) => {
       setTimerState({
         remainingTime: null,
         isExpired: true,
-        formattedTime: "Expired",
+        formattedTime: localize("timer.expired"),
         endTime: null,
         isWarning: false,
       });
@@ -69,7 +72,7 @@ export const useTimer = ({ database, scheduler }: TimerProps) => {
         setTimerState({
           remainingTime: 0,
           isExpired: true,
-          formattedTime: "Expired",
+          formattedTime: localize("timer.expired"),
           endTime: scheduler.endTime,
           isWarning: false,
         });

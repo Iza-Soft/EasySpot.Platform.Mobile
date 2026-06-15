@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Modal, View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { colors } from "../../themes/main";
+import { useTranslation } from "react-i18next";
 
 type WidthType = number | `${number}%`;
 
@@ -19,6 +20,8 @@ export default function ModalComponent({
   width = "100%",
   canClose = true,
 }: ModalProps) {
+  const { t: localize } = useTranslation();
+
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
@@ -34,7 +37,9 @@ export default function ModalComponent({
             style={[styles.closeBtn, { opacity: canClose ? 1 : 0.4 }]}
           >
             <Text style={styles.closeText}>
-              {canClose ? "Close" : "Accept to continue"}
+              {canClose
+                ? localize("common.close")
+                : localize("common.accept_to_continue")}
             </Text>
           </TouchableOpacity>
         </View>

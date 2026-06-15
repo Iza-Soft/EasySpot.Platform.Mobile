@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../themes/main";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNotifications } from "../hook/useNotifications";
+import { useTranslation } from "react-i18next";
 
 const screenHeight = Dimensions.get("window").height;
 export default function SettingsComponent({
@@ -24,6 +25,7 @@ export default function SettingsComponent({
   onAboutView,
   onBatteryOptimizationView,
 }: any) {
+  const { t: localize } = useTranslation();
   const slideAnim = useRef(new Animated.Value(screenHeight)).current; // starts off-screen
   const [isMounted, setIsMounted] = useState(false); // ✅ Track mounting state
   const [reminderEnabled, setReminderEnabled] = useState(false);
@@ -86,7 +88,7 @@ export default function SettingsComponent({
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>Settings</Text>
+          <Text style={styles.headerText}>{localize("settings.title")}</Text>
           <TouchableOpacity onPress={onClose}>
             <Ionicons name="close" size={28} color={colors.tab} />
           </TouchableOpacity>
@@ -94,12 +96,16 @@ export default function SettingsComponent({
 
         {/* App Preferences */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>App Preferences</Text>
+          <Text style={styles.sectionTitle}>
+            {localize("settings.sections.preferences")}
+          </Text>
 
           <View style={styles.itemWithSwitch}>
             <View style={styles.itemLeft}>
               <Text style={styles.emoji}>🔔</Text>
-              <Text style={styles.itemText}>Reminder</Text>
+              <Text style={styles.itemText}>
+                {localize("settings.items.reminder")}
+              </Text>
             </View>
             <Switch
               value={reminderEnabled} // ← false по подразбиране
@@ -115,125 +121,54 @@ export default function SettingsComponent({
 
         {/* Privacy & Tearms */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Privacy & Terms</Text>
+          <Text style={styles.sectionTitle}>
+            {localize("settings.sections.privacy")}
+          </Text>
 
           <TouchableOpacity style={styles.item} onPress={onPrivacyView}>
             <Text style={styles.emoji}>🛡️</Text>
-            <Text style={styles.itemText}>Privacy policy</Text>
+            <Text style={styles.itemText}>
+              {localize("settings.items.privacy_policy")}
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.item} onPress={onTermsView}>
             <Text style={styles.emoji}>📄</Text>
-            <Text style={styles.itemText}>Terms of service</Text>
+            <Text style={styles.itemText}>
+              {localize("settings.items.terms_of_service")}
+            </Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Device Settings</Text>
+          <Text style={styles.sectionTitle}>
+            {localize("settings.sections.device")}
+          </Text>
 
           <TouchableOpacity
             style={styles.item}
             onPress={onBatteryOptimizationView}
           >
             <Text style={styles.emoji}>⚡</Text>
-            <Text style={styles.itemText}>Battery optimization</Text>
+            <Text style={styles.itemText}>
+              {localize("settings.items.battery_optimization")}
+            </Text>
           </TouchableOpacity>
         </View>
 
         {/* About */}
         <View style={[styles.section, { marginBottom: 20 }]}>
-          <Text style={styles.sectionTitle}>About</Text>
+          <Text style={styles.sectionTitle}>
+            {localize("settings.sections.about")}
+          </Text>
 
           <TouchableOpacity style={styles.item} onPress={onAboutView}>
             <Text style={styles.emoji}>ℹ️</Text>
-            <Text style={styles.itemText}>About Easy Spot</Text>
+            <Text style={styles.itemText}>
+              {localize("settings.items.about")}
+            </Text>
           </TouchableOpacity>
         </View>
-
-        {/* App Preferences */}
-        {/* <View style={styles.section}>
-          <Text style={styles.sectionTitle}>App Preferences</Text>
-
-          <TouchableOpacity style={styles.item}>
-            <Text style={styles.emoji}>🌙</Text>
-            <Text style={styles.itemText}>Dark Mode</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.item}>
-            <Text style={styles.emoji}>🌐</Text>
-            <Text style={styles.itemText}>Language</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.item}>
-            <Text style={styles.emoji}>🔔</Text>
-            <Text style={styles.itemText}>Notifications</Text>
-          </TouchableOpacity>
-        </View> */}
-
-        {/* Data & Storage */}
-        {/* <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Data & Storage</Text>
-
-          <TouchableOpacity style={styles.item}>
-            <Text style={styles.emoji}>☁️</Text>
-            <Text style={styles.itemText}>Backup Data</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.item}>
-            <Text style={styles.emoji}>🗑️</Text>
-            <Text style={styles.itemText}>Clear Cache</Text>
-          </TouchableOpacity>
-        </View> */}
-
-        {/* 💎 Subscription */}
-        {/* <View style={styles.subscriptionSection}>
-          <Text style={styles.sectionTitle}>Subscription</Text>
-
-          <TouchableOpacity style={styles.subscriptionCard}>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <View style={{ flexDirection: "column", flex: 1 }}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text style={styles.emoji}>⭐</Text>
-                  <Text style={styles.subscriptionTitle}>
-                    Easy Spot Premium
-                  </Text>
-                </View>
-
-                <Text style={styles.subscriptionDesc}>
-                  Unlock unlimited saves, cloud backup, and early access 🚀
-                </Text>
-              </View>
-
-              <Ionicons name="chevron-forward" size={22} color={colors.tab} />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.item}>
-            <Text style={styles.emoji}>💳</Text>
-            <Text style={styles.itemText}>Manage Subscription</Text>
-          </TouchableOpacity>
-        </View> */}
-
-        {/* About */}
-        {/* <View style={styles.section}>
-          <Text style={styles.sectionTitle}>About</Text>
-
-          <TouchableOpacity style={styles.item}>
-            <Text style={styles.emoji}>ℹ️</Text>
-            <Text style={styles.itemText}>About Easy Spot</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.item}>
-            <Text style={styles.emoji}>💬</Text>
-            <Text style={styles.itemText}>Contact Support</Text>
-          </TouchableOpacity>
-        </View> */}
       </Animated.View>
     </Pressable>
   );

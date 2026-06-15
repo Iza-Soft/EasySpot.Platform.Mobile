@@ -43,14 +43,19 @@ import {
 } from "../../services/scheduler-service";
 import AdjustParkTimeComponent from "../../components/modal/AdjustParkTimeComponent";
 import { REMINDER_CONFIG } from "../../config/reminder.config";
+import { useTranslation } from "react-i18next";
+import { TABS_CONFIG } from "../../config/tabs.config";
 
 export default function HistoryScreenComponent() {
+  const { t: localize } = useTranslation();
   const database = useSQLiteContext();
   const [locations, setLocations] = useState<CardItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState<
-    "all" | "favorites" | "parking"
-  >("all");
+    | typeof TABS_CONFIG.ALL
+    | typeof TABS_CONFIG.FAVORITES
+    | typeof TABS_CONFIG.PARKING
+  >(TABS_CONFIG.ALL);
   const [searchText, setSearchText] = useState<string | undefined>();
   const [modalVisible, setModalVisible] = useState(false);
   const [detailsMode, setDetailsMode] = useState<"edit" | "view" | "update">(
@@ -146,110 +151,117 @@ export default function HistoryScreenComponent() {
     if (!id) {
       Toast.show({
         type: "error",
-        text1: "Error",
-        text2: "Invalid location ID",
+        text1: localize("common.error"),
+        text2: localize("history.errors.invalid_id"),
       });
       return;
     }
 
-    Alert.alert("Delete", "Are you sure you want to delete this location?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: async () => {
-          setCardOptionsVisible(false);
-          setLoadingMessage("Deleting location...");
-          setLoading(true);
+    Alert.alert(
+      localize("history.delete_confirm_title"),
+      localize("history.delete_confirm_message"),
+      [
+        { text: localize("common.cancel"), style: "cancel" },
+        {
+          text: localize("common.delete"),
+          style: "destructive",
+          onPress: async () => {
+            setCardOptionsVisible(false);
+            setLoadingMessage(localize("history.deleting_location"));
+            setLoading(true);
 
-          try {
-            // First, check if there is an active reminder
-            let hasActiveReminder = false;
+            try {
+              // First, check if there is an active reminder
+              let hasActiveReminder = false;
 
-            await hasSchedulerAsync({
-              locationId: id,
-              onSuccess: (hasActive) => {
-                hasActiveReminder = hasActive;
-                console.log(`Location ${id} has active reminder:`, hasActive);
-              },
-              onError: (message) => {
-                console.error("Failed to check active reminder:", message);
-              },
-            });
+              await hasSchedulerAsync({
+                locationId: id,
+                onSuccess: (hasActive) => {
+                  hasActiveReminder = hasActive;
+                  console.log(`Location ${id} has active reminder:`, hasActive);
+                },
+                onError: (message) => {
+                  console.error("Failed to check active reminder:", message);
+                },
+              });
 
-            await deleteLocationAsync({
-              database,
-              id,
-              onSuccess: async () => {
-                setLocations((prev) => prev.filter((l) => l.id !== id));
+              await deleteLocationAsync({
+                database,
+                id,
+                onSuccess: async () => {
+                  setLocations((prev) => prev.filter((l) => l.id !== id));
 
-                // Cancel a reminder only if there is an active one
-                if (hasActiveReminder) {
-                  try {
-                    await cancelSchedulerAsync({
-                      locationId: id,
-                      onSuccess: () => {
-                        console.log("Reminder cancelled successfully");
-                      },
-                      onError: (message) => {
-                        console.error("Error cancelling reminder:", message);
-                      },
-                    });
-                  } catch (reminderError) {
-                    console.error("Failed to cancel reminder:", reminderError);
+                  // Cancel a reminder only if there is an active one
+                  if (hasActiveReminder) {
+                    try {
+                      await cancelSchedulerAsync({
+                        locationId: id,
+                        onSuccess: () => {
+                          console.log("Reminder cancelled successfully");
+                        },
+                        onError: (message) => {
+                          console.error("Error cancelling reminder:", message);
+                        },
+                      });
+                    } catch (reminderError) {
+                      console.error(
+                        "Failed to cancel reminder:",
+                        reminderError,
+                      );
+                    }
+                  } else {
+                    console.log(
+                      `No active reminder found for location ${id}, skipping cancellation`,
+                    );
                   }
-                } else {
-                  console.log(
-                    `No active reminder found for location ${id}, skipping cancellation`,
-                  );
-                }
 
-                Toast.show({
-                  type: "success",
-                  text1: "Success",
-                  text2: "Location deleted successfully.",
-                });
-              },
-              onError: (message) => {
-                throw new Error(message);
-              },
-            });
-          } catch (error) {
-            console.error("❌ Failed to delete location:", error);
-            Toast.show({
-              type: "error",
-              text1: "Error",
-              text2: "Failed to delete the location.",
-            });
-          } finally {
-            setLoading(false);
-          }
+                  Toast.show({
+                    type: "success",
+                    text1: localize("common.success"),
+                    text2: localize("history.success.location_deleted"),
+                  });
+                },
+                onError: (message) => {
+                  throw new Error(message);
+                },
+              });
+            } catch (error) {
+              console.error("❌ Failed to delete location:", error);
+              Toast.show({
+                type: "error",
+                text1: localize("common.error"),
+                text2: localize("history.errors.delete_failed"),
+              });
+            } finally {
+              setLoading(false);
+            }
+          },
         },
-      },
-    ]);
+      ],
+    );
   };
 
   const deleteAllLocations = async () => {
     if (selectedLocations.length === 0) {
       Toast.show({
         type: "error",
-        text1: "Error",
-        text2: "No locations selected",
+        text1: localize("common.error"),
+        text2: localize("history.errors.no_locations_selected"),
       });
       return;
     }
 
     Alert.alert(
-      "Delete",
-      "Are you sure you want to delete all selected locations?",
+      localize("history.delete_confirm_title"),
+      localize("history.delete_all_confirm_message"),
       [
-        { text: "Cancel", style: "cancel" },
+        { text: localize("common.cancel"), style: "cancel" },
         {
-          text: "Delete",
+          text: localize("common.delete"),
           style: "destructive",
           onPress: async () => {
             setCardOptionsVisible(false);
-            setLoadingMessage("Deleting locations...");
+            setLoadingMessage(localize("history.deleting_locations"));
             setLoading(true);
 
             try {
@@ -328,8 +340,10 @@ export default function HistoryScreenComponent() {
 
                   Toast.show({
                     type: "success",
-                    text1: "Success",
-                    text2: `${selectedLocations.length} location(s) deleted successfully.`,
+                    text1: localize("common.success"),
+                    text2: localize("history.success.locations_deleted", {
+                      count: selectedLocations.length,
+                    }),
                   });
                 },
                 onError: (message) => {
@@ -340,8 +354,8 @@ export default function HistoryScreenComponent() {
               console.error("❌ Failed to delete locations:", error);
               Toast.show({
                 type: "error",
-                text1: "Error",
-                text2: "Failed to delete the locations.",
+                text1: localize("common.error"),
+                text2: localize("history.errors.delete_all_failed"),
               });
             } finally {
               setLoading(false);
@@ -357,7 +371,7 @@ export default function HistoryScreenComponent() {
     longitude: number | undefined;
   }) => {
     setLoading(true);
-    setLoadingMessage("Share location...");
+    setLoadingMessage(localize("history.share_location"));
     setTimeout(async () => {
       try {
         await ShareLocationAsync(Maps.google, {
@@ -368,8 +382,8 @@ export default function HistoryScreenComponent() {
         console.error("❌ Failed to share the location:", err);
         Toast.show({
           type: "error",
-          text1: "Error",
-          text2: "Failed to share the location.",
+          text1: localize("common.error"),
+          text2: localize("history.errors.share_failed"),
         });
       } finally {
         setLoading(false);
@@ -380,7 +394,7 @@ export default function HistoryScreenComponent() {
   const handleUpdateLocation = async (data: LocationDetails) => {
     setModalVisible(false);
     setLoading(true);
-    setLoadingMessage("Update location...");
+    setLoadingMessage(localize("history.update_location"));
 
     (async () => {
       await updateLocationAsync({
@@ -421,11 +435,11 @@ export default function HistoryScreenComponent() {
           setLoading(false);
           Toast.show({
             type: "success",
-            text1: "Success",
+            text1: localize("common.success"),
             text2:
               selectedItem?.type === "favorites"
-                ? "Favorite location updated successfully."
-                : "Parking location update successfully.",
+                ? localize("history.success.favorite_updated")
+                : localize("history.success.parking_updated"),
           });
         },
         onError: (message) => {
@@ -433,8 +447,8 @@ export default function HistoryScreenComponent() {
           console.error("❌ Failed to update location:", message);
           Toast.show({
             type: "error",
-            text1: "Error",
-            text2: "Failed to update location.",
+            text1: localize("common.error"),
+            text2: localize("history.errors.update_failed"),
           });
         },
       });
@@ -445,7 +459,7 @@ export default function HistoryScreenComponent() {
     console.log("Selected time in minutes:", minutes);
     setModalVisible(false);
     setLoading(true);
-    setLoadingMessage("Updating reminder...");
+    setLoadingMessage(localize("history.updating_reminder"));
 
     try {
       let hasActiveReminder = false;
@@ -504,26 +518,31 @@ export default function HistoryScreenComponent() {
 
         Toast.show({
           type: "success",
-          text1: "Success",
-          text2: "Parking reminder updated successfully.",
+          text1: localize("common.success"),
+          text2: localize("history.success.reminder_updated"),
         });
       }
     } catch (error) {
       console.error("❌ handleUpdateReminder error:", error);
       Toast.show({
         type: "error",
-        text1: "Error",
-        text2: "Failed to update the reminder.",
+        text1: localize("common.error"),
+        text2: localize("history.errors.reminder_update_failed"),
       });
     } finally {
       setLoading(false);
     }
   };
 
+  const TAB_TO_TYPE: Record<number, string> = {
+    [TABS_CONFIG.FAVORITES]: "favorites",
+    [TABS_CONFIG.PARKING]: "parking",
+  };
+
   const filteredLocations =
-    selectedTab === "all"
+    selectedTab === TABS_CONFIG.ALL
       ? locations
-      : locations.filter((item) => item.type === selectedTab);
+      : locations.filter((item) => item.type === TAB_TO_TYPE[selectedTab]);
 
   const renderItem = ({ item }: { item: CardItem }) => (
     <LocationCard
@@ -550,14 +569,14 @@ export default function HistoryScreenComponent() {
 
       Toast.show({
         type: "success",
-        text1: "Copied",
-        text2: "Coordinates copied to clipboard.",
+        text1: localize("history.success.copied"),
+        text2: localize("history.success.coordinates_copied"),
       });
     } else {
       Toast.show({
         type: "error",
-        text1: "Error",
-        text2: "Failed to retrieve the saved location.",
+        text1: localize("common.error"),
+        text2: localize("history.errors.location_not_found"),
       });
     }
   };
@@ -583,16 +602,18 @@ export default function HistoryScreenComponent() {
 
       Toast.show({
         type: "success",
-        text1: missingFields ? "⚠️ Copied" : "Copied",
+        text1: missingFields
+          ? `⚠️ ${localize("history.success.copied")}`
+          : localize("history.success.copied"),
         text2: missingFields
-          ? "Address copied, but some fields are missing."
-          : "Address copied to clipboard.",
+          ? localize("history.success.address_copied_missing")
+          : localize("history.success.address_copied"),
       });
     } else {
       Toast.show({
         type: "error",
-        text1: "Error",
-        text2: "Address not available.",
+        text1: localize("common.error"),
+        text2: localize("history.errors.address_not_available"),
       });
     }
   };
@@ -622,22 +643,25 @@ export default function HistoryScreenComponent() {
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <View style={styles.tabs}>
-        {["all", "favorites", "parking"].map((tab) => (
-          <Pressable
-            key={tab}
-            onPress={() => setSelectedTab(tab as typeof selectedTab)}
-            style={[styles.tab, selectedTab === tab && styles.tabSelected]}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                selectedTab === tab && styles.tabTextSelected,
-              ]}
+        {[TABS_CONFIG.ALL, TABS_CONFIG.FAVORITES, TABS_CONFIG.PARKING].map(
+          (tab) => (
+            <Pressable
+              key={tab}
+              onPress={() => setSelectedTab(tab as typeof selectedTab)}
+              style={[styles.tab, selectedTab === tab && styles.tabSelected]}
             >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            </Text>
-          </Pressable>
-        ))}
+              <Text
+                style={[
+                  styles.tabText,
+                  selectedTab === tab && styles.tabTextSelected,
+                ]}
+              >
+                {/* {tab.charAt(0).toUpperCase() + tab.slice(1)} */}
+                {localize(`history.tabs.${tab}`)}
+              </Text>
+            </Pressable>
+          ),
+        )}
       </View>
       <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
         <View style={{ height: 48, transform: [{ perspective: 1000 }] }}>
@@ -651,7 +675,7 @@ export default function HistoryScreenComponent() {
             pointerEvents={isMultiSelectMode ? "none" : "auto"}
           >
             <TextInput
-              placeholder="Search locations..."
+              placeholder={localize("history.search_placeholder")}
               value={searchText}
               onChangeText={setSearchText}
               style={{
@@ -714,7 +738,7 @@ export default function HistoryScreenComponent() {
       </View>
 
       {filteredLocations.length === 0 ? (
-        <EmptyComponent text="📂 No locations found" />
+        <EmptyComponent text={localize("history.no_locations")} />
       ) : (
         <FlatList
           data={filteredLocations}
