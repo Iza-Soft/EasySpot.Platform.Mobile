@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
+  Image,
 } from "react-native";
 import { colors } from "../../themes/main";
 import { useEffect, useRef, useState } from "react";
@@ -45,8 +46,12 @@ import AdjustParkTimeComponent from "../../components/modal/AdjustParkTimeCompon
 import { REMINDER_CONFIG } from "../../config/reminder.config";
 import { useTranslation } from "react-i18next";
 import { TABS_CONFIG } from "../../config/tabs.config";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function HistoryScreenComponent() {
+export default function HistoryScreenComponent({
+  navigation,
+  onMenuPress,
+}: any) {
   const { t: localize } = useTranslation();
   const database = useSQLiteContext();
   const [locations, setLocations] = useState<CardItem[]>([]);
@@ -585,7 +590,6 @@ export default function HistoryScreenComponent() {
     if (item) {
       const { street, city, region, postalCode, country } = item;
 
-      // Check if any required fields are missing
       const missingFields = [street, city, region, postalCode, country].some(
         (field) => !field || field.trim() === "",
       );
@@ -642,6 +646,29 @@ export default function HistoryScreenComponent() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
+      <View style={styles.hero}>
+        <View style={styles.heroInner}>
+          <View style={styles.logoRow}>
+            <View style={styles.logoIconWrapper}>
+              <Image
+                source={require("../../assets/easyspot-logo.png")}
+                style={styles.logoIcon}
+                resizeMode="contain"
+              />
+            </View>
+            <View>
+              <Text style={styles.logoText}>easy spot</Text>
+              <Text style={styles.logoSub}>{localize("about.tagline")}</Text>
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.menuBtn}
+            onPress={onMenuPress} // 🎨 НОВО
+          >
+            <Ionicons name="menu" size={20} color="white" />
+          </TouchableOpacity>
+        </View>
+      </View>
       <View style={styles.tabs}>
         {[TABS_CONFIG.ALL, TABS_CONFIG.FAVORITES, TABS_CONFIG.PARKING].map(
           (tab) => (
@@ -874,5 +901,53 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     opacity: 0.4,
+  },
+  hero: {
+    backgroundColor: colors.tab,
+    paddingTop: 40,
+    paddingBottom: 16,
+    paddingHorizontal: 16,
+  },
+  heroInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  logoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  logoIconWrapper: {
+    width: 38,
+    height: 38,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logoIcon: {
+    width: 26,
+    height: 26,
+    tintColor: "white",
+  },
+  logoText: {
+    fontSize: 17,
+    fontWeight: "900",
+    color: "white",
+    letterSpacing: -0.3,
+  },
+  logoSub: {
+    fontSize: 11,
+    color: "rgba(255,255,255,0.65)",
+    marginTop: 1,
+  },
+  menuBtn: {
+    width: 34,
+    height: 34,
+    backgroundColor: "rgba(255,255,255,0.15)",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
