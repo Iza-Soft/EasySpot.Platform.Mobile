@@ -1,0 +1,4 @@
+<resources>
+  <string name="notification_title">⏰ Ваша парковка скоро истечет</string>
+  <string name="notification_body">%1$s - осталось %2$d минут</string>
+</resources>

@@ -1,43 +1,31 @@
 import React from "react";
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { Text, ScrollView, StyleSheet } from "react-native";
 import { colors } from "../../themes/main";
+import { useTranslation } from "react-i18next";
 
 const AboutScreenComponent = () => {
+  const { t: localize } = useTranslation();
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>ℹ️ About EasySpot</Text>
+      <Text style={styles.title}>{localize("about.title")}</Text>
 
-      <Text style={styles.tagline}>Your personal location assistant.</Text>
+      <Text style={styles.tagline}>{localize("about.tagline")}</Text>
 
-      <Text style={styles.paragraph}>
-        EasySpot helps you save, manage, and share the places that matter most
-        to you — simply and privately.
-      </Text>
+      <Text style={styles.paragraph}>{localize("about.description")}</Text>
 
-      <Text style={styles.paragraph}>With EasySpot, you can:</Text>
+      <Text style={styles.paragraph}>{localize("about.can_do")}</Text>
 
+      <Text style={styles.listItem}>{localize("about.features.parking")}</Text>
       <Text style={styles.listItem}>
-        • Save your car’s parking location so you never forget where you parked
+        {localize("about.features.favorites")}
       </Text>
-      <Text style={styles.listItem}>
-        • Store favorite places like cinemas, malls, restaurants, and more
-      </Text>
-      <Text style={styles.listItem}>
-        • Share locations easily with friends and family through popular
-        messaging apps
-      </Text>
+      <Text style={styles.listItem}>{localize("about.features.share")}</Text>
 
-      <Text style={styles.paragraph}>
-        All your data is stored locally on your device, giving you full control
-        over your information and ensuring your locations stay private.
-      </Text>
+      <Text style={styles.paragraph}>{localize("about.privacy_note")}</Text>
 
-      <Text style={styles.paragraph}>
-        Whether you’re finding your way back to your car or letting someone know
-        where to meet, EasySpot makes everyday outings easier and stress-free.
-      </Text>
+      <Text style={styles.paragraph}>{localize("about.closing")}</Text>
       <Text style={styles.footer}>
-        © {new Date().getFullYear()} EasySpot — Developed by Ilko Adamov
+        {localize("common.footer", { year: new Date().getFullYear() })}
       </Text>
     </ScrollView>
   );

@@ -1,0 +1,4 @@
+<resources>
+  <string name="notification_title">⏰ Ihr Parkvorgang läuft bald ab!</string>
+  <string name="notification_body">%1$s - %2$d minuten verbleibend</string>
+</resources>

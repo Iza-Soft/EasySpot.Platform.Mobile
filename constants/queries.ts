@@ -2,7 +2,7 @@ export const SQL = {
   SELECT_ALL_LOCATION: `SELECT locations.*, schedulers.id as schedulerId, schedulers.locationId, schedulers.startTime, schedulers.durationMinutes, schedulers.endTime, schedulers.notifyBeforeMinutes, schedulers.notificationSent, schedulers.isActive 
       FROM locations LEFT JOIN schedulers ON locations.id = schedulers.locationId 
       ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
-  SELECT_SEARCH_LOCATION: `SELECT locations.*, schedulers.id as schedulerId, chedulers.locationId, schedulers.startTime, schedulers.durationMinutes, schedulers.endTime, schedulers.notifyBeforeMinutes, schedulers.notificationSent, schedulers.isActive 
+  SELECT_SEARCH_LOCATION: `SELECT locations.*, schedulers.id as schedulerId, schedulers.locationId, schedulers.startTime, schedulers.durationMinutes, schedulers.endTime, schedulers.notifyBeforeMinutes, schedulers.notificationSent, schedulers.isActive 
       FROM locations LEFT JOIN schedulers ON locations.id = schedulers.locationId 
       WHERE title LIKE ? OR street LIKE ? OR city LIKE ? OR region LIKE ? OR country LIKE ? ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
   SELECT_LAST_LOCATION: `SELECT * FROM locations ORDER BY timestamp DESC LIMIT 1`,

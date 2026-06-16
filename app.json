@@ -50,7 +50,8 @@
       ],
       "expo-font",
       "expo-background-task",
-      "expo-notifications"
+      "expo-notifications",
+      "expo-localization"
     ],
     "owner": "i.z.adamov",
     "extra": {

@@ -6,6 +6,7 @@ import { useTimer } from "../hook/useTimer";
 import { Scheduler } from "../types/common";
 import { useMemo } from "react";
 import { useSQLiteContext } from "expo-sqlite";
+import { useTranslation } from "react-i18next";
 
 export default function LocationItemCard({
   item,
@@ -14,8 +15,8 @@ export default function LocationItemCard({
   onPress,
   onLongPress,
 }: LocationCardProps) {
+  const { t: localize } = useTranslation();
   const database = useSQLiteContext();
-
   const shouldShowTimer = item.type === "parking";
 
   const scheduler = useMemo<Scheduler | null>(() => {
@@ -66,10 +67,10 @@ export default function LocationItemCard({
             </Text>
             <View style={styles.textContainer}>
               <Text style={styles.title}>
-                {item.title?.trim() || "(No title)"}
+                {item.title?.trim() || localize("common.no_title")}
               </Text>
               <Text style={styles.address}>
-                {item.street || "Unnamed Street"},{" "}
+                {item.street || localize("common.unnamed_street")},{" "}
                 {item.city || item.region || ""}, {item.postalCode || ""},{" "}
                 {item.country || ""}
               </Text>
@@ -91,10 +92,12 @@ export default function LocationItemCard({
                       ⏱️ {timer.formattedTime}
                     </Text>
                     {timer.isExpired ? (
-                      <Text style={styles.expiredTextInline}>(Expired)</Text>
+                      <Text style={styles.expiredTextInline}>
+                        {localize("card_options.timer.expired")}
+                      </Text>
                     ) : (
                       <Text style={styles.remainingTextInline}>
-                        (remaining)
+                        {localize("card_options.timer.remaining")}
                       </Text>
                     )}
                   </View>

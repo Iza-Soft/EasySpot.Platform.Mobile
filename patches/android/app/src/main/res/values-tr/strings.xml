@@ -1,0 +1,4 @@
+<resources>
+  <string name="notification_title">⏰ Park süreniz dolmak üzere!</string>
+  <string name="notification_body">%1$s - %2$d dakika kaldı</string>
+</resources>

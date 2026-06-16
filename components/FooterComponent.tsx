@@ -1,11 +1,14 @@
 import { StyleSheet, View, Text, Image } from "react-native";
+import { useTranslation } from "react-i18next";
 
 export default function FooterComponent() {
+  const { t: localize } = useTranslation();
+
   return (
     <View style={styles.footer}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.footerText}>
-          © 2026 EasySpot — Developed by Ilko Adamov
+          {localize("common.footer", { year: new Date().getFullYear() })}
         </Text>
       </View>
     </View>

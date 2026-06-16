@@ -1,0 +1,4 @@
+<resources>
+    <string name="notification_title">⏰ Паркирането ти изтича скоро!</string>
+    <string name="notification_body">%1$s - остават %2$d минути</string>
+</resources>
