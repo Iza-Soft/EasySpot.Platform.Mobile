@@ -2,6 +2,7 @@ import React from "react";
 import { Text, ScrollView, StyleSheet } from "react-native";
 import { colors } from "../../themes/main";
 import { useTranslation } from "react-i18next";
+import { typography } from "../../themes/typography";
 
 const AboutScreenComponent = () => {
   const { t: localize } = useTranslation();
@@ -35,35 +36,39 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "900",
-    marginBottom: 10,
-  },
+  title: typography.headerLarge,
+  // title: {
+  //   fontSize: 24,
+  //   fontWeight: "900",
+  //   marginBottom: 10,
+  // },
 
   tagline: {
     fontWeight: "700",
     marginBottom: 20,
   },
-  paragraph: {
-    fontSize: 14,
-    lineHeight: 21,
-    color: colors.text,
-    marginBottom: 10,
-  },
-  listItem: {
-    fontSize: 14,
-    lineHeight: 21,
-    color: colors.text,
-    marginLeft: 10,
-    marginBottom: 4,
-  },
-  footer: {
-    marginTop: 20,
-    fontSize: 12,
-    textAlign: "center",
-    color: colors.muted,
-  },
+  paragraph: typography.body,
+  // paragraph: {
+  //   fontSize: 14,
+  //   lineHeight: 21,
+  //   color: colors.text,
+  //   marginBottom: 10,
+  // },
+  listItem: { ...typography.body, marginLeft: 10 },
+  // listItem: {
+  //   fontSize: 14,
+  //   lineHeight: 21,
+  //   color: colors.text,
+  //   marginLeft: 10,
+  //   marginBottom: 4,
+  // },
+  footer: typography.footer,
+  // footer: {
+  //   marginTop: 20,
+  //   fontSize: 12,
+  //   textAlign: "center",
+  //   color: colors.muted,
+  // },
 });
 
 export default AboutScreenComponent;

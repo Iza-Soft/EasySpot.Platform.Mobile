@@ -3,6 +3,7 @@ import { useEffect, useRef, useMemo } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../themes/main";
 import { SlideCardProps } from "../types/props";
+import { typography } from "../themes/typography";
 
 const ICON_COLORS: Record<string, { bg: string }> = {
   parking: { bg: "#e6fbfa" },
@@ -166,14 +167,6 @@ const styles = StyleSheet.create({
   iconEmoji: {
     fontSize: 20,
   },
-  cardTitle: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: colors.text,
-    marginBottom: 3,
-  },
-  cardDesc: {
-    fontSize: 11,
-    color: colors.muted,
-  },
+  cardTitle: typography.cardTitle,
+  cardDesc: typography.cardDesc,
 });

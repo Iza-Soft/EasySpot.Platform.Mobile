@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { colors } from "../../themes/main";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import { typography } from "../../themes/typography";
 
 export type LocationDetails = {
   id?: string;
@@ -114,14 +115,7 @@ export default function LocationDetailsComponent({
 
   return (
     <View style={{ width: "100%" }}>
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "700",
-          marginBottom: 16,
-          color: colors.text,
-        }}
-      >
+      <Text style={typography.header}>
         {localize("location_details.title")}
       </Text>
       {renderInput(
@@ -137,9 +131,9 @@ export default function LocationDetailsComponent({
           style={{ marginBottom: 8, paddingVertical: 4 }}
         >
           <Text style={{ color: colors.tab, fontWeight: "600" }}>
-            {!showDetails
-              ? localize("location_details.add_details")
-              : localize("location_details.hide_details")}
+            {!showDetails ?
+              localize("location_details.add_details")
+            : localize("location_details.hide_details")}
           </Text>
         </TouchableOpacity>
       )}
@@ -232,9 +226,9 @@ export default function LocationDetailsComponent({
           <Text
             style={{ color: colors.bg, textAlign: "center", fontWeight: "600" }}
           >
-            {mode === "edit"
-              ? localize("common.save")
-              : localize("common.update")}
+            {mode === "edit" ?
+              localize("common.save")
+            : localize("common.update")}
           </Text>
         </TouchableOpacity>
       )}

@@ -28,9 +28,9 @@ import ParkingNativeService from "../../native/ParkingModule";
 import { setupSchedulerAsync } from "../../services/scheduler-service";
 import { REMINDER_CONFIG } from "../../config/reminder.config";
 import { useTranslation } from "react-i18next";
-
 import { Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { typography } from "../../themes/typography";
 
 export type LocationDetails = {
   id?: string;
@@ -81,9 +81,9 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
   }, []);
 
   const slides = SLIDE_ITEMS.map((item) =>
-    item.action === "navigate"
-      ? { ...item, disabled: !hasSavedLocation }
-      : item,
+    item.action === "navigate" ?
+      { ...item, disabled: !hasSavedLocation }
+    : item,
   );
 
   const navigateIndex = slides.findIndex((item) => item.action === "navigate");
@@ -115,13 +115,12 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
             type: "success",
             text1: localize("common.success"),
             text2:
-              action === "favorites"
-                ? localize("main.success.favorite_saved")
-                : scheduled
-                  ? localize("main.success.parking_with_reminder", {
-                      minutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
-                    })
-                  : localize("main.success.parking_saved"),
+              action === "favorites" ? localize("main.success.favorite_saved")
+              : scheduled ?
+                localize("main.success.parking_with_reminder", {
+                  minutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
+                })
+              : localize("main.success.parking_saved"),
           });
 
           setTimeout(() => {
@@ -399,17 +398,8 @@ const styles = StyleSheet.create({
     height: 26,
     tintColor: "white",
   },
-  logoText: {
-    fontSize: 17,
-    fontWeight: "900",
-    color: "white",
-    letterSpacing: -0.3,
-  },
-  logoSub: {
-    fontSize: 11,
-    color: "rgba(255,255,255,0.65)",
-    marginTop: 1,
-  },
+  logoText: typography.heroTitle,
+  logoSub: typography.heroSub,
   menuBtn: {
     width: 34,
     height: 34,

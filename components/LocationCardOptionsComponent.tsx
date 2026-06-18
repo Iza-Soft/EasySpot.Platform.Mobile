@@ -14,6 +14,7 @@ import { CardItem, Scheduler } from "../types/common";
 import { useSQLiteContext } from "expo-sqlite";
 import { useTimer } from "../hook/useTimer";
 import { useTranslation } from "react-i18next";
+import { typography } from "../themes/typography";
 
 const screenHeight = Dimensions.get("window").height;
 export default function LocationCardOptionsComponent({
@@ -200,7 +201,7 @@ export default function LocationCardOptionsComponent({
                   {localize("card_options.sections.reminder")}
                 </Text>
 
-                <View style={styles.timerInline}>
+                <View style={[styles.timerInline, { marginTop: 16 }]}>
                   <Text
                     style={[
                       styles.timerTextInline,
@@ -209,15 +210,14 @@ export default function LocationCardOptionsComponent({
                   >
                     ⏱️ {timer.formattedTime}
                   </Text>
-                  {timer.isExpired ? (
+                  {timer.isExpired ?
                     <Text style={styles.expiredTextInline}>
                       {localize("card_options.timer.expired")}
                     </Text>
-                  ) : (
-                    <Text style={styles.remainingTextInline}>
+                  : <Text style={styles.remainingTextInline}>
                       {localize("card_options.timer.remaining")}
                     </Text>
-                  )}
+                  }
                 </View>
               </View>
 
@@ -312,36 +312,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
-  headerText: {
-    fontSize: 22,
-    fontWeight: "900",
-    color: colors.text,
-  },
-
+  headerText: typography.headerLarge,
   section: {
     marginTop: 20,
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.text,
-    marginBottom: 10,
-  },
+  sectionTitle: typography.sectionTitle,
   item: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 8,
   },
-  itemText: {
-    fontSize: 14,
-    color: colors.text,
-    marginLeft: 10,
-  },
+  itemText: typography.itemText,
   emoji: {
     fontSize: 16,
     marginRight: 5,
   },
-  itemSubText: { fontSize: 12, color: colors.muted, marginLeft: 10 },
+  itemSubText: typography.itemSubText,
   reminderHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
