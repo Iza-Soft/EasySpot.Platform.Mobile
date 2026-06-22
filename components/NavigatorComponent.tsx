@@ -58,7 +58,6 @@ const NavigatorComponent = ({ navigation }: any) => {
     checkPrivacyPolicy();
   }, []);
 
-  // ✅ Handle modal close
   const handleCloseModal = async () => {
     // If privacy is required
     if (policyRequired) {
@@ -74,91 +73,42 @@ const NavigatorComponent = ({ navigation }: any) => {
     setModalVisible(false);
   };
 
-  const HeaderMenuButton = ({ navigation }: any) => (
-    <TouchableOpacity
-      onPress={() => setSettingsVisible(true)}
-      style={{ marginRight: 15 }}
-    >
-      <Ionicons name="menu" size={28} color={colors.tab} />
-    </TouchableOpacity>
-  );
-
   const { handleInstructionsOpened } = useBatteryBannerLogic();
 
   return (
     <NavigationContainer>
       <StatusBar
-        barStyle="dark-content"
+        barStyle="light-content"
         backgroundColor="transparent"
         translucent={true}
       />
       <Stack.Navigator>
         <Stack.Screen
           name="Main"
-          component={MainScreenComponent}
           options={{
-            headerTitle: () => (
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Image
-                  source={require("../assets/easyspot-logo.png")}
-                  style={{ width: 32, height: 32 }}
-                  resizeMode="contain" // or 'cover', 'stretch'
-                />
-                <Text
-                  style={{
-                    fontSize: 20,
-                    color: colors.tab,
-                    fontWeight: "900",
-                    marginBottom: 10,
-                    marginLeft: -6,
-                  }}
-                >
-                  asy spot
-                </Text>
-                <Text
-                  style={{ fontSize: 12, color: colors.muted, marginLeft: 15 }}
-                >
-                  v{appVersion}
-                </Text>
-              </View>
-            ),
-            headerRight: () => <HeaderMenuButton navigation={navigation} />,
+            headerShown: false,
           }}
-        />
+        >
+          {(props) => (
+            <MainScreenComponent
+              {...props}
+              onMenuPress={() => setSettingsVisible(true)}
+            />
+          )}
+        </Stack.Screen>
         <Stack.Screen
           name="History"
-          component={HistoryScreenComponent}
           options={{
-            headerTitle: () => (
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Image
-                  source={require("../assets/easyspot-logo.png")}
-                  style={{ width: 32, height: 32 }}
-                  resizeMode="contain" // or 'cover', 'stretch'
-                />
-                <Text
-                  style={{
-                    fontSize: 20,
-                    color: colors.tab,
-                    fontWeight: "900",
-                    marginBottom: 10,
-                    marginLeft: -6,
-                  }}
-                >
-                  asy spot
-                </Text>
-                <Text
-                  style={{ fontSize: 12, color: colors.muted, marginLeft: 15 }}
-                >
-                  v{appVersion}
-                </Text>
-              </View>
-            ),
-            headerLeft: () => null, // <-- removes the back button
-            headerBackVisible: false, // hides back button
-            headerRight: () => <HeaderMenuButton navigation={navigation} />,
+            headerShown: false,
           }}
-        />
+        >
+          {(props) => (
+            <HistoryScreenComponent
+              {...props}
+              onMenuPress={() => setSettingsVisible(true)}
+            />
+          )}
+        </Stack.Screen>
       </Stack.Navigator>
       <FooterComponent />
       <SettingsComponent
@@ -214,11 +164,11 @@ const styles = StyleSheet.create({
     width: 98,
     height: 30,
     marginRight: 8,
-    borderRadius: 0, // matches your icon style
+    borderRadius: 0,
   },
   headerTitleText: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#007BFF", // ParkMate blue
+    color: "#007BFF",
   },
 });

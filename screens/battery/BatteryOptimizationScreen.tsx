@@ -3,6 +3,7 @@ import { Text, ScrollView, StyleSheet } from "react-native";
 import { checkBatteryOptimizations } from "../../utils/deviceUtils";
 import { colors } from "../../themes/main";
 import { useTranslation } from "react-i18next";
+import { typography } from "../../themes/typography";
 
 const BatteryOptimizationScreenComponent = () => {
   const { t: localize } = useTranslation();
@@ -246,35 +247,39 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "900",
-    marginBottom: 10,
-  },
+  title: typography.headerLarge,
+  // title: {
+  //   fontSize: 24,
+  //   fontWeight: "900",
+  //   marginBottom: 10,
+  // },
   deviceInfo: {
     fontWeight: "700",
     marginBottom: 20,
   },
-  sectionTitle: {
-    fontWeight: "700",
-    fontSize: 14,
-    lineHeight: 21,
-    color: colors.text,
-    marginBottom: 10,
-  },
-  paragraph: {
-    fontSize: 14,
-    lineHeight: 21,
-    color: colors.text,
-    marginBottom: 10,
-  },
-  listItem: {
-    fontSize: 14,
-    lineHeight: 21,
-    color: colors.text,
-    marginLeft: 10,
-    marginBottom: 4,
-  },
+  sectionTitle: typography.sectionTitle,
+  // sectionTitle: {
+  //   fontWeight: "700",
+  //   fontSize: 14,
+  //   lineHeight: 21,
+  //   color: colors.text,
+  //   marginBottom: 10,
+  // },
+  paragraph: typography.body,
+  // paragraph: {
+  //   fontSize: 14,
+  //   lineHeight: 21,
+  //   color: colors.text,
+  //   marginBottom: 10,
+  // },
+  listItem: { ...typography.body, marginLeft: 10 },
+  // listItem: {
+  //   fontSize: 14,
+  //   lineHeight: 21,
+  //   color: colors.text,
+  //   marginLeft: 10,
+  //   marginBottom: 4,
+  //},
   subListItem: {
     fontSize: 14,
     lineHeight: 21,
@@ -299,13 +304,14 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.card,
   },
-  footer: {
-    marginTop: 20,
-    fontSize: 12,
-    textAlign: "center",
-    color: colors.muted,
-    marginBottom: 8,
-  },
+  footer: typography.footer,
+  // footer: {
+  //   marginTop: 20,
+  //   fontSize: 12,
+  //   textAlign: "center",
+  //   color: colors.muted,
+  //   marginBottom: 8,
+  // },
   footerDetail: {
     fontSize: 12,
     color: colors.muted,

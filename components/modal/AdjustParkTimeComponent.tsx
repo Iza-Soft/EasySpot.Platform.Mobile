@@ -10,6 +10,7 @@ import { colors } from "../../themes/main";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import { REMINDER_CONFIG } from "../../config/reminder.config";
 import { useTranslation } from "react-i18next";
+import { typography } from "../../themes/typography";
 
 const HOUR_OPTIONS = REMINDER_CONFIG.DURATION_OPTIONS_MINUTES.map(
   (m) => m / 60,
@@ -55,31 +56,32 @@ export default function AdjustParkTimeComponent({
   };
 
   const getReminderTime = () => {
-    const totalMins = isOther
-      ? parseInt(customHours || "0") * 60 + parseInt(customMinutes || "0") - 15
+    const totalMins =
+      isOther ?
+        parseInt(customHours || "0") * 60 + parseInt(customMinutes || "0") - 15
       : HOUR_OPTIONS[selectedIndex] * 60 - 15;
 
     if (totalMins <= 0) return localize("adjust_park_time.no_reminder");
     const h = Math.floor(totalMins / 60);
     const m = totalMins % 60;
-    return h > 0
-      ? `${h}${localize("adjust_park_time.hours_short")} ${m}${localize("adjust_park_time.min")}`
+    return h > 0 ?
+        `${h}${localize("adjust_park_time.hours_short")} ${m}${localize("adjust_park_time.min")}`
       : `${m}${localize("adjust_park_time.min")}`;
   };
 
   const getSelectedLabel = () => {
     if (!isOther) {
       const h = HOUR_OPTIONS[selectedIndex];
-      return h === 1
-        ? localize("adjust_park_time.label_1h")
-        : h === 2
-          ? localize("adjust_park_time.label_2h")
-          : localize("adjust_park_time.label_4h");
+      return (
+        h === 1 ? localize("adjust_park_time.label_1h")
+        : h === 2 ? localize("adjust_park_time.label_2h")
+        : localize("adjust_park_time.label_4h")
+      );
     }
     const h = parseInt(customHours || "0");
     const m = parseInt(customMinutes || "0");
-    return h || m
-      ? `${h}${localize("adjust_park_time.hours_short")} ${String(m).padStart(2, "0")}${localize("adjust_park_time.min")}`
+    return h || m ?
+        `${h}${localize("adjust_park_time.hours_short")} ${String(m).padStart(2, "0")}${localize("adjust_park_time.min")}`
       : localize("adjust_park_time.custom");
   };
 
@@ -160,11 +162,11 @@ export default function AdjustParkTimeComponent({
                 const minMinutes =
                   customHours === "" || customHours === "0" ? 16 : 0;
                 const clamped =
-                  numeric.length === 2
-                    ? String(
-                        Math.min(59, Math.max(minMinutes, parseInt(numeric))),
-                      )
-                    : numeric;
+                  numeric.length === 2 ?
+                    String(
+                      Math.min(59, Math.max(minMinutes, parseInt(numeric))),
+                    )
+                  : numeric;
                 setCustomMinutes(clamped);
                 handleCustomChange(customHours, clamped);
               }}
@@ -231,17 +233,8 @@ const styles = StyleSheet.create({
   iconEmoji: {
     fontSize: 18,
   },
-  header: {
-    fontSize: 17,
-    fontWeight: "700",
-    color: colors.text,
-  },
-  description: {
-    fontSize: 13,
-    color: colors.muted,
-    lineHeight: 19,
-    marginBottom: 14,
-  },
+  header: typography.header,
+  description: typography.bodySmall,
   descriptionAccent: {
     color: colors.tab,
     fontWeight: "600",
@@ -292,25 +285,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
-  summaryLabel: {
-    fontSize: 11,
-    color: colors.muted,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    marginBottom: 3,
-  },
-  summaryValue: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: colors.text,
-  },
+  summaryLabel: typography.label,
+  summaryValue: { ...typography.header, marginBottom: 0 },
   summaryRight: {
     alignItems: "flex-end",
   },
   summaryAccent: {
     color: colors.tab,
   },
-
   confirmButton: {
     backgroundColor: colors.tab,
     borderRadius: 8,

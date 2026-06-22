@@ -1,25 +1,28 @@
-import { useEffect, useRef, useMemo } from "react";
 import { Pressable, View, Text, StyleSheet, Animated } from "react-native";
+import { useEffect, useRef, useMemo } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../themes/main";
 import { SlideCardProps } from "../types/props";
+import { typography } from "../themes/typography";
 
-export function SlideCardComponent({ item, onPress }: SlideCardProps) {
-  const contentOpacity = item.disabled ? 0.6 : 1;
+const ICON_COLORS: Record<string, { bg: string }> = {
+  parking: { bg: "#e6fbfa" },
+  navigate: { bg: "#f3f4f6" },
+  favorites: { bg: "#fefce8" },
+  history: { bg: "#f0fdf4" },
+  share: { bg: "#eff6ff" },
+};
 
-  // 🔒 lock animation
+export function SlideCardComponent({
+  item,
+  onPress,
+  isFullWidth,
+}: SlideCardProps & { isFullWidth?: boolean }) {
+  const contentOpacity = item.disabled ? 0.45 : 1;
   const lockAnim = useRef(new Animated.Value(item.disabled ? 1 : 0)).current;
-
-  // 🔥 card pulse scale
   const pulseScale = useRef(new Animated.Value(1)).current;
-
-  // ✨ glow overlay opacity (safe with native driver)
-  const glowAnim = useRef(new Animated.Value(0)).current;
-
-  // Track previous state
   const wasDisabled = useRef(item.disabled);
 
-  // Lock icon animated style
   const lockStyle = useMemo(
     () => ({
       opacity: lockAnim,
@@ -35,7 +38,6 @@ export function SlideCardComponent({ item, onPress }: SlideCardProps) {
     [lockAnim],
   );
 
-  // Lock icon animation
   useEffect(() => {
     Animated.spring(lockAnim, {
       toValue: item.disabled ? 1 : 0,
@@ -45,11 +47,8 @@ export function SlideCardComponent({ item, onPress }: SlideCardProps) {
     }).start();
   }, [item.disabled]);
 
-  // Pulse & glow when card becomes enabled
   useEffect(() => {
     if (wasDisabled.current && !item.disabled) {
-      // 🔥 Pulse animation
-      pulseScale.stopAnimation();
       Animated.sequence([
         Animated.timing(pulseScale, {
           toValue: 1.03,
@@ -63,114 +62,111 @@ export function SlideCardComponent({ item, onPress }: SlideCardProps) {
           useNativeDriver: true,
         }),
       ]).start();
-
-      // ✨ Glow overlay animation (1 second)
-      glowAnim.setValue(0);
-      Animated.sequence([
-        Animated.timing(glowAnim, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true, // safe now
-        }),
-        Animated.timing(glowAnim, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: true, // fade out
-        }),
-      ]).start();
     }
-
     wasDisabled.current = item.disabled;
   }, [item.disabled]);
 
+  const iconBg = ICON_COLORS[item.action]?.bg ?? "#f3f4f6";
+
+  if (isFullWidth) {
+    return (
+      <Animated.View style={{ transform: [{ scale: pulseScale }] }}>
+        <Pressable
+          onPress={() => onPress(item.action)}
+          disabled={item.disabled}
+          style={({ pressed }) => [
+            styles.cardRow,
+            pressed && !item.disabled && { transform: [{ scale: 0.98 }] },
+          ]}
+        >
+          <View
+            style={[
+              styles.iconBox,
+              { backgroundColor: iconBg, opacity: contentOpacity },
+            ]}
+          >
+            <Text style={styles.iconEmoji}>{item.emoji}</Text>
+          </View>
+          <View style={[{ flex: 1 }, { opacity: contentOpacity }]}>
+            <Text style={styles.cardTitle}>{item.title}</Text>
+            <Text style={styles.cardDesc}>{item.description}</Text>
+          </View>
+          <Animated.View style={lockStyle} pointerEvents="none">
+            <Ionicons name="lock-closed" size={15} color={colors.muted} />
+          </Animated.View>
+          {!item.disabled && (
+            <Ionicons name="chevron-forward" size={14} color="#d1d5db" />
+          )}
+        </Pressable>
+      </Animated.View>
+    );
+  }
+
   return (
-    <Animated.View style={{ transform: [{ scale: pulseScale }] }}>
+    <Animated.View style={[{ transform: [{ scale: pulseScale }], flex: 1 }]}>
       <Pressable
         onPress={() => onPress(item.action)}
         disabled={item.disabled}
-        pointerEvents={item.disabled ? "none" : "auto"}
         style={({ pressed }) => [
-          styles.card,
-          pressed && !item.disabled && { transform: [{ scale: 0.98 }] },
+          styles.cardGrid,
+          pressed && !item.disabled && { transform: [{ scale: 0.96 }] },
         ]}
       >
-        {/* Glow overlay */}
-        {!item.disabled && (
-          <Animated.View
-            pointerEvents="none"
-            style={[
-              StyleSheet.absoluteFill,
-              {
-                borderRadius: 16,
-                borderWidth: 1,
-                borderColor: colors.tab,
-                opacity: glowAnim, // animated opacity
-              },
-            ]}
-          />
-        )}
-
-        <View style={styles.cardHeader}>
-          <View style={[styles.left, { opacity: contentOpacity }]}>
-            <Text style={styles.emoji}>{item.emoji}</Text>
-            <Text style={styles.cardTitle}>{item.title}</Text>
-          </View>
-
-          {/* 🔒 animated lock */}
-          <Animated.View style={lockStyle} pointerEvents="none">
-            <Ionicons name="lock-closed" size={18} color={colors.muted} />
-          </Animated.View>
+        <View
+          style={[
+            styles.iconBox,
+            { backgroundColor: iconBg },
+            { opacity: contentOpacity },
+          ]}
+        >
+          <Text style={styles.iconEmoji}>{item.emoji}</Text>
         </View>
-
-        <Text style={[styles.cardDesc, { opacity: contentOpacity }]}>
-          {item.description}
-        </Text>
+        <View style={{ opacity: contentOpacity }}>
+          <Text style={styles.cardTitle}>{item.title}</Text>
+          <Text style={styles.cardDesc}>{item.description}</Text>
+        </View>
+        <Animated.View
+          style={[lockStyle, { position: "absolute", top: 12, right: 12 }]}
+          pointerEvents="none"
+        >
+          <Ionicons name="lock-closed" size={15} color={colors.muted} />
+        </Animated.View>
       </Pressable>
     </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
+  cardGrid: {
     backgroundColor: colors.card,
     borderRadius: 16,
-    padding: 18,
-    shadowColor: "#000",
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
+    padding: 16,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.border,
-  },
-
-  cardHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 6,
-  },
-
-  left: {
-    flexDirection: "row",
-    alignItems: "center",
     flex: 1,
   },
-
-  emoji: {
-    fontSize: 26,
-    marginRight: 10,
+  cardRow: {
+    backgroundColor: colors.card,
+    borderRadius: 16,
+    padding: 14,
+    paddingHorizontal: 16,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.border,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
   },
-
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: colors.text,
+  iconBox: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
   },
-
-  cardDesc: {
-    fontSize: 14,
-    color: colors.muted,
-    marginTop: 2,
+  iconEmoji: {
+    fontSize: 20,
   },
+  cardTitle: typography.cardTitle,
+  cardDesc: typography.cardDesc,
 });

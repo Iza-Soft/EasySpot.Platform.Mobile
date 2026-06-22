@@ -1,7 +1,6 @@
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../../themes/main";
-//import { SLIDE_ITEMS } from "../../constants/slides";
 import { useSlideItems } from "../../hook/slides";
 import { SlideCardComponent } from "../../components/SlideCardComponent";
 import {
@@ -29,6 +28,9 @@ import ParkingNativeService from "../../native/ParkingModule";
 import { setupSchedulerAsync } from "../../services/scheduler-service";
 import { REMINDER_CONFIG } from "../../config/reminder.config";
 import { useTranslation } from "react-i18next";
+import { Image, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { typography } from "../../themes/typography";
 
 export type LocationDetails = {
   id?: string;
@@ -40,7 +42,7 @@ export type LocationDetails = {
   timerEnabled?: boolean;
 };
 
-export default function MainScreenComponent({ navigation }: any) {
+export default function MainScreenComponent({ navigation, onMenuPress }: any) {
   const database = useSQLiteContext();
   const { t: localize } = useTranslation();
   const SLIDE_ITEMS = useSlideItems();
@@ -79,9 +81,9 @@ export default function MainScreenComponent({ navigation }: any) {
   }, []);
 
   const slides = SLIDE_ITEMS.map((item) =>
-    item.action === "navigate"
-      ? { ...item, disabled: !hasSavedLocation }
-      : item,
+    item.action === "navigate" ?
+      { ...item, disabled: !hasSavedLocation }
+    : item,
   );
 
   const navigateIndex = slides.findIndex((item) => item.action === "navigate");
@@ -113,13 +115,12 @@ export default function MainScreenComponent({ navigation }: any) {
             type: "success",
             text1: localize("common.success"),
             text2:
-              action === "favorites"
-                ? localize("main.success.favorite_saved")
-                : scheduled
-                  ? localize("main.success.parking_with_reminder", {
-                      minutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
-                    })
-                  : localize("main.success.parking_saved"),
+              action === "favorites" ? localize("main.success.favorite_saved")
+              : scheduled ?
+                localize("main.success.parking_with_reminder", {
+                  minutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
+                })
+              : localize("main.success.parking_saved"),
           });
 
           setTimeout(() => {
@@ -270,6 +271,27 @@ export default function MainScreenComponent({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.hero}>
+        <View style={styles.heroInner}>
+          <View style={styles.logoRow}>
+            <View style={styles.logoIconWrapper}>
+              <Image
+                source={require("../../assets/easyspot-logo.png")}
+                style={styles.logoIcon}
+                resizeMode="contain"
+              />
+            </View>
+            <View>
+              <Text style={styles.logoText}>easy spot</Text>
+              <Text style={styles.logoSub}>{localize("about.tagline")}</Text>
+            </View>
+          </View>
+          <TouchableOpacity style={styles.menuBtn} onPress={onMenuPress}>
+            <Ionicons name="menu" size={20} color="white" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
       {shouldShowBanner && deviceInfo && (
         <BatteryOptimizationBannerComponent
           deviceInfo={deviceInfo}
@@ -281,12 +303,22 @@ export default function MainScreenComponent({ navigation }: any) {
         ref={listRef}
         data={slides}
         keyExtractor={(_, i) => String(i)}
+        numColumns={2}
+        columnWrapperStyle={styles.row}
         contentContainerStyle={styles.listContent}
-        renderItem={({ item }) => (
-          <SlideCardComponent item={item} onPress={onPress} />
-        )}
-        ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-        // 👇 IMPORTANT — avoid scroll crash
+        renderItem={({ item, index }) => {
+          const isLastOdd =
+            slides.length % 2 !== 0 && index === slides.length - 1;
+          if (isLastOdd) {
+            return (
+              <View style={{ flex: 1 }}>
+                <SlideCardComponent item={item} onPress={onPress} isFullWidth />
+              </View>
+            );
+          }
+          return <SlideCardComponent item={item} onPress={onPress} />;
+        }}
+        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
         onScrollToIndexFailed={(info) => {
           setTimeout(() => {
             listRef.current?.scrollToIndex({
@@ -336,8 +368,53 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bg,
     marginTop: -30,
   },
-  listContent: {
+
+  hero: {
+    backgroundColor: colors.tab,
+    paddingTop: 40,
+    paddingBottom: 16,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+  },
+  heroInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  logoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  logoIconWrapper: {
+    width: 34,
+    height: 34,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logoIcon: {
+    width: 26,
+    height: 26,
+    tintColor: "white",
+  },
+  logoText: typography.heroTitle,
+  logoSub: typography.heroSub,
+  menuBtn: {
+    width: 34,
+    height: 34,
+    backgroundColor: "rgba(255,255,255,0.15)",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  listContent: {
+    padding: 14,
+    gap: 10,
+  },
+
+  row: {
+    gap: 10,
   },
 });

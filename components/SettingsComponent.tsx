@@ -15,6 +15,7 @@ import { colors } from "../themes/main";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNotifications } from "../hook/useNotifications";
 import { useTranslation } from "react-i18next";
+import { typography } from "../themes/typography";
 
 const screenHeight = Dimensions.get("window").height;
 export default function SettingsComponent({
@@ -198,20 +199,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
-  headerText: {
-    fontSize: 22,
-    fontWeight: "900",
-    color: colors.text,
-  },
+  headerText: typography.headerLarge,
   section: {
     marginTop: 20,
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.text,
-    marginBottom: 10,
-  },
+  sectionTitle: typography.sectionTitle,
   itemWithSwitch: {
     flexDirection: "row",
     alignItems: "center",
@@ -227,12 +219,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
   },
-  itemText: {
-    fontSize: 14,
-    color: colors.text,
-    marginLeft: 10,
-  },
-  // 💎 Subscription Styles
+  itemText: typography.itemText,
   subscriptionSection: {
     marginTop: 25,
     paddingVertical: 15,
