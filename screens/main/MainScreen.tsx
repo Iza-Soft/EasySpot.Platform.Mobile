@@ -81,9 +81,9 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
   }, []);
 
   const slides = SLIDE_ITEMS.map((item) =>
-    item.action === "navigate" ?
-      { ...item, disabled: !hasSavedLocation }
-    : item,
+    item.action === "navigate"
+      ? { ...item, disabled: !hasSavedLocation }
+      : item,
   );
 
   const navigateIndex = slides.findIndex((item) => item.action === "navigate");
@@ -115,12 +115,13 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
             type: "success",
             text1: localize("common.success"),
             text2:
-              action === "favorites" ? localize("main.success.favorite_saved")
-              : scheduled ?
-                localize("main.success.parking_with_reminder", {
-                  minutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
-                })
-              : localize("main.success.parking_saved"),
+              action === "favorites"
+                ? localize("main.success.favorite_saved")
+                : scheduled
+                  ? localize("main.success.parking_with_reminder", {
+                      minutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
+                    })
+                  : localize("main.success.parking_saved"),
           });
 
           setTimeout(() => {
@@ -270,7 +271,7 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <View style={styles.hero}>
         <View style={styles.heroInner}>
           <View style={styles.logoRow}>
@@ -358,20 +359,14 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
       >
         <BatteryOptimizationScreenComponent />
       </ModalComponent>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.bg,
-    marginTop: -30,
-  },
-
   hero: {
     backgroundColor: colors.tab,
-    paddingTop: 40,
+    paddingTop: 60,
     paddingBottom: 16,
     paddingHorizontal: 16,
   },
