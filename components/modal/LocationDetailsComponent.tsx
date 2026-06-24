@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   DimensionValue,
   Switch,
+  StyleSheet,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { colors } from "../../themes/main";
@@ -115,9 +116,14 @@ export default function LocationDetailsComponent({
 
   return (
     <View style={{ width: "100%" }}>
-      <Text style={typography.header}>
+      {/* <Text style={typography.header}>
         {localize("location_details.title")}
-      </Text>
+      </Text> */}
+      <View style={styles.headerRow}>
+        <Text style={typography.header}>
+          {localize("location_details.title")}
+        </Text>
+      </View>
       {renderInput(
         localize("location_details.fields.title"),
         title,
@@ -131,9 +137,9 @@ export default function LocationDetailsComponent({
           style={{ marginBottom: 8, paddingVertical: 4 }}
         >
           <Text style={{ color: colors.tab, fontWeight: "600" }}>
-            {!showDetails ?
-              localize("location_details.add_details")
-            : localize("location_details.hide_details")}
+            {!showDetails
+              ? localize("location_details.add_details")
+              : localize("location_details.hide_details")}
           </Text>
         </TouchableOpacity>
       )}
@@ -226,12 +232,21 @@ export default function LocationDetailsComponent({
           <Text
             style={{ color: colors.bg, textAlign: "center", fontWeight: "600" }}
           >
-            {mode === "edit" ?
-              localize("common.save")
-            : localize("common.update")}
+            {mode === "edit"
+              ? localize("common.save")
+              : localize("common.update")}
           </Text>
         </TouchableOpacity>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 12,
+  },
+});
