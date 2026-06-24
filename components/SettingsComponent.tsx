@@ -8,7 +8,6 @@ import {
   Dimensions,
   Pressable,
   Switch,
-  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../themes/main";

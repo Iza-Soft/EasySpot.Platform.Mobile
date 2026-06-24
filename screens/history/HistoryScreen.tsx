@@ -19,7 +19,6 @@ import {
   openMapsAsync,
   ShareLocationAsync,
 } from "../../services/navigation-service";
-import { Maps } from "../../constants/maps";
 import LocationCard from "../../components/LocationCard";
 import { CardItem } from "../../types/common";
 import EmptyComponent from "../../components/EmptyComponent";

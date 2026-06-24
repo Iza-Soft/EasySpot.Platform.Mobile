@@ -113,7 +113,12 @@
       "privacy_policy": "Politique de confidentialité",
       "terms_of_service": "Conditions d'utilisation",
       "battery_optimization": "Optimisation de la batterie",
-      "about": "À propos d'Easy Spot"
+      "about": "À propos d'Easy Spot",
+      "map_provider": "Application de navigation"
+    },
+    "map_provider": {
+      "title": "Choisir l'application de navigation",
+      "description": "Sélectionnez l'application à utiliser pour naviguer vers un emplacement enregistré."
     }
   },
   "privacy": {

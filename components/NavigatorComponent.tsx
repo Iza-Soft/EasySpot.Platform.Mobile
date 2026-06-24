@@ -1,18 +1,9 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import {
-  StatusBar,
-  StyleSheet,
-  Image,
-  View,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
 import MainScreenComponent from "../screens/main/MainScreen";
 import FooterComponent from "./FooterComponent";
 import HistoryScreenComponent from "../screens/history/HistoryScreen";
-import { colors } from "../themes/main";
-import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import SettingsComponent from "./SettingsComponent";
 import ModalComponent from "./modal/ModalComponent";

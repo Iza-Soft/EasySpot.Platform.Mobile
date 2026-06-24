@@ -34,6 +34,34 @@ export default function MapProviderComponent() {
     (p) => !(p.id === Maps.apple && Platform.OS === "android"),
   );
 
+  const MapIcon = ({
+    brandColor,
+    initial,
+    size = 25,
+  }: {
+    brandColor: string;
+    initial: string;
+    size?: number;
+  }) => (
+    <View
+      style={[
+        styles.mapIcon,
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 4,
+          backgroundColor: brandColor,
+        },
+      ]}
+    >
+      <Text
+        style={[styles.mapIconText, { fontSize: initial.length > 1 ? 11 : 18 }]}
+      >
+        {initial}
+      </Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>{t("settings.map_provider.title")}</Text>
@@ -51,7 +79,10 @@ export default function MapProviderComponent() {
               onPress={() => handleSelect(provider.id)}
               activeOpacity={0.7}
             >
-              <Text style={styles.emoji}>{provider.emoji}</Text>
+              <MapIcon
+                brandColor={provider.brandColor}
+                initial={provider.initial}
+              />
               <Text
                 style={[
                   styles.cardLabel,
@@ -130,5 +161,20 @@ const styles = StyleSheet.create({
     backgroundColor: colors.tab,
     alignItems: "center",
     justifyContent: "center",
+  },
+  mapIcon: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
+  },
+  mapIconText: {
+    color: "white",
+    fontWeight: "900",
+    letterSpacing: -0.5,
   },
 });

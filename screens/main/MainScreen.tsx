@@ -1,5 +1,4 @@
 import { StyleSheet, View, FlatList, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../../themes/main";
 import { useSlideItems } from "../../hook/slides";
 import { SlideCardComponent } from "../../components/SlideCardComponent";
@@ -14,7 +13,6 @@ import {
   openMapsAsync,
   ShareLocationAsync,
 } from "../../services/navigation-service";
-import { Maps } from "../../constants/maps";
 import { LocationData } from "../../types/common";
 import * as Location from "expo-location";
 import Toast from "react-native-toast-message";
