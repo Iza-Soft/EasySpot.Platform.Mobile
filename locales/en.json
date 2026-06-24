@@ -113,7 +113,12 @@
       "privacy_policy": "Privacy policy",
       "terms_of_service": "Terms of service",
       "battery_optimization": "Battery optimization",
-      "about": "About Easy Spot"
+      "about": "About Easy Spot",
+      "map_provider": "Navigation app"
+    },
+    "map_provider": {
+      "title": "Choose navigation app",
+      "description": "Select which app to use when navigating to a saved location."
     }
   },
   "privacy": {

@@ -31,6 +31,7 @@ import { useTranslation } from "react-i18next";
 import { Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { typography } from "../../themes/typography";
+import { getPreferredMap } from "../../services/map-preference-service";
 
 export type LocationDetails = {
   id?: string;
@@ -206,7 +207,7 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
             await openMapsAsync({
               latitude: (location as LocationData).latitude,
               longitude: (location as LocationData).longitude,
-              map: Maps.google,
+              map: await getPreferredMap(),
             });
           },
           onError: (message) => {
@@ -237,7 +238,7 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
             return;
           }
 
-          await ShareLocationAsync(Maps.google);
+          await ShareLocationAsync();
         } catch (err) {
           console.error("❌ Share current location failed:", err);
           Toast.show({

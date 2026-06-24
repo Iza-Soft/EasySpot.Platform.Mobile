@@ -47,6 +47,7 @@ import { REMINDER_CONFIG } from "../../config/reminder.config";
 import { useTranslation } from "react-i18next";
 import { TABS_CONFIG } from "../../config/tabs.config";
 import { Ionicons } from "@expo/vector-icons";
+import { getPreferredMap } from "../../services/map-preference-service";
 
 export default function HistoryScreenComponent({
   navigation,
@@ -141,7 +142,7 @@ export default function HistoryScreenComponent({
       await openMapsAsync({
         latitude: item.latitude,
         longitude: item.longitude,
-        map: Maps.google,
+        map: await getPreferredMap(),
       });
     } else {
       Toast.show({
@@ -379,7 +380,7 @@ export default function HistoryScreenComponent({
     setLoadingMessage(localize("history.share_location"));
     setTimeout(async () => {
       try {
-        await ShareLocationAsync(Maps.google, {
+        await ShareLocationAsync({
           latitude: coordinates?.latitude,
           longitude: coordinates?.longitude,
         });
