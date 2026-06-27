@@ -113,7 +113,12 @@
       "privacy_policy": "Gizlilik politikası",
       "terms_of_service": "Kullanım koşulları",
       "battery_optimization": "Pil optimizasyonu",
-      "about": "EasySpot Hakkında"
+      "about": "EasySpot Hakkında",
+      "map_provider": "Navigasyon uygulaması"
+    },
+    "map_provider": {
+      "title": "Navigasyon uygulaması seç",
+      "description": "Kayıtlı bir konuma giderken kullanılacak uygulamayı seçin."
     }
   },
   "privacy": {

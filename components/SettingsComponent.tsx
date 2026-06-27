@@ -8,7 +8,6 @@ import {
   Dimensions,
   Pressable,
   Switch,
-  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../themes/main";
@@ -25,6 +24,7 @@ export default function SettingsComponent({
   onTermsView,
   onAboutView,
   onBatteryOptimizationView,
+  onMapProviderView,
 }: any) {
   const { t: localize } = useTranslation();
   const slideAnim = useRef(new Animated.Value(screenHeight)).current; // starts off-screen
@@ -118,6 +118,13 @@ export default function SettingsComponent({
               ios_backgroundColor="#3e3e3e"
             />
           </View>
+
+          <TouchableOpacity style={styles.item} onPress={onMapProviderView}>
+            <Text style={styles.emoji}>🗺️</Text>
+            <Text style={styles.itemText}>
+              {localize("settings.items.map_provider")}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Privacy & Tearms */}

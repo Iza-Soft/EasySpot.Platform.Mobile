@@ -37,38 +37,14 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: typography.headerLarge,
-  // title: {
-  //   fontSize: 24,
-  //   fontWeight: "900",
-  //   marginBottom: 10,
-  // },
-
   tagline: {
     fontWeight: "700",
+    marginTop: 5,
     marginBottom: 20,
   },
   paragraph: typography.body,
-  // paragraph: {
-  //   fontSize: 14,
-  //   lineHeight: 21,
-  //   color: colors.text,
-  //   marginBottom: 10,
-  // },
   listItem: { ...typography.body, marginLeft: 10 },
-  // listItem: {
-  //   fontSize: 14,
-  //   lineHeight: 21,
-  //   color: colors.text,
-  //   marginLeft: 10,
-  //   marginBottom: 4,
-  // },
-  footer: typography.footer,
-  // footer: {
-  //   marginTop: 20,
-  //   fontSize: 12,
-  //   textAlign: "center",
-  //   color: colors.muted,
-  // },
+  footer: { ...typography.footer, marginTop: 20 },
 });
 
 export default AboutScreenComponent;

@@ -113,7 +113,12 @@
       "privacy_policy": "Политика конфиденциальности",
       "terms_of_service": "Условия использования",
       "battery_optimization": "Оптимизация батареи",
-      "about": "О Easy Spot"
+      "about": "О Easy Spot",
+      "map_provider": "Навигационное приложение"
+    },
+    "map_provider": {
+      "title": "Выбрать навигационное приложение",
+      "description": "Выберите приложение для навигации к сохранённому месту."
     }
   },
   "privacy": {

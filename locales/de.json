@@ -113,7 +113,12 @@
       "privacy_policy": "Datenschutzrichtlinie",
       "terms_of_service": "Nutzungsbedingungen",
       "battery_optimization": "Akku-Optimierung",
-      "about": "Über Easy Spot"
+      "about": "Über Easy Spot",
+      "map_provider": "Navigations-App"
+    },
+    "map_provider": {
+      "title": "Navigations-App wählen",
+      "description": "Wählen Sie, welche App beim Navigieren zu einem gespeicherten Ort geöffnet werden soll."
     }
   },
   "privacy": {

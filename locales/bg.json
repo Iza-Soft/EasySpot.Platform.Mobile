@@ -113,7 +113,12 @@
       "privacy_policy": "Политика за поверителност",
       "terms_of_service": "Условия за ползване",
       "battery_optimization": "Оптимизация на батерията",
-      "about": "За Easy Spot"
+      "about": "За Easy Spot",
+      "map_provider": "Навигационно приложение"
+    },
+    "map_provider": {
+      "title": "Избери навигационно приложение",
+      "description": "Избери кое приложение да се отваря при навигация към запазена локация."
     }
   },
   "privacy": {

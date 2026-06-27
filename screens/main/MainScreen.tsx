@@ -1,5 +1,4 @@
 import { StyleSheet, View, FlatList, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../../themes/main";
 import { useSlideItems } from "../../hook/slides";
 import { SlideCardComponent } from "../../components/SlideCardComponent";
@@ -14,7 +13,6 @@ import {
   openMapsAsync,
   ShareLocationAsync,
 } from "../../services/navigation-service";
-import { Maps } from "../../constants/maps";
 import { LocationData } from "../../types/common";
 import * as Location from "expo-location";
 import Toast from "react-native-toast-message";
@@ -31,6 +29,7 @@ import { useTranslation } from "react-i18next";
 import { Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { typography } from "../../themes/typography";
+import { getPreferredMap } from "../../services/map-preference-service";
 
 export type LocationDetails = {
   id?: string;
@@ -206,7 +205,7 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
             await openMapsAsync({
               latitude: (location as LocationData).latitude,
               longitude: (location as LocationData).longitude,
-              map: Maps.google,
+              map: await getPreferredMap(),
             });
           },
           onError: (message) => {
@@ -237,7 +236,7 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
             return;
           }
 
-          await ShareLocationAsync(Maps.google);
+          await ShareLocationAsync();
         } catch (err) {
           console.error("❌ Share current location failed:", err);
           Toast.show({
