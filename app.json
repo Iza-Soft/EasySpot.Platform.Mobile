@@ -12,7 +12,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourcompany.easyspot",
+      "bundleIdentifier": "com.ilkoadamov.easyspot",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "EasySpot needs your location to save your parking spot.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "EasySpot needs your location to save your parking spot.",
