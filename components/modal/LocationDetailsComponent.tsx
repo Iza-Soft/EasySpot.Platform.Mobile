@@ -5,10 +5,13 @@ import {
   TouchableOpacity,
   DimensionValue,
   Switch,
+  StyleSheet,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { colors } from "../../themes/main";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
+import { typography } from "../../themes/typography";
 
 export type LocationDetails = {
   id?: string;
@@ -33,6 +36,7 @@ export default function LocationDetailsComponent({
   initialData,
   onSubmit,
 }: Props) {
+  const { t: localize } = useTranslation();
   const isEdit = mode === "edit" || mode === "update";
   const [title, setTitle] = useState(initialData.title || "");
   const [level, setLevel] = useState(initialData.level || "");
@@ -112,22 +116,20 @@ export default function LocationDetailsComponent({
 
   return (
     <View style={{ width: "100%" }}>
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "700",
-          marginBottom: 16,
-          color: colors.text,
-        }}
-      >
-        Location Details
-      </Text>
+      {/* <Text style={typography.header}>
+        {localize("location_details.title")}
+      </Text> */}
+      <View style={styles.headerRow}>
+        <Text style={typography.header}>
+          {localize("location_details.title")}
+        </Text>
+      </View>
       {renderInput(
-        "Title",
+        localize("location_details.fields.title"),
         title,
         25,
         isEdit ? setTitle : undefined,
-        "E.g. Home, Work, Gym",
+        localize("location_details.placeholders.title"),
       )}
       {action === "parking" && mode !== "view" && mode !== "update" && (
         <TouchableOpacity
@@ -135,32 +137,34 @@ export default function LocationDetailsComponent({
           style={{ marginBottom: 8, paddingVertical: 4 }}
         >
           <Text style={{ color: colors.tab, fontWeight: "600" }}>
-            {!showDetails ? "+" : "-"} Add more details (optional)
+            {!showDetails
+              ? localize("location_details.add_details")
+              : localize("location_details.hide_details")}
           </Text>
         </TouchableOpacity>
       )}
       {action === "parking" && showDetails && (
         <>
           {renderInput(
-            "Level",
+            localize("location_details.fields.level"),
             level,
             5,
             isEdit ? setLevel : undefined,
-            "E.g. -3, 1, P2",
+            localize("location_details.placeholders.level"),
           )}
           {renderInput(
-            "Section",
+            localize("location_details.fields.section"),
             section,
             10,
             isEdit ? setSection : undefined,
-            "E.g. A, Green Zone, B-West",
+            localize("location_details.placeholders.section"),
           )}
           {renderInput(
-            "Spot",
+            localize("location_details.fields.spot"),
             spot,
             10,
             isEdit ? setSpot : undefined,
-            "E.g. 123, B19, P3-027",
+            localize("location_details.placeholders.spot"),
           )}
         </>
       )}
@@ -181,7 +185,9 @@ export default function LocationDetailsComponent({
               style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
             >
               <Text style={{ fontSize: 16 }}>🔔</Text>
-              <Text style={{ color: colors.text }}>Parking reminder</Text>
+              <Text style={{ color: colors.text }}>
+                {localize("location_details.parking_reminder")}
+              </Text>
             </View>
 
             <Switch
@@ -192,9 +198,11 @@ export default function LocationDetailsComponent({
             />
           </View>
         )}
-      <Text style={{ marginBottom: 4 }}>Comments</Text>
+      <Text style={{ marginBottom: 4 }}>
+        {localize("location_details.fields.comments")}
+      </Text>
       <TextInput
-        placeholder="E.g. Opposite the blue column, beside motorcycle spaces"
+        placeholder={localize("location_details.placeholders.comments")}
         value={comments}
         editable={isEdit}
         multiline
@@ -224,10 +232,21 @@ export default function LocationDetailsComponent({
           <Text
             style={{ color: colors.bg, textAlign: "center", fontWeight: "600" }}
           >
-            {mode === "edit" ? "Save" : "Update"}
+            {mode === "edit"
+              ? localize("common.save")
+              : localize("common.update")}
           </Text>
         </TouchableOpacity>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 12,
+  },
+});

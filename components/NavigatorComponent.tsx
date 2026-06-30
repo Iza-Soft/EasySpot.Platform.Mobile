@@ -1,18 +1,9 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import {
-  StatusBar,
-  StyleSheet,
-  Image,
-  View,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
 import MainScreenComponent from "../screens/main/MainScreen";
 import FooterComponent from "./FooterComponent";
 import HistoryScreenComponent from "../screens/history/HistoryScreen";
-import { colors } from "../themes/main";
-import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import SettingsComponent from "./SettingsComponent";
 import ModalComponent from "./modal/ModalComponent";
@@ -20,9 +11,9 @@ import PrivacyPolicyScreenComponent from "../screens/legal/PrivacyPolicyScreen";
 import TermsOfServiceScreenComponent from "../screens/legal/TermsOfServiceScreen";
 import AboutScreenComponent from "../screens/about/AboutScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Constants from "expo-constants";
 import BatteryOptimizationScreenComponent from "../screens/battery/BatteryOptimizationScreen";
 import { useBatteryBannerLogic } from "../hook/useBatteryBannerLogic";
+import MapProviderComponent from "./modal/MapProviderComponent";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,13 +21,12 @@ const NavigatorComponent = ({ navigation }: any) => {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [detailsMode, setDetailsMode] = useState<
-    "privacy" | "terms" | "about" | "battery"
+    "privacy" | "terms" | "about" | "battery" | "map_provider"
   >("privacy");
 
   const [policyRequired, setPolicyRequired] = useState(false);
   const [isPrivacyChecked, setIsPrivacyChecked] = useState(false);
   const PRIVACY_VERSION = "1.0.0";
-  const appVersion = Constants.expoConfig?.version || "1.0.0";
 
   useEffect(() => {
     const checkPrivacyPolicy = async () => {
@@ -58,7 +48,6 @@ const NavigatorComponent = ({ navigation }: any) => {
     checkPrivacyPolicy();
   }, []);
 
-  // ✅ Handle modal close
   const handleCloseModal = async () => {
     // If privacy is required
     if (policyRequired) {
@@ -74,91 +63,42 @@ const NavigatorComponent = ({ navigation }: any) => {
     setModalVisible(false);
   };
 
-  const HeaderMenuButton = ({ navigation }: any) => (
-    <TouchableOpacity
-      onPress={() => setSettingsVisible(true)}
-      style={{ marginRight: 15 }}
-    >
-      <Ionicons name="menu" size={28} color={colors.tab} />
-    </TouchableOpacity>
-  );
-
   const { handleInstructionsOpened } = useBatteryBannerLogic();
 
   return (
     <NavigationContainer>
       <StatusBar
-        barStyle="dark-content"
+        barStyle="light-content"
         backgroundColor="transparent"
         translucent={true}
       />
       <Stack.Navigator>
         <Stack.Screen
           name="Main"
-          component={MainScreenComponent}
           options={{
-            headerTitle: () => (
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Image
-                  source={require("../assets/easyspot-logo.png")}
-                  style={{ width: 32, height: 32 }}
-                  resizeMode="contain" // or 'cover', 'stretch'
-                />
-                <Text
-                  style={{
-                    fontSize: 20,
-                    color: colors.tab,
-                    fontWeight: "900",
-                    marginBottom: 10,
-                    marginLeft: -6,
-                  }}
-                >
-                  asy spot
-                </Text>
-                <Text
-                  style={{ fontSize: 12, color: colors.muted, marginLeft: 15 }}
-                >
-                  v{appVersion}
-                </Text>
-              </View>
-            ),
-            headerRight: () => <HeaderMenuButton navigation={navigation} />,
+            headerShown: false,
           }}
-        />
+        >
+          {(props) => (
+            <MainScreenComponent
+              {...props}
+              onMenuPress={() => setSettingsVisible(true)}
+            />
+          )}
+        </Stack.Screen>
         <Stack.Screen
           name="History"
-          component={HistoryScreenComponent}
           options={{
-            headerTitle: () => (
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Image
-                  source={require("../assets/easyspot-logo.png")}
-                  style={{ width: 32, height: 32 }}
-                  resizeMode="contain" // or 'cover', 'stretch'
-                />
-                <Text
-                  style={{
-                    fontSize: 20,
-                    color: colors.tab,
-                    fontWeight: "900",
-                    marginBottom: 10,
-                    marginLeft: -6,
-                  }}
-                >
-                  asy spot
-                </Text>
-                <Text
-                  style={{ fontSize: 12, color: colors.muted, marginLeft: 15 }}
-                >
-                  v{appVersion}
-                </Text>
-              </View>
-            ),
-            headerLeft: () => null, // <-- removes the back button
-            headerBackVisible: false, // hides back button
-            headerRight: () => <HeaderMenuButton navigation={navigation} />,
+            headerShown: false,
           }}
-        />
+        >
+          {(props) => (
+            <HistoryScreenComponent
+              {...props}
+              onMenuPress={() => setSettingsVisible(true)}
+            />
+          )}
+        </Stack.Screen>
       </Stack.Navigator>
       <FooterComponent />
       <SettingsComponent
@@ -181,6 +121,10 @@ const NavigatorComponent = ({ navigation }: any) => {
           setDetailsMode("battery");
           handleInstructionsOpened();
         }}
+        onMapProviderView={() => {
+          setModalVisible(true);
+          setDetailsMode("map_provider");
+        }}
       />
 
       <ModalComponent
@@ -198,6 +142,7 @@ const NavigatorComponent = ({ navigation }: any) => {
         {detailsMode === "terms" && <TermsOfServiceScreenComponent />}
         {detailsMode === "about" && <AboutScreenComponent />}
         {detailsMode === "battery" && <BatteryOptimizationScreenComponent />}
+        {detailsMode === "map_provider" && <MapProviderComponent />}
       </ModalComponent>
     </NavigationContainer>
   );
@@ -214,11 +159,11 @@ const styles = StyleSheet.create({
     width: 98,
     height: 30,
     marginRight: 8,
-    borderRadius: 0, // matches your icon style
+    borderRadius: 0,
   },
   headerTitleText: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#007BFF", // ParkMate blue
+    color: "#007BFF",
   },
 });

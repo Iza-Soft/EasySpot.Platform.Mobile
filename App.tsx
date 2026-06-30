@@ -1,3 +1,5 @@
+import "intl-pluralrules";
+import "./i18n";
 import { SQLiteProvider } from "expo-sqlite";
 import {
   createDBifNeeded,
@@ -17,8 +19,10 @@ import {
 import { colors } from "./themes/main";
 import Toast from "react-native-toast-message";
 import { toastConfigComponent } from "./components/toastConfigComponent";
+import { useTranslation } from "react-i18next";
 
 export default function App() {
+  const { t: localize } = useTranslation();
   const [isReady, setIsReady] = useState(false);
   const [dbError, setDbError] = useState(false);
   const [isSplashVisible, setIsSplashVisible] = useState(true);
@@ -117,7 +121,9 @@ export default function App() {
           <Animated.View
             style={[styles.initRow, { opacity: initializingOpacity }]}
           >
-            <Text style={styles.initializingText}>Getting ready...</Text>
+            <Text style={styles.initializingText}>
+              {localize("app.getting_ready")}
+            </Text>
             <Animated.Text
               style={[styles.gear, { transform: [{ rotate: spin }] }]}
             >
@@ -126,9 +132,7 @@ export default function App() {
           </Animated.View>
         )}
         {dbError && (
-          <Text style={styles.errorText}>
-            Easy Spot hit a small bump! Try reopening the app 🚧
-          </Text>
+          <Text style={styles.errorText}>{localize("app.db_error")}</Text>
         )}
       </View>
     );

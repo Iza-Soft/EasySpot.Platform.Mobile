@@ -1,0 +1,309 @@
+{
+  "common": {
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "update": "Mettre à jour",
+    "error": "Erreur",
+    "success": "Succès",
+    "info": "Information",
+    "close": "Fermer",
+    "accept_to_continue": "Accepter pour continuer",
+    "no_title": "(Sans titre)",
+    "unnamed_street": "Rue sans nom",
+    "coming_soon": "Cette fonctionnalité arrive bientôt !",
+    "footer": "© {{year}} EasySpot — Développé par Ilko Adamov"
+  },
+  "battery_banner": {
+    "title": "Optimisation de la batterie requise",
+    "subtitle": "Votre appareil {{manufacturer}} a besoin de paramètres de batterie spéciaux pour des rappels de stationnement fiables.",
+    "instructions": "Instructions",
+    "dismiss": "Fermer"
+  },
+  "battery_screen": {
+    "title": "⚙️ Paramètres de batterie",
+    "your_device": "Votre appareil : {{manufacturer}} {{model}}",
+    "description": "{{manufacturer}} utilise une gestion agressive de la batterie qui peut empêcher EasySpot d'envoyer des rappels de stationnement. Pour des rappels fiables, vous devez modifier les paramètres.",
+    "how_to_setup": "Comment configurer ?",
+    "follow_steps": "Suivez ces étapes pour votre appareil :",
+    "steps": {
+      "1": "1. Ouvrir les Paramètres du téléphone",
+      "2": "2. Aller dans Batterie ou Gestion de la batterie",
+      "3": "3. Trouver EasySpot dans la liste des applications",
+      "4": "4. Autoriser :",
+      "4a": " • Démarrage automatique",
+      "4b": " • Fonctionnement en arrière-plan",
+      "4c": " • Aucune restriction de batterie",
+      "5": "5. Épingler l'application dans les Applications récentes"
+    },
+    "footer_warning": "⚠️ Important : L'optimisation de la batterie affecte les rappels en arrière-plan",
+    "footer_without": "• Sans configuration : Les rappels fonctionnent UNIQUEMENT quand l'app est ouverte",
+    "footer_with": "• Avec configuration : Les rappels fonctionnent même quand l'app est fermée",
+    "manufacturers": {
+      "huawei": {
+        "title": "📱 Instructions pour Huawei :",
+        "steps": {
+          "1": "1. Ouvrir les Paramètres",
+          "2": "2. Batterie → Lancement des applications",
+          "3": "3. Trouver EasySpot",
+          "4": "4. Autoriser :",
+          "4a": " • Lancement automatique",
+          "4b": " • Lancement secondaire",
+          "4c": " • Verrouiller l'application",
+          "5": "5. Puis tester à nouveau"
+        }
+      },
+      "xiaomi": {
+        "title": "📱 Instructions pour Xiaomi :",
+        "steps": {
+          "1": "1. Ouvrir les Paramètres",
+          "2": "2. Batterie et performances",
+          "3": "3. Gestion de la batterie des applications",
+          "4": "4. Sélectionner EasySpot",
+          "5": "5. Choisir :",
+          "5a": " • Aucune restriction",
+          "5b": " • Autoriser le démarrage automatique",
+          "6": "6. Épingler l'application dans les Applications récentes"
+        }
+      },
+      "oneplus": {
+        "title": "📱 Instructions pour OnePlus :",
+        "steps": {
+          "1": "1. Ouvrir les Paramètres",
+          "2": "2. Batterie → Optimisation de la batterie",
+          "3": "3. Trouver EasySpot",
+          "4": "4. Sélectionner \"Ne pas optimiser\"",
+          "5": "5. Aussi : Paramètres → Applications → EasySpot",
+          "6": "6. Autoriser le \"Démarrage automatique\""
+        }
+      },
+      "samsung": {
+        "title": "📱 Instructions pour Samsung :",
+        "steps": {
+          "1": "1. Ouvrir les Paramètres",
+          "2": "2. Maintenance de l'appareil → Batterie",
+          "3": "3. Gestion de l'énergie → Applications en veille",
+          "4": "4. Retirer EasySpot de la liste",
+          "5": "5. Aussi : Paramètres → Applications → EasySpot",
+          "6": "6. Batterie → Sélectionner \"Non restreinte\""
+        }
+      },
+      "default": {
+        "title": "📱 Instructions pour votre appareil :",
+        "steps": {
+          "1": "1. Ouvrir les Paramètres",
+          "2": "2. Batterie → Optimisation de la batterie",
+          "3": "3. Trouver EasySpot",
+          "4": "4. Sélectionner \"Ne pas optimiser\" ou \"Aucune restriction\"",
+          "5": "5. Si vous avez un paramètre \"Démarrage automatique\", l'activer"
+        }
+      }
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "sections": {
+      "preferences": "Préférences de l'application",
+      "privacy": "Confidentialité & Conditions",
+      "device": "Paramètres de l'appareil",
+      "about": "À propos"
+    },
+    "items": {
+      "reminder": "Rappel",
+      "privacy_policy": "Politique de confidentialité",
+      "terms_of_service": "Conditions d'utilisation",
+      "battery_optimization": "Optimisation de la batterie",
+      "about": "À propos d'Easy Spot",
+      "map_provider": "Application de navigation"
+    },
+    "map_provider": {
+      "title": "Choisir l'application de navigation",
+      "description": "Sélectionnez l'application à utiliser pour naviguer vers un emplacement enregistré."
+    }
+  },
+  "privacy": {
+    "title": "🛡️ Politique de confidentialité",
+    "effective_date": "Date d'entrée en vigueur : Janvier 2026",
+    "agree_checkbox": "J'ai lu et j'accepte la Politique de confidentialité"
+  },
+  "terms": {
+    "title": "📄 Conditions d'utilisation",
+    "effective_date": "Date d'entrée en vigueur : Janvier 2026"
+  },
+  "about": {
+    "title": "ℹ️ À propos d'EasySpot",
+    "tagline": "Votre assistant personnel de localisation.",
+    "description": "EasySpot vous aide à enregistrer, gérer et partager les endroits qui comptent pour vous — simplement et en toute confidentialité.",
+    "can_do": "Avec EasySpot, vous pouvez :",
+    "features": {
+      "parking": "• Enregistrer l'emplacement de votre voiture pour ne jamais oublier où vous vous êtes garé",
+      "favorites": "• Stocker vos endroits favoris comme les cinémas, centres commerciaux, restaurants et plus",
+      "share": "• Partager facilement des emplacements avec vos amis et famille via les applications de messagerie"
+    },
+    "privacy_note": "Toutes vos données sont stockées localement sur votre appareil, vous donnant un contrôle total sur vos informations.",
+    "closing": "Que vous cherchiez le chemin vers votre voiture ou que vous disiez à quelqu'un où se retrouver, EasySpot rend les sorties quotidiennes plus faciles."
+  },
+  "slides": {
+    "parking": {
+      "title": "Marquer le stationnement",
+      "description": "Enregistrez l'emplacement de votre voiture en un tap."
+    },
+    "navigate": {
+      "title": "Retourner",
+      "description": "Ouvrez les cartes avec votre dernier emplacement enregistré."
+    },
+    "history": {
+      "title": "Voir l'historique",
+      "description": "Consultez vos emplacements précédemment enregistrés."
+    },
+    "share": {
+      "title": "Partager l'emplacement",
+      "description": "Envoyez votre position à vos amis ou famille."
+    },
+    "favorites": {
+      "title": "Lieux favoris",
+      "description": "Enregistrez vos lieux favoris pour un accès rapide."
+    }
+  },
+  "main": {
+    "saving": "Enregistrement de votre emplacement…",
+    "no_saved_locations": "Aucun emplacement enregistré trouvé.",
+    "location_permission_denied": "Permission de localisation non accordée. Veuillez l'activer dans les paramètres.",
+    "errors": {
+      "save_failed": "Impossible d'enregistrer l'emplacement.",
+      "retrieve_failed": "Impossible de récupérer l'emplacement enregistré.",
+      "share_failed": "Impossible de partager votre position actuelle."
+    },
+    "success": {
+      "favorite_saved": "Lieu favori enregistré avec succès.",
+      "parking_saved": "Emplacement de stationnement enregistré avec succès.",
+      "parking_with_reminder": "Vous serez notifié {{minutes}} minutes avant l'expiration de votre stationnement."
+    }
+  },
+  "location_details": {
+    "title": "Détails de l'emplacement",
+    "fields": {
+      "title": "Titre",
+      "level": "Niveau",
+      "section": "Section",
+      "spot": "Place",
+      "comments": "Commentaires"
+    },
+    "placeholders": {
+      "title": "Ex. Maison, Travail, Salle de sport",
+      "level": "Ex. -3, 1, P2",
+      "section": "Ex. A, Zone verte, B-Ouest",
+      "spot": "Ex. 123, B19, P3-027",
+      "comments": "Ex. En face de la colonne bleue, à côté des places moto"
+    },
+    "add_details": "+ Ajouter plus de détails (facultatif)",
+    "hide_details": "- Ajouter plus de détails (facultatif)",
+    "parking_reminder": "Rappel de stationnement"
+  },
+  "history": {
+    "loading": "Chargement de l'historique…",
+    "deleting_location": "Suppression de l'emplacement...",
+    "deleting_locations": "Suppression des emplacements...",
+    "updating_reminder": "Mise à jour du rappel...",
+    "update_location": "Mise à jour de l'emplacement...",
+    "share_location": "Partage de l'emplacement...",
+    "no_locations": "📂 Aucun emplacement trouvé",
+    "search_placeholder": "Rechercher des emplacements...",
+    "selected_count": "{{count}} sélectionné(s)",
+    "tabs": {
+      "all": "Tous",
+      "favorites": "Favoris",
+      "parking": "Stationnement"
+    },
+    "delete_confirm_title": "Supprimer",
+    "delete_confirm_message": "Êtes-vous sûr de vouloir supprimer cet emplacement ?",
+    "delete_all_confirm_message": "Êtes-vous sûr de vouloir supprimer tous les emplacements sélectionnés ?",
+    "errors": {
+      "no_locations_selected": "Aucun emplacement sélectionné",
+      "invalid_id": "ID d'emplacement invalide",
+      "delete_failed": "Impossible de supprimer l'emplacement.",
+      "delete_all_failed": "Impossible de supprimer les emplacements.",
+      "share_failed": "Impossible de partager l'emplacement.",
+      "location_not_found": "Impossible de récupérer l'emplacement enregistré.",
+      "update_failed": "Impossible de mettre à jour l'emplacement.",
+      "reminder_update_failed": "Impossible de mettre à jour le rappel.",
+      "address_not_available": "Adresse non disponible."
+    },
+    "success": {
+      "location_deleted": "Emplacement supprimé avec succès.",
+      "locations_deleted": "{{count}} emplacement(s) supprimé(s) avec succès.",
+      "favorite_updated": "Lieu favori mis à jour avec succès.",
+      "parking_updated": "Emplacement de stationnement mis à jour avec succès.",
+      "reminder_updated": "Rappel de stationnement mis à jour avec succès.",
+      "coordinates_copied": "Coordonnées copiées dans le presse-papiers.",
+      "address_copied": "Adresse copiée dans le presse-papiers.",
+      "address_copied_missing": "Adresse copiée, mais certains champs sont manquants."
+    }
+  },
+  "card_options": {
+    "sections": {
+      "location_tools": "Outils de localisation",
+      "share": "Partager",
+      "reminder": "Rappel",
+      "danger_zone": "Zone dangereuse"
+    },
+    "actions": {
+      "view_details": "Voir les détails",
+      "view_details_sub": "Voir les détails de l'emplacement enregistré",
+      "edit_details": "Modifier les détails",
+      "edit_details_sub": "Modifier les détails enregistrés",
+      "open_maps": "Ouvrir dans Maps",
+      "open_maps_sub": "Naviguer vers cet emplacement",
+      "copy_coordinates": "Copier les coordonnées",
+      "copy_coordinates_sub": "Latitude et longitude dans le presse-papiers",
+      "copy_address": "Copier l'adresse",
+      "copy_address_sub": "Copier l'adresse formatée",
+      "share_location": "Partager l'emplacement",
+      "share_location_sub": "Envoyer cet emplacement via des applications",
+      "parking_duration": "Durée de stationnement",
+      "parking_duration_sub": "Choisir une autre durée de stationnement",
+      "delete_location": "Supprimer l'emplacement",
+      "delete_location_sub": "Supprimer cet emplacement définitivement"
+    },
+    "timer": {
+      "remaining": "(restant)",
+      "expired": "(Expiré)"
+    }
+  },
+  "adjust_park_time": {
+    "header": "Durée de stationnement",
+    "description_before": "Choisissez combien de temps vous avez besoin. Nous vous rappellerons ",
+    "description_highlight": "15 min avant",
+    "description_after": " la fin.",
+    "selected": "Sélectionné",
+    "reminder_at": "Rappel à",
+    "hours": "heures",
+    "hours_short": "h",
+    "min": "min",
+    "custom": "Personnalisé",
+    "no_reminder": "—",
+    "confirm": "Définir {{label}}",
+    "segment_1h": "1h",
+    "segment_2h": "2h",
+    "segment_4h": "4h",
+    "segment_other": "Autre",
+    "label_1h": "1 heure",
+    "label_2h": "2 heures",
+    "label_4h": "4 heures"
+  },
+  "notifications": {
+    "disabled_title": "🔔 Notifications désactivées",
+    "disabled_message": "Appuyez ici pour ouvrir les paramètres et activer les notifications."
+  },
+  "navigation": {
+    "share_message": "📍 Ma position actuelle : {{url}}",
+    "share_title": "Ma position actuelle"
+  },
+  "timer": {
+    "expired": "Expiré"
+  },
+  "app": {
+    "getting_ready": "Préparation...",
+    "db_error": "EasySpot a rencontré un petit problème ! Essayez de rouvrir l'application 🚧"
+  }
+}

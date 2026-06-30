@@ -1,7 +1,8 @@
 // components/BatteryOptimizationBanner.tsx
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { colors } from "../themes/main";
+import { useTranslation } from "react-i18next";
 
 const BatteryOptimizationBannerComponent = ({
   deviceInfo,
@@ -12,6 +13,7 @@ const BatteryOptimizationBannerComponent = ({
   onInstructionsPress: () => void;
   onDismiss: () => void;
 }) => {
+  const { t: localize } = useTranslation();
   if (!deviceInfo) {
     return null;
   }
@@ -22,13 +24,16 @@ const BatteryOptimizationBannerComponent = ({
         <View style={styles.bannerContent}>
           <View style={styles.bannerHeader}>
             <Text style={styles.bannerIcon}>⚙️</Text>
-            <Text style={styles.bannerTitle}>Battery Optimization Needed</Text>
+            <Text style={styles.bannerTitle}>
+              {localize("battery_banner.title")}
+            </Text>
           </View>
 
           <View style={styles.bannerMainContent}>
             <Text style={styles.bannerSubtitle}>
-              Your {deviceInfo.manufacturer} device needs special battery
-              settings for reliable parking reminders.
+              {localize("battery_banner.subtitle", {
+                manufacturer: deviceInfo.manufacturer,
+              })}
             </Text>
 
             <View style={styles.bannerButtons}>
@@ -36,14 +41,18 @@ const BatteryOptimizationBannerComponent = ({
                 style={styles.instructionsButton}
                 onPress={onInstructionsPress}
               >
-                <Text style={styles.instructionsButtonText}>Instructions</Text>
+                <Text style={styles.instructionsButtonText}>
+                  {localize("battery_banner.instructions")}
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.dismissButton}
                 onPress={onDismiss}
               >
-                <Text style={styles.dismissButtonText}>Dismiss</Text>
+                <Text style={styles.dismissButtonText}>
+                  {localize("battery_banner.dismiss")}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

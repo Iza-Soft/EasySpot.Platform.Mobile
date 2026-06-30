@@ -1,0 +1,309 @@
+{
+  "common": {
+    "cancel": "İptal",
+    "delete": "Sil",
+    "save": "Kaydet",
+    "update": "Güncelle",
+    "error": "Hata",
+    "success": "Başarılı",
+    "info": "Bilgi",
+    "close": "Kapat",
+    "accept_to_continue": "Devam etmek için kabul edin",
+    "no_title": "(Başlık yok)",
+    "unnamed_street": "İsimsiz Sokak",
+    "coming_soon": "Bu özellik yakında geliyor!",
+    "footer": "© {{year}} EasySpot — Ilko Adamov tarafından geliştirildi"
+  },
+  "battery_banner": {
+    "title": "Pil Optimizasyonu Gerekli",
+    "subtitle": "{{manufacturer}} cihazınızın güvenilir park hatırlatıcıları için özel pil ayarları gerekiyor.",
+    "instructions": "Talimatlar",
+    "dismiss": "Kapat"
+  },
+  "battery_screen": {
+    "title": "⚙️ Pil ayarları",
+    "your_device": "Cihazınız: {{manufacturer}} {{model}}",
+    "description": "{{manufacturer}} agresif pil yönetimi kullanıyor, bu da EasySpot'un park hatırlatıcısı göndermesini engelleyebilir. Güvenilir hatırlatıcılar için ayarları değiştirmeniz gerekiyor.",
+    "how_to_setup": "Nasıl ayarlanır?",
+    "follow_steps": "Cihazınız için şu adımları izleyin:",
+    "steps": {
+      "1": "1. Telefon Ayarlarını Açın",
+      "2": "2. Pil veya Pil Yönetimine Gidin",
+      "3": "3. Uygulamalar listesinde EasySpot'u bulun",
+      "4": "4. İzin verin:",
+      "4a": " • Otomatik başlatma",
+      "4b": " • Arka planda çalışma",
+      "4c": " • Pil kısıtlaması yok",
+      "5": "5. Son Uygulamalarda uygulamayı kilitleyin"
+    },
+    "footer_warning": "⚠️ Kritik: Pil optimizasyonu arka plan hatırlatıcılarını etkiler",
+    "footer_without": "• Ayarsız: Hatırlatıcılar YALNIZCA uygulama açıkken çalışır",
+    "footer_with": "• Ayarla: Uygulama kapalıyken bile hatırlatıcılar çalışır",
+    "manufacturers": {
+      "huawei": {
+        "title": "📱 Huawei için Talimatlar:",
+        "steps": {
+          "1": "1. Ayarları Açın",
+          "2": "2. Pil → Uygulama Başlatma",
+          "3": "3. EasySpot'u bulun",
+          "4": "4. İzin verin:",
+          "4a": " • Otomatik başlatma",
+          "4b": " • İkincil başlatma",
+          "4c": " • Uygulamayı kilitle",
+          "5": "5. Sonra tekrar test edin"
+        }
+      },
+      "xiaomi": {
+        "title": "📱 Xiaomi için Talimatlar:",
+        "steps": {
+          "1": "1. Ayarları Açın",
+          "2": "2. Pil ve Performans",
+          "3": "3. Uygulama Pil Yönetimi",
+          "4": "4. EasySpot'u seçin",
+          "5": "5. Seçin:",
+          "5a": " • Kısıtlama yok",
+          "5b": " • Otomatik başlatmaya izin ver",
+          "6": "6. Son Uygulamalarda uygulamayı kilitleyin"
+        }
+      },
+      "oneplus": {
+        "title": "📱 OnePlus için Talimatlar:",
+        "steps": {
+          "1": "1. Ayarları Açın",
+          "2": "2. Pil → Pil Optimizasyonu",
+          "3": "3. EasySpot'u bulun",
+          "4": "4. \"Optimize etme\" seçin",
+          "5": "5. Ayrıca: Ayarlar → Uygulamalar → EasySpot",
+          "6": "6. \"Otomatik başlatma\"ya izin verin"
+        }
+      },
+      "samsung": {
+        "title": "📱 Samsung için Talimatlar:",
+        "steps": {
+          "1": "1. Ayarları Açın",
+          "2": "2. Cihaz Bakımı → Pil",
+          "3": "3. Uygulama güç yönetimi → Uyuyan uygulamalar",
+          "4": "4. EasySpot'u listeden kaldırın",
+          "5": "5. Ayrıca: Ayarlar → Uygulamalar → EasySpot",
+          "6": "6. Pil → \"Kısıtlama yok\" seçin"
+        }
+      },
+      "default": {
+        "title": "📱 Cihazınız için Talimatlar:",
+        "steps": {
+          "1": "1. Ayarları Açın",
+          "2": "2. Pil → Pil Optimizasyonu",
+          "3": "3. EasySpot'u bulun",
+          "4": "4. \"Optimize etme\" veya \"Kısıtlama yok\" seçin",
+          "5": "5. \"Otomatik başlatma\" ayarınız varsa etkinleştirin"
+        }
+      }
+    }
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "sections": {
+      "preferences": "Uygulama Tercihleri",
+      "privacy": "Gizlilik ve Koşullar",
+      "device": "Cihaz Ayarları",
+      "about": "Hakkında"
+    },
+    "items": {
+      "reminder": "Hatırlatıcı",
+      "privacy_policy": "Gizlilik politikası",
+      "terms_of_service": "Kullanım koşulları",
+      "battery_optimization": "Pil optimizasyonu",
+      "about": "EasySpot Hakkında",
+      "map_provider": "Navigasyon uygulaması"
+    },
+    "map_provider": {
+      "title": "Navigasyon uygulaması seç",
+      "description": "Kayıtlı bir konuma giderken kullanılacak uygulamayı seçin."
+    }
+  },
+  "privacy": {
+    "title": "🛡️ Gizlilik Politikası",
+    "effective_date": "Yürürlük Tarihi: Ocak 2026",
+    "agree_checkbox": "Gizlilik Politikasını okudum ve kabul ediyorum"
+  },
+  "terms": {
+    "title": "📄 Kullanım Koşulları",
+    "effective_date": "Yürürlük Tarihi: Ocak 2026"
+  },
+  "about": {
+    "title": "ℹ️ EasySpot Hakkında",
+    "tagline": "Kişisel konum asistanınız.",
+    "description": "EasySpot, sizin için önemli olan yerleri kaydetmenize, yönetmenize ve paylaşmanıza yardımcı olur — basit ve gizli.",
+    "can_do": "EasySpot ile yapabilecekleriniz:",
+    "features": {
+      "parking": "• Park ettiğiniz yeri unutmamak için arabanızın konumunu kaydedin",
+      "favorites": "• Sinema, alışveriş merkezi, restoran gibi favori yerlerinizi saklayın",
+      "share": "• Konumları popüler mesajlaşma uygulamaları aracılığıyla arkadaşlarınızla kolayca paylaşın"
+    },
+    "privacy_note": "Tüm verileriniz cihazınızda yerel olarak saklanır, bilgileriniz üzerinde tam kontrol size aittir.",
+    "closing": "Arabanıza geri dönerken veya birine buluşma yerini söylerken, EasySpot günlük çıkışlarınızı daha kolay hale getirir."
+  },
+  "slides": {
+    "parking": {
+      "title": "Park Yerini İşaretle",
+      "description": "Tek dokunuşla arabanızın konumunu kaydedin."
+    },
+    "navigate": {
+      "title": "Geri Gidin",
+      "description": "Son kaydedilen yerinizle haritaları açın."
+    },
+    "history": {
+      "title": "Geçmişi Görüntüle",
+      "description": "Önceden kaydedilen konumlarınızı görün."
+    },
+    "share": {
+      "title": "Yeri Paylaş",
+      "description": "Konumunuzu arkadaşlarınıza veya ailenize gönderin."
+    },
+    "favorites": {
+      "title": "Favori Yerler",
+      "description": "Hızlı erişim için favori konumlarınızı kaydedin."
+    }
+  },
+  "main": {
+    "saving": "Yeriniz kaydediliyor…",
+    "no_saved_locations": "Kayıtlı konum bulunamadı.",
+    "location_permission_denied": "Konum izni verilmedi. Lütfen ayarlardan etkinleştirin.",
+    "errors": {
+      "save_failed": "Konum kaydedilemedi.",
+      "retrieve_failed": "Kaydedilen konum alınamadı.",
+      "share_failed": "Mevcut konumunuz paylaşılamadı."
+    },
+    "success": {
+      "favorite_saved": "Favori konum başarıyla kaydedildi.",
+      "parking_saved": "Park konumu başarıyla kaydedildi.",
+      "parking_with_reminder": "Parkınızın sona ermesinden {{minutes}} dakika önce bildirim alacaksınız."
+    }
+  },
+  "location_details": {
+    "title": "Konum Detayları",
+    "fields": {
+      "title": "Başlık",
+      "level": "Kat",
+      "section": "Bölüm",
+      "spot": "Yer",
+      "comments": "Yorumlar"
+    },
+    "placeholders": {
+      "title": "Örn. Ev, İş, Spor Salonu",
+      "level": "Örn. -3, 1, P2",
+      "section": "Örn. A, Yeşil Alan, B-Batı",
+      "spot": "Örn. 123, B19, P3-027",
+      "comments": "Örn. Mavi sütunun karşısı, motosiklet alanlarının yanı"
+    },
+    "add_details": "+ Daha fazla detay ekle (isteğe bağlı)",
+    "hide_details": "- Daha fazla detay ekle (isteğe bağlı)",
+    "parking_reminder": "Park hatırlatıcısı"
+  },
+  "history": {
+    "loading": "Geçmiş yükleniyor…",
+    "deleting_location": "Konum siliniyor...",
+    "deleting_locations": "Konumlar siliniyor...",
+    "updating_reminder": "Hatırlatıcı güncelleniyor...",
+    "update_location": "Konum güncelleniyor...",
+    "share_location": "Konum paylaşılıyor...",
+    "no_locations": "📂 Konum bulunamadı",
+    "search_placeholder": "Konum ara...",
+    "selected_count": "{{count}} seçildi",
+    "tabs": {
+      "all": "Tümü",
+      "favorites": "Favoriler",
+      "parking": "Park"
+    },
+    "delete_confirm_title": "Sil",
+    "delete_confirm_message": "Bu konumu silmek istediğinizden emin misiniz?",
+    "delete_all_confirm_message": "Seçili tüm konumları silmek istediğinizden emin misiniz?",
+    "errors": {
+      "no_locations_selected": "Konum seçilmedi",
+      "invalid_id": "Geçersiz konum ID",
+      "delete_failed": "Konum silinemedi.",
+      "delete_all_failed": "Konumlar silinemedi.",
+      "share_failed": "Konum paylaşılamadı.",
+      "location_not_found": "Kaydedilen konum alınamadı.",
+      "update_failed": "Konum güncellenemedi.",
+      "reminder_update_failed": "Hatırlatıcı güncellenemedi.",
+      "address_not_available": "Adres mevcut değil."
+    },
+    "success": {
+      "location_deleted": "Konum başarıyla silindi.",
+      "locations_deleted": "{{count}} konum başarıyla silindi.",
+      "favorite_updated": "Favori konum başarıyla güncellendi.",
+      "parking_updated": "Park konumu başarıyla güncellendi.",
+      "reminder_updated": "Park hatırlatıcısı başarıyla güncellendi.",
+      "coordinates_copied": "Koordinatlar panoya kopyalandı.",
+      "address_copied": "Adres panoya kopyalandı.",
+      "address_copied_missing": "Adres kopyalandı, ancak bazı alanlar eksik."
+    }
+  },
+  "card_options": {
+    "sections": {
+      "location_tools": "Konum Araçları",
+      "share": "Paylaş",
+      "reminder": "Hatırlatıcı",
+      "danger_zone": "Tehlikeli Bölge"
+    },
+    "actions": {
+      "view_details": "Detayları Görüntüle",
+      "view_details_sub": "Kaydedilen konum detaylarını gör",
+      "edit_details": "Detayları Düzenle",
+      "edit_details_sub": "Kaydedilen detayları değiştir",
+      "open_maps": "Haritada Aç",
+      "open_maps_sub": "Bu konuma git",
+      "copy_coordinates": "Koordinatları Kopyala",
+      "copy_coordinates_sub": "Enlem ve boylamı panoya kopyala",
+      "copy_address": "Adresi Kopyala",
+      "copy_address_sub": "Formatlanmış adresi kopyala",
+      "share_location": "Konumu Paylaş",
+      "share_location_sub": "Bu konumu uygulamalar aracılığıyla gönder",
+      "parking_duration": "Park süresi",
+      "parking_duration_sub": "Farklı bir park süresi seçin",
+      "delete_location": "Konumu Sil",
+      "delete_location_sub": "Bu konumu kalıcı olarak kaldır"
+    },
+    "timer": {
+      "remaining": "(kalan)",
+      "expired": "(Süresi doldu)"
+    }
+  },
+  "adjust_park_time": {
+    "header": "Park süresi",
+    "description_before": "Ne kadar süreye ihtiyacınız olduğunu seçin. Süreniz dolmadan ",
+    "description_highlight": "15 dk önce",
+    "description_after": " sizi hatırlatırız.",
+    "selected": "Seçilen",
+    "reminder_at": "Hatırlatıcı",
+    "hours": "saat",
+    "hours_short": "s",
+    "min": "dk",
+    "custom": "Özel",
+    "no_reminder": "—",
+    "confirm": "{{label}} ayarla",
+    "segment_1h": "1s",
+    "segment_2h": "2s",
+    "segment_4h": "4s",
+    "segment_other": "Diğer",
+    "label_1h": "1 saat",
+    "label_2h": "2 saat",
+    "label_4h": "4 saat"
+  },
+  "notifications": {
+    "disabled_title": "🔔 Bildirimler devre dışı",
+    "disabled_message": "Ayarları açmak ve bildirimleri etkinleştirmek için buraya dokunun."
+  },
+  "navigation": {
+    "share_message": "📍 Mevcut konumum: {{url}}",
+    "share_title": "Mevcut Konumum"
+  },
+  "timer": {
+    "expired": "Süresi Doldu"
+  },
+  "app": {
+    "getting_ready": "Hazırlanıyor...",
+    "db_error": "EasySpot küçük bir sorunla karşılaştı! Uygulamayı yeniden açmayı deneyin 🚧"
+  }
+}

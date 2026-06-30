@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Text, ScrollView, StyleSheet } from "react-native";
 import { checkBatteryOptimizations } from "../../utils/deviceUtils";
 import { colors } from "../../themes/main";
+import { useTranslation } from "react-i18next";
+import { typography } from "../../themes/typography";
 
 const BatteryOptimizationScreenComponent = () => {
+  const { t: localize } = useTranslation();
   const [deviceInfo, setDeviceInfo] = useState<any>(null);
 
   useEffect(() => {
@@ -30,16 +33,32 @@ const BatteryOptimizationScreenComponent = () => {
       return (
         <>
           <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
-            📱 Instructions for Huawei:
+            {localize("battery_screen.manufacturers.huawei.title")}
           </Text>
-          <Text style={styles.listItem}>1. Open Settings</Text>
-          <Text style={styles.listItem}>2. Battery → App Launch</Text>
-          <Text style={styles.listItem}>3. Find EasySpot</Text>
-          <Text style={styles.listItem}>4. Allow:</Text>
-          <Text style={styles.subListItem}> • Auto-launch</Text>
-          <Text style={styles.subListItem}> • Secondary launch</Text>
-          <Text style={styles.subListItem}> • Lock app</Text>
-          <Text style={styles.listItem}>5. Then test again</Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.huawei.steps.1")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.huawei.steps.2")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.huawei.steps.3")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.huawei.steps.4")}
+          </Text>
+          <Text style={styles.subListItem}>
+            {localize("battery_screen.manufacturers.huawei.steps.4a")}
+          </Text>
+          <Text style={styles.subListItem}>
+            {localize("battery_screen.manufacturers.huawei.steps.4b")}
+          </Text>
+          <Text style={styles.subListItem}>
+            {localize("battery_screen.manufacturers.huawei.steps.4c")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.huawei.steps.5")}
+          </Text>
         </>
       );
     }
@@ -48,17 +67,31 @@ const BatteryOptimizationScreenComponent = () => {
       return (
         <>
           <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
-            📱 Instructions for Xiaomi:
+            {localize("battery_screen.manufacturers.xiaomi.title")}
           </Text>
-          <Text style={styles.listItem}>1. Open Settings</Text>
-          <Text style={styles.listItem}>2. Battery & Performance</Text>
-          <Text style={styles.listItem}>3. App Battery Management</Text>
-          <Text style={styles.listItem}>4. Select EasySpot</Text>
-          <Text style={styles.listItem}>5. Choose:</Text>
-          <Text style={styles.subListItem}> • No restrictions</Text>
-          <Text style={styles.subListItem}> • Allow auto-start</Text>
           <Text style={styles.listItem}>
-            6. Also lock the app in Recent apps
+            {localize("battery_screen.manufacturers.xiaomi.steps.1")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.xiaomi.steps.2")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.xiaomi.steps.3")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.xiaomi.steps.4")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.xiaomi.steps.5")}
+          </Text>
+          <Text style={styles.subListItem}>
+            {localize("battery_screen.manufacturers.xiaomi.steps.5a")}
+          </Text>
+          <Text style={styles.subListItem}>
+            {localize("battery_screen.manufacturers.xiaomi.steps.5b")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.xiaomi.steps.6")}
           </Text>
         </>
       );
@@ -68,16 +101,26 @@ const BatteryOptimizationScreenComponent = () => {
       return (
         <>
           <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
-            📱 Instructions for OnePlus:
+            {localize("battery_screen.manufacturers.oneplus.title")}
           </Text>
-          <Text style={styles.listItem}>1. Open Settings</Text>
-          <Text style={styles.listItem}>2. Battery → Battery Optimization</Text>
-          <Text style={styles.listItem}>3. Find EasySpot</Text>
-          <Text style={styles.listItem}>4. Select "Don't optimize"</Text>
           <Text style={styles.listItem}>
-            5. Also: Settings → Apps → EasySpot
+            {localize("battery_screen.manufacturers.oneplus.steps.1")}
           </Text>
-          <Text style={styles.listItem}>6. Allow "Auto-start"</Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.oneplus.steps.2")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.oneplus.steps.3")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.oneplus.steps.4")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.oneplus.steps.5")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.oneplus.steps.6")}
+          </Text>
         </>
       );
     }
@@ -86,19 +129,25 @@ const BatteryOptimizationScreenComponent = () => {
       return (
         <>
           <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
-            📱 Instructions for Samsung:
-          </Text>
-          <Text style={styles.listItem}>1. Open Settings</Text>
-          <Text style={styles.listItem}>2. Device Care → Battery</Text>
-          <Text style={styles.listItem}>
-            3. App power management → Sleeping apps
-          </Text>
-          <Text style={styles.listItem}>4. Remove EasySpot from the list</Text>
-          <Text style={styles.listItem}>
-            5. Also: Settings → Apps → EasySpot
+            {localize("battery_screen.manufacturers.samsung.title")}
           </Text>
           <Text style={styles.listItem}>
-            6. Battery → Select "Unrestricted"
+            {localize("battery_screen.manufacturers.samsung.steps.1")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.samsung.steps.2")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.samsung.steps.3")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.samsung.steps.4")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.samsung.steps.5")}
+          </Text>
+          <Text style={styles.listItem}>
+            {localize("battery_screen.manufacturers.samsung.steps.6")}
           </Text>
         </>
       );
@@ -107,16 +156,22 @@ const BatteryOptimizationScreenComponent = () => {
     return (
       <>
         <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
-          📱 Instructions for your device:
-        </Text>
-        <Text style={styles.listItem}>1. Open Settings</Text>
-        <Text style={styles.listItem}>2. Battery → Battery Optimization</Text>
-        <Text style={styles.listItem}>3. Find EasySpot</Text>
-        <Text style={styles.listItem}>
-          4. Select "Don't optimize" or "No restrictions"
+          {localize("battery_screen.manufacturers.default.title")}
         </Text>
         <Text style={styles.listItem}>
-          5. If you have an "Auto-start" setting, enable it
+          {localize("battery_screen.manufacturers.default.steps.1")}
+        </Text>
+        <Text style={styles.listItem}>
+          {localize("battery_screen.manufacturers.default.steps.2")}
+        </Text>
+        <Text style={styles.listItem}>
+          {localize("battery_screen.manufacturers.default.steps.3")}
+        </Text>
+        <Text style={styles.listItem}>
+          {localize("battery_screen.manufacturers.default.steps.4")}
+        </Text>
+        <Text style={styles.listItem}>
+          {localize("battery_screen.manufacturers.default.steps.5")}
         </Text>
       </>
     );
@@ -125,47 +180,63 @@ const BatteryOptimizationScreenComponent = () => {
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>⚙️ Battery settings</Text>
+        <Text style={styles.title}>{localize("battery_screen.title")}</Text>
 
         <Text style={styles.deviceInfo}>
-          Your device: {deviceInfo.manufacturer} {deviceInfo.model}
+          {localize("battery_screen.your_device", {
+            manufacturer: deviceInfo.manufacturer,
+            model: deviceInfo.model,
+          })}
         </Text>
 
-        {/* <Text style={styles.sectionTitle}>Защо е необходимо?</Text> */}
         <Text style={styles.paragraph}>
-          {deviceInfo.manufacturer} There is aggressive battery management that
-          may prevent EasySpot to send parking reminder. To get reliable
-          reminders, you need to change the settings.
+          {localize("battery_screen.description", {
+            manufacturer: deviceInfo.manufacturer,
+          })}
         </Text>
 
-        <Text style={styles.sectionTitle}>How to set up?</Text>
+        <Text style={styles.sectionTitle}>
+          {localize("battery_screen.how_to_setup")}
+        </Text>
         <Text style={styles.paragraph}>
-          Follow these steps for your device:
+          {localize("battery_screen.follow_steps")}
         </Text>
 
-        <Text style={styles.listItem}>1. Open Phone Settings</Text>
         <Text style={styles.listItem}>
-          2. Go to Battery or Battery Management
+          {localize("battery_screen.steps.1")}
         </Text>
         <Text style={styles.listItem}>
-          3. Find EasySpot in the list of applications
+          {localize("battery_screen.steps.2")}
         </Text>
-        <Text style={styles.listItem}>4. Allow:</Text>
-        <Text style={styles.subListItem}> • Automatic start</Text>
-        <Text style={styles.subListItem}> • Working in background mode</Text>
-        <Text style={styles.subListItem}> • No battery limitations</Text>
-        <Text style={styles.listItem}>5. Lock the app in Recent Apps</Text>
+        <Text style={styles.listItem}>
+          {localize("battery_screen.steps.3")}
+        </Text>
+        <Text style={styles.listItem}>
+          {localize("battery_screen.steps.4")}
+        </Text>
+        <Text style={styles.subListItem}>
+          {localize("battery_screen.steps.4a")}
+        </Text>
+        <Text style={styles.subListItem}>
+          {localize("battery_screen.steps.4b")}
+        </Text>
+        <Text style={styles.subListItem}>
+          {localize("battery_screen.steps.4c")}
+        </Text>
+        <Text style={styles.listItem}>
+          {localize("battery_screen.steps.5")}
+        </Text>
 
         {getBatteryInstructions()}
 
         <Text style={styles.footer}>
-          ⚠️ Critical: Battery optimization affects background reminders
+          {localize("battery_screen.footer_warning")}
         </Text>
         <Text style={styles.footerDetail}>
-          • Without setup: Reminders work ONLY when app is open
+          {localize("battery_screen.footer_without")}
         </Text>
         <Text style={styles.footerDetail}>
-          • With setup: Reminders work even when app is closed
+          {localize("battery_screen.footer_with")}
         </Text>
       </ScrollView>
     </>
@@ -176,35 +247,15 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "900",
-    marginBottom: 10,
-  },
+  title: typography.headerLarge,
   deviceInfo: {
     fontWeight: "700",
+    marginTop: 5,
     marginBottom: 20,
   },
-  sectionTitle: {
-    fontWeight: "700",
-    fontSize: 14,
-    lineHeight: 21,
-    color: colors.text,
-    marginBottom: 10,
-  },
-  paragraph: {
-    fontSize: 14,
-    lineHeight: 21,
-    color: colors.text,
-    marginBottom: 10,
-  },
-  listItem: {
-    fontSize: 14,
-    lineHeight: 21,
-    color: colors.text,
-    marginLeft: 10,
-    marginBottom: 4,
-  },
+  sectionTitle: typography.sectionTitle,
+  paragraph: typography.body,
+  listItem: { ...typography.body, marginLeft: 10 },
   subListItem: {
     fontSize: 14,
     lineHeight: 21,
@@ -229,17 +280,11 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.card,
   },
-  footer: {
-    marginTop: 20,
-    fontSize: 12,
-    textAlign: "center",
-    color: colors.muted,
-    marginBottom: 8,
-  },
+  footer: { ...typography.footer, marginTop: 20, marginBottom: 8 },
   footerDetail: {
     fontSize: 12,
     color: colors.muted,
-    marginLeft: 10,
+    marginLeft: 25,
     marginBottom: 4,
   },
 });

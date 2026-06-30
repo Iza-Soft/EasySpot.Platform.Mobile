@@ -1,7 +1,10 @@
 import { Platform, PermissionsAndroid, Linking } from "react-native";
 import Toast from "react-native-toast-message";
+import { useTranslation } from "react-i18next";
 
 export const useNotifications = () => {
+  const { t: localize } = useTranslation();
+
   const requestNotificationPermission = async (showToastOnDeny = true) => {
     // Само за Android 13 (API 33) и нагоре
     console.log(Platform.OS);
@@ -20,8 +23,8 @@ export const useNotifications = () => {
           if (showToastOnDeny) {
             Toast.show({
               type: "info",
-              text1: "🔔 Notifications disabled",
-              text2: "Tap here to open settings and enable notifications.",
+              text1: localize("notifications.disabled_title"),
+              text2: localize("notifications.disabled_message"),
               onPress: async () => {
                 await Linking.openSettings();
               },

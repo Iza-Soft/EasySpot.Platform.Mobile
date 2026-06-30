@@ -38,8 +38,8 @@ class ParkingReceiver : BroadcastReceiver() {
             
             // Създаване на нотификация
             val notification = NotificationCompat.Builder(context, "parking_channel")
-                .setContentTitle("⏰ Your parking is expiring soon!")
-                .setContentText("$title - $remindBeforeMinutes minutes left")
+                .setContentTitle(context.getString(R.string.notification_title))
+                .setContentText(context.getString(R.string.notification_body, title, remindBeforeMinutes))
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)

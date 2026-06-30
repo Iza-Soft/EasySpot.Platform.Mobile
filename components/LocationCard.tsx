@@ -6,6 +6,8 @@ import { useTimer } from "../hook/useTimer";
 import { Scheduler } from "../types/common";
 import { useMemo } from "react";
 import { useSQLiteContext } from "expo-sqlite";
+import { useTranslation } from "react-i18next";
+import { typography } from "../themes/typography";
 
 export default function LocationItemCard({
   item,
@@ -14,8 +16,8 @@ export default function LocationItemCard({
   onPress,
   onLongPress,
 }: LocationCardProps) {
+  const { t: localize } = useTranslation();
   const database = useSQLiteContext();
-
   const shouldShowTimer = item.type === "parking";
 
   const scheduler = useMemo<Scheduler | null>(() => {
@@ -66,10 +68,10 @@ export default function LocationItemCard({
             </Text>
             <View style={styles.textContainer}>
               <Text style={styles.title}>
-                {item.title?.trim() || "(No title)"}
+                {item.title?.trim() || localize("common.no_title")}
               </Text>
               <Text style={styles.address}>
-                {item.street || "Unnamed Street"},{" "}
+                {item.street || localize("common.unnamed_street")},{" "}
                 {item.city || item.region || ""}, {item.postalCode || ""},{" "}
                 {item.country || ""}
               </Text>
@@ -90,13 +92,14 @@ export default function LocationItemCard({
                     >
                       ⏱️ {timer.formattedTime}
                     </Text>
-                    {timer.isExpired ? (
-                      <Text style={styles.expiredTextInline}>(Expired)</Text>
-                    ) : (
-                      <Text style={styles.remainingTextInline}>
-                        (remaining)
+                    {timer.isExpired ?
+                      <Text style={styles.expiredTextInline}>
+                        {localize("card_options.timer.expired")}
                       </Text>
-                    )}
+                    : <Text style={styles.remainingTextInline}>
+                        {localize("card_options.timer.remaining")}
+                      </Text>
+                    }
                   </View>
                 )}
               </View>
@@ -145,27 +148,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginRight: 10,
   },
-  title: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 2,
-  },
-  address: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: colors.text,
-    marginBottom: 4,
-  },
+  title: { ...typography.cardTitle, fontSize: 16 },
+  address: { ...typography.bodySmall, fontWeight: "600" },
   timeRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     flexWrap: "wrap",
   },
-  time: {
-    fontSize: 13,
-    color: colors.muted,
-  },
+  time: typography.cardDesc,
   timerInline: {
     flexDirection: "row",
     alignItems: "center",

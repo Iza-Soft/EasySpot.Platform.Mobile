@@ -1,7 +1,6 @@
-import { StyleSheet, View, FlatList } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, View, FlatList, Text } from "react-native";
 import { colors } from "../../themes/main";
-import { SLIDE_ITEMS } from "../../constants/slides";
+import { useSlideItems } from "../../hook/slides";
 import { SlideCardComponent } from "../../components/SlideCardComponent";
 import {
   getLastSavedLocationAsync,
@@ -14,7 +13,6 @@ import {
   openMapsAsync,
   ShareLocationAsync,
 } from "../../services/navigation-service";
-import { Maps } from "../../constants/maps";
 import { LocationData } from "../../types/common";
 import * as Location from "expo-location";
 import Toast from "react-native-toast-message";
@@ -27,6 +25,12 @@ import { useBatteryBannerLogic } from "../../hook/useBatteryBannerLogic";
 import ParkingNativeService from "../../native/ParkingModule";
 import { setupSchedulerAsync } from "../../services/scheduler-service";
 import { REMINDER_CONFIG } from "../../config/reminder.config";
+import { useTranslation } from "react-i18next";
+import { Image, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { typography } from "../../themes/typography";
+import { getPreferredMap } from "../../services/map-preference-service";
+import Constants from "expo-constants";
 
 export type LocationDetails = {
   id?: string;
@@ -38,15 +42,16 @@ export type LocationDetails = {
   timerEnabled?: boolean;
 };
 
-export default function MainScreenComponent({ navigation }: any) {
+export default function MainScreenComponent({ navigation, onMenuPress }: any) {
   const database = useSQLiteContext();
+  const { t: localize } = useTranslation();
+  const SLIDE_ITEMS = useSlideItems();
   const [loading, setLoading] = useState(false);
   const [batteryModalVisible, setBatteryModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [action, setAction] = useState<undefined | string>();
-
+  const appVersion = Constants.expoConfig?.version || "1.1.0";
   const [hasSavedLocation, setHasSavedLocation] = useState(false);
-
   const listRef = useRef<FlatList>(null);
 
   useFocusEffect(
@@ -107,13 +112,15 @@ export default function MainScreenComponent({ navigation }: any) {
 
           Toast.show({
             type: "success",
-            text1: "Success",
+            text1: localize("common.success"),
             text2:
               action === "favorites"
-                ? "Favorite location saved successfully."
+                ? localize("main.success.favorite_saved")
                 : scheduled
-                  ? `You'll be notified ${REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES} minutes before your parking expires.`
-                  : "Parking location saved successfully.",
+                  ? localize("main.success.parking_with_reminder", {
+                      minutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
+                    })
+                  : localize("main.success.parking_saved"),
           });
 
           setTimeout(() => {
@@ -131,8 +138,8 @@ export default function MainScreenComponent({ navigation }: any) {
           console.error("❌ Failed to save location:", message);
           Toast.show({
             type: "error",
-            text1: "Error",
-            text2: "Failed to save location.",
+            text1: localize("common.error"),
+            text2: localize("main.errors.save_failed"),
           });
         },
       });
@@ -168,8 +175,8 @@ export default function MainScreenComponent({ navigation }: any) {
           console.error("Failed to get last location:", message);
           Toast.show({
             type: "error",
-            text1: "Error",
-            text2: "Failed to retrieve the saved location.",
+            text1: localize("common.error"),
+            text2: localize("main.errors.retrieve_failed"),
           });
           reject(new Error(message));
         },
@@ -189,8 +196,8 @@ export default function MainScreenComponent({ navigation }: any) {
             if (!location) {
               Toast.show({
                 type: "info",
-                text1: "Info",
-                text2: "No saved locations found.",
+                text1: localize("common.info"),
+                text2: localize("main.no_saved_locations"),
               });
               return;
             }
@@ -198,15 +205,15 @@ export default function MainScreenComponent({ navigation }: any) {
             await openMapsAsync({
               latitude: (location as LocationData).latitude,
               longitude: (location as LocationData).longitude,
-              map: Maps.google,
+              map: await getPreferredMap(),
             });
           },
           onError: (message) => {
             console.error("❌ Failed to retrieve location:", message);
             Toast.show({
               type: "error",
-              text1: "Error",
-              text2: "Failed to retrieve the saved location.",
+              text1: localize("common.error"),
+              text2: localize("main.errors.retrieve_failed"),
             });
           },
         });
@@ -223,20 +230,19 @@ export default function MainScreenComponent({ navigation }: any) {
             setLoading(false);
             Toast.show({
               type: "info",
-              text1: "Info",
-              text2:
-                "Location permission not granted. Please enable it in settings.",
+              text1: localize("common.info"),
+              text2: localize("main.location_permission_denied"),
             });
             return;
           }
 
-          await ShareLocationAsync(Maps.google);
+          await ShareLocationAsync();
         } catch (err) {
           console.error("❌ Share current location failed:", err);
           Toast.show({
             type: "error",
-            text1: "Error",
-            text2: "Failed to share your current location.",
+            text1: localize("common.error"),
+            text2: localize("main.errors.share_failed"),
           });
         } finally {
           setLoading(false);
@@ -245,8 +251,8 @@ export default function MainScreenComponent({ navigation }: any) {
     } else {
       Toast.show({
         type: "info",
-        text1: "Info",
-        text2: "This feature is coming soon!",
+        text1: localize("common.info"),
+        text2: localize("common.coming_soon"),
       });
     }
   };
@@ -264,7 +270,42 @@ export default function MainScreenComponent({ navigation }: any) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+      <View style={styles.hero}>
+        <View style={styles.heroInner}>
+          <View style={styles.logoRow}>
+            <View style={styles.logoIconWrapper}>
+              <Image
+                source={require("../../assets/easyspot-logo.png")}
+                style={styles.logoIcon}
+                resizeMode="contain"
+              />
+            </View>
+            <View>
+              <View
+                style={{ flexDirection: "row", alignItems: "baseline", gap: 6 }}
+              >
+                <Text style={styles.logoText}>easy spot</Text>
+                <Text
+                  style={{
+                    fontSize: 11,
+                    color: "rgba(255,255,255,0.55)",
+                    marginLeft: 10,
+                    fontWeight: "500",
+                  }}
+                >
+                  v{appVersion}
+                </Text>
+              </View>
+              <Text style={styles.logoSub}>{localize("about.tagline")}</Text>
+            </View>
+          </View>
+          <TouchableOpacity style={styles.menuBtn} onPress={onMenuPress}>
+            <Ionicons name="menu" size={20} color="white" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
       {shouldShowBanner && deviceInfo && (
         <BatteryOptimizationBannerComponent
           deviceInfo={deviceInfo}
@@ -276,12 +317,22 @@ export default function MainScreenComponent({ navigation }: any) {
         ref={listRef}
         data={slides}
         keyExtractor={(_, i) => String(i)}
+        numColumns={2}
+        columnWrapperStyle={styles.row}
         contentContainerStyle={styles.listContent}
-        renderItem={({ item }) => (
-          <SlideCardComponent item={item} onPress={onPress} />
-        )}
-        ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-        // 👇 IMPORTANT — avoid scroll crash
+        renderItem={({ item, index }) => {
+          const isLastOdd =
+            slides.length % 2 !== 0 && index === slides.length - 1;
+          if (isLastOdd) {
+            return (
+              <View style={{ flex: 1 }}>
+                <SlideCardComponent item={item} onPress={onPress} isFullWidth />
+              </View>
+            );
+          }
+          return <SlideCardComponent item={item} onPress={onPress} />;
+        }}
+        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
         onScrollToIndexFailed={(info) => {
           setTimeout(() => {
             listRef.current?.scrollToIndex({
@@ -292,7 +343,7 @@ export default function MainScreenComponent({ navigation }: any) {
         }}
       />
 
-      {loading && <LoadingComponent message="Saving your spot…" />}
+      {loading && <LoadingComponent message={localize("main.saving")} />}
 
       <ModalComponent
         visible={modalVisible}
@@ -321,18 +372,57 @@ export default function MainScreenComponent({ navigation }: any) {
       >
         <BatteryOptimizationScreenComponent />
       </ModalComponent>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.bg,
-    marginTop: -30,
-  },
-  listContent: {
+  hero: {
+    backgroundColor: colors.tab,
+    paddingTop: 60,
+    paddingBottom: 16,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+  },
+  heroInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  logoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  logoIconWrapper: {
+    width: 34,
+    height: 34,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logoIcon: {
+    width: 26,
+    height: 26,
+    tintColor: "white",
+  },
+  logoText: typography.heroTitle,
+  logoSub: typography.heroSub,
+  menuBtn: {
+    width: 34,
+    height: 34,
+    backgroundColor: "rgba(255,255,255,0.15)",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  listContent: {
+    padding: 14,
+    gap: 10,
+  },
+
+  row: {
+    gap: 10,
   },
 });
