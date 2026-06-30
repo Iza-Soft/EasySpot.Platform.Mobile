@@ -47,6 +47,7 @@ import { useTranslation } from "react-i18next";
 import { TABS_CONFIG } from "../../config/tabs.config";
 import { Ionicons } from "@expo/vector-icons";
 import { getPreferredMap } from "../../services/map-preference-service";
+import Constants from "expo-constants";
 
 export default function HistoryScreenComponent({
   navigation,
@@ -80,6 +81,7 @@ export default function HistoryScreenComponent({
   const [selectedAll, setSelectedAll] = useState(false);
   const [selectedLocations, setSelectedLocations] = useState<number[]>([]);
   const rotateAnim = useRef(new Animated.Value(0)).current;
+  const appVersion = Constants.expoConfig?.version || "1.1.0";
 
   useEffect(() => {
     loadPage(0, true);
@@ -657,7 +659,21 @@ export default function HistoryScreenComponent({
               />
             </View>
             <View>
-              <Text style={styles.logoText}>easy spot</Text>
+              <View
+                style={{ flexDirection: "row", alignItems: "baseline", gap: 6 }}
+              >
+                <Text style={styles.logoText}>easy spot</Text>
+                <Text
+                  style={{
+                    fontSize: 11,
+                    color: "rgba(255,255,255,0.55)",
+                    marginLeft: 10,
+                    fontWeight: "500",
+                  }}
+                >
+                  v{appVersion}
+                </Text>
+              </View>
               <Text style={styles.logoSub}>{localize("about.tagline")}</Text>
             </View>
           </View>

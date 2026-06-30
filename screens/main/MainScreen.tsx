@@ -30,6 +30,7 @@ import { Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { typography } from "../../themes/typography";
 import { getPreferredMap } from "../../services/map-preference-service";
+import Constants from "expo-constants";
 
 export type LocationDetails = {
   id?: string;
@@ -49,9 +50,8 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
   const [batteryModalVisible, setBatteryModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [action, setAction] = useState<undefined | string>();
-
+  const appVersion = Constants.expoConfig?.version || "1.1.0";
   const [hasSavedLocation, setHasSavedLocation] = useState(false);
-
   const listRef = useRef<FlatList>(null);
 
   useFocusEffect(
@@ -282,7 +282,21 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
               />
             </View>
             <View>
-              <Text style={styles.logoText}>easy spot</Text>
+              <View
+                style={{ flexDirection: "row", alignItems: "baseline", gap: 6 }}
+              >
+                <Text style={styles.logoText}>easy spot</Text>
+                <Text
+                  style={{
+                    fontSize: 11,
+                    color: "rgba(255,255,255,0.55)",
+                    marginLeft: 10,
+                    fontWeight: "500",
+                  }}
+                >
+                  v{appVersion}
+                </Text>
+              </View>
               <Text style={styles.logoSub}>{localize("about.tagline")}</Text>
             </View>
           </View>

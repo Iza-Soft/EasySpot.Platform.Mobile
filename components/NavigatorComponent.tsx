@@ -11,7 +11,6 @@ import PrivacyPolicyScreenComponent from "../screens/legal/PrivacyPolicyScreen";
 import TermsOfServiceScreenComponent from "../screens/legal/TermsOfServiceScreen";
 import AboutScreenComponent from "../screens/about/AboutScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Constants from "expo-constants";
 import BatteryOptimizationScreenComponent from "../screens/battery/BatteryOptimizationScreen";
 import { useBatteryBannerLogic } from "../hook/useBatteryBannerLogic";
 import MapProviderComponent from "./modal/MapProviderComponent";
@@ -28,7 +27,6 @@ const NavigatorComponent = ({ navigation }: any) => {
   const [policyRequired, setPolicyRequired] = useState(false);
   const [isPrivacyChecked, setIsPrivacyChecked] = useState(false);
   const PRIVACY_VERSION = "1.0.0";
-  const appVersion = Constants.expoConfig?.version || "1.0.0";
 
   useEffect(() => {
     const checkPrivacyPolicy = async () => {
