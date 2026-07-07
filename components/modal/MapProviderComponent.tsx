@@ -15,6 +15,7 @@ import {
   setPreferredMap,
 } from "../../services/map-preference-service";
 import { typography } from "../../themes/typography";
+import AppText from "../AppTextComponent";
 
 export default function MapProviderComponent() {
   const { t } = useTranslation();
@@ -54,20 +55,22 @@ export default function MapProviderComponent() {
         },
       ]}
     >
-      <Text
+      <AppText
         style={[styles.mapIconText, { fontSize: initial.length > 1 ? 11 : 18 }]}
       >
         {initial}
-      </Text>
+      </AppText>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{t("settings.map_provider.title")}</Text>
-      <Text style={styles.description}>
+      <AppText style={styles.header}>
+        {t("settings.map_provider.title")}
+      </AppText>
+      <AppText style={styles.description}>
         {t("settings.map_provider.description")}
-      </Text>
+      </AppText>
 
       <View style={styles.grid}>
         {providers.map((provider) => {
@@ -83,15 +86,15 @@ export default function MapProviderComponent() {
                 brandColor={provider.brandColor}
                 initial={provider.initial}
               />
-              <Text
+              <AppText
                 style={[
                   styles.cardLabel,
                   isSelected && styles.cardLabelSelected,
                 ]}
               >
                 {provider.label}
-              </Text>
-              <Text style={styles.cardSub}>{provider.available}</Text>
+              </AppText>
+              <AppText style={styles.cardSub}>{provider.available}</AppText>
               {isSelected && (
                 <View style={styles.checkmark}>
                   <Ionicons name="checkmark" size={12} color="white" />

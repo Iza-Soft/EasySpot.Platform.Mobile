@@ -48,6 +48,7 @@ import { TABS_CONFIG } from "../../config/tabs.config";
 import { Ionicons } from "@expo/vector-icons";
 import { getPreferredMap } from "../../services/map-preference-service";
 import Constants from "expo-constants";
+import AppText from "../../components/AppTextComponent";
 
 export default function HistoryScreenComponent({
   navigation,
@@ -415,38 +416,38 @@ export default function HistoryScreenComponent({
         onSuccess: () => {
           setLocations((prev) =>
             prev.map((item) =>
-              item.id === selectedItem?.id
-                ? {
-                    ...item,
-                    title: data.title?.trim(),
-                    level: data.level?.trim(),
-                    section: data.section?.trim(),
-                    spot: data.spot?.trim(),
-                    comments: data.comments?.trim(),
-                  }
-                : item,
-            ),
-          );
-          setSelectedItem((prev) =>
-            prev
-              ? {
-                  ...prev,
+              item.id === selectedItem?.id ?
+                {
+                  ...item,
                   title: data.title?.trim(),
                   level: data.level?.trim(),
                   section: data.section?.trim(),
                   spot: data.spot?.trim(),
                   comments: data.comments?.trim(),
                 }
-              : prev,
+              : item,
+            ),
+          );
+          setSelectedItem((prev) =>
+            prev ?
+              {
+                ...prev,
+                title: data.title?.trim(),
+                level: data.level?.trim(),
+                section: data.section?.trim(),
+                spot: data.spot?.trim(),
+                comments: data.comments?.trim(),
+              }
+            : prev,
           );
           setLoading(false);
           Toast.show({
             type: "success",
             text1: localize("common.success"),
             text2:
-              selectedItem?.type === "favorites"
-                ? localize("history.success.favorite_updated")
-                : localize("history.success.parking_updated"),
+              selectedItem?.type === "favorites" ?
+                localize("history.success.favorite_updated")
+              : localize("history.success.parking_updated"),
           });
         },
         onError: (message) => {
@@ -547,9 +548,9 @@ export default function HistoryScreenComponent({
   };
 
   const filteredLocations =
-    selectedTab === TABS_CONFIG.ALL
-      ? locations
-      : locations.filter((item) => item.type === TAB_TO_TYPE[selectedTab]);
+    selectedTab === TABS_CONFIG.ALL ?
+      locations
+    : locations.filter((item) => item.type === TAB_TO_TYPE[selectedTab]);
 
   const renderItem = ({ item }: { item: CardItem }) => (
     <LocationCard
@@ -608,11 +609,13 @@ export default function HistoryScreenComponent({
 
       Toast.show({
         type: "success",
-        text1: missingFields
-          ? `⚠️ ${localize("history.success.copied")}`
+        text1:
+          missingFields ?
+            `⚠️ ${localize("history.success.copied")}`
           : localize("history.success.copied"),
-        text2: missingFields
-          ? localize("history.success.address_copied_missing")
+        text2:
+          missingFields ?
+            localize("history.success.address_copied_missing")
           : localize("history.success.address_copied"),
       });
     } else {
@@ -631,9 +634,8 @@ export default function HistoryScreenComponent({
 
   const toggleSelection = (id: number) => {
     setSelectedLocations((prev) => {
-      const next = prev.includes(id)
-        ? prev.filter((x) => x !== id)
-        : [...prev, id];
+      const next =
+        prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
 
       setSelectedAll(
         locations.length > 0 &&
@@ -662,8 +664,8 @@ export default function HistoryScreenComponent({
               <View
                 style={{ flexDirection: "row", alignItems: "baseline", gap: 6 }}
               >
-                <Text style={styles.logoText}>easy spot</Text>
-                <Text
+                <AppText style={styles.logoText}>easy spot</AppText>
+                <AppText
                   style={{
                     fontSize: 11,
                     color: "rgba(255,255,255,0.55)",
@@ -672,9 +674,11 @@ export default function HistoryScreenComponent({
                   }}
                 >
                   v{appVersion}
-                </Text>
+                </AppText>
               </View>
-              <Text style={styles.logoSub}>{localize("about.tagline")}</Text>
+              <AppText style={styles.logoSub}>
+                {localize("about.tagline")}
+              </AppText>
             </View>
           </View>
           <TouchableOpacity style={styles.menuBtn} onPress={onMenuPress}>
@@ -690,7 +694,7 @@ export default function HistoryScreenComponent({
               onPress={() => setSelectedTab(tab as typeof selectedTab)}
               style={[styles.tab, selectedTab === tab && styles.tabSelected]}
             >
-              <Text
+              <AppText
                 style={[
                   styles.tabText,
                   selectedTab === tab && styles.tabTextSelected,
@@ -698,7 +702,7 @@ export default function HistoryScreenComponent({
               >
                 {/* {tab.charAt(0).toUpperCase() + tab.slice(1)} */}
                 {localize(`history.tabs.${tab}`)}
-              </Text>
+              </AppText>
             </Pressable>
           ),
         )}
@@ -744,7 +748,9 @@ export default function HistoryScreenComponent({
                 onPress={() => toggleSelectionAll(!selectedAll)}
                 style={styles.button}
               >
-                <Text style={styles.emoji}>{selectedAll ? "☑️" : "⬜️"}</Text>
+                <AppText style={styles.emoji}>
+                  {selectedAll ? "☑️" : "⬜️"}
+                </AppText>
               </TouchableOpacity>
 
               {/* Exit */}
@@ -756,12 +762,12 @@ export default function HistoryScreenComponent({
                 }}
                 style={styles.button}
               >
-                <Text style={styles.emoji}>❌</Text>
+                <AppText style={styles.emoji}>❌</AppText>
               </TouchableOpacity>
 
               {/* Count */}
               <View style={styles.selectedCount}>
-                <Text>{selectedLocations.length} selected</Text>
+                <AppText>{selectedLocations.length} selected</AppText>
               </View>
 
               {/* Delete */}
@@ -770,17 +776,16 @@ export default function HistoryScreenComponent({
                 onPress={isDisabled ? undefined : deleteAllLocations}
                 style={[styles.button, isDisabled && styles.buttonDisabled]}
               >
-                <Text style={styles.emoji}>🗑️</Text>
+                <AppText style={styles.emoji}>🗑️</AppText>
               </TouchableOpacity>
             </View>
           </Animated.View>
         </View>
       </View>
 
-      {filteredLocations.length === 0 ? (
+      {filteredLocations.length === 0 ?
         <EmptyComponent text={localize("history.no_locations")} />
-      ) : (
-        <FlatList
+      : <FlatList
           data={filteredLocations}
           keyExtractor={(item) => String(item.id)}
           renderItem={renderItem}
@@ -794,39 +799,36 @@ export default function HistoryScreenComponent({
           }}
           showsVerticalScrollIndicator={true}
         />
-      )}
+      }
 
       <ModalComponent
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
       >
-        {parkTimeMode === "adjust" ? (
+        {parkTimeMode === "adjust" ?
           <AdjustParkTimeComponent
             onSubmit={(minutes) => {
               console.log(selectedItem);
               handleUpdateReminder(minutes);
             }}
           />
-        ) : (
-          <LocationDetailsComponent
+        : <LocationDetailsComponent
             mode={detailsMode}
             action={selectedItem?.type}
             initialData={{
               title: selectedItem?.title ? selectedItem?.title?.trim() : "",
               level: selectedItem?.level ? selectedItem?.level?.trim() : "",
-              section: selectedItem?.section
-                ? selectedItem?.section?.trim()
-                : "",
+              section:
+                selectedItem?.section ? selectedItem?.section?.trim() : "",
               spot: selectedItem?.spot ? selectedItem?.spot?.trim() : "",
-              comments: selectedItem?.comments
-                ? selectedItem?.comments?.trim()
-                : "",
+              comments:
+                selectedItem?.comments ? selectedItem?.comments?.trim() : "",
             }}
             onSubmit={(data) => {
               handleUpdateLocation(data);
             }}
           />
-        )}
+        }
       </ModalComponent>
 
       <LocationCardOptionsComponent

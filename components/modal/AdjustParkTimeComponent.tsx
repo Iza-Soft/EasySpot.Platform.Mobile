@@ -11,6 +11,7 @@ import SegmentedControl from "@react-native-segmented-control/segmented-control"
 import { REMINDER_CONFIG } from "../../config/reminder.config";
 import { useTranslation } from "react-i18next";
 import { typography } from "../../themes/typography";
+import AppText from "../AppTextComponent";
 
 const HOUR_OPTIONS = REMINDER_CONFIG.DURATION_OPTIONS_MINUTES.map(
   (m) => m / 60,
@@ -101,17 +102,19 @@ export default function AdjustParkTimeComponent({
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.headerRow}>
-        <Text style={styles.header}>{localize("adjust_park_time.header")}</Text>
+        <AppText style={styles.header}>
+          {localize("adjust_park_time.header")}
+        </AppText>
       </View>
 
       {/* Description */}
-      <Text style={styles.description}>
+      <AppText style={styles.description}>
         {localize("adjust_park_time.description_before")}
-        <Text style={styles.descriptionAccent}>
+        <AppText style={styles.descriptionAccent}>
           {localize("adjust_park_time.description_highlight")}
-        </Text>
+        </AppText>
         {localize("adjust_park_time.description_after")}
-      </Text>
+      </AppText>
 
       {/* Segmented Control */}
       <SegmentedControl
@@ -142,12 +145,12 @@ export default function AdjustParkTimeComponent({
                 handleCustomChange(v, customMinutes);
               }}
             />
-            <Text style={styles.inputLabel}>
+            <AppText style={styles.inputLabel}>
               {localize("adjust_park_time.hours")}
-            </Text>
+            </AppText>
           </View>
 
-          <Text style={styles.separator}>:</Text>
+          <AppText style={styles.separator}>:</AppText>
 
           <View style={styles.inputGroup}>
             <TextInput
@@ -171,9 +174,9 @@ export default function AdjustParkTimeComponent({
                 handleCustomChange(customHours, clamped);
               }}
             />
-            <Text style={styles.inputLabel}>
+            <AppText style={styles.inputLabel}>
               {localize("adjust_park_time.min")}
-            </Text>
+            </AppText>
           </View>
         </View>
       )}
@@ -181,18 +184,18 @@ export default function AdjustParkTimeComponent({
       {/* Summary card */}
       <View style={styles.summaryCard}>
         <View>
-          <Text style={styles.summaryLabel}>
+          <AppText style={styles.summaryLabel}>
             {localize("adjust_park_time.selected")}
-          </Text>
-          <Text style={styles.summaryValue}>{getSelectedLabel()}</Text>
+          </AppText>
+          <AppText style={styles.summaryValue}>{getSelectedLabel()}</AppText>
         </View>
         <View style={styles.summaryRight}>
-          <Text style={styles.summaryLabel}>
+          <AppText style={styles.summaryLabel}>
             {localize("adjust_park_time.reminder_at")}
-          </Text>
-          <Text style={[styles.summaryValue, styles.summaryAccent]}>
+          </AppText>
+          <AppText style={[styles.summaryValue, styles.summaryAccent]}>
             {getReminderTime()}
-          </Text>
+          </AppText>
         </View>
       </View>
 
@@ -204,9 +207,9 @@ export default function AdjustParkTimeComponent({
         onPress={() => onSubmit(getTotalMinutes())}
         disabled={!isValidInput}
       >
-        <Text style={styles.confirmText}>
+        <AppText style={styles.confirmText}>
           {localize("adjust_park_time.confirm")}
-        </Text>
+        </AppText>
       </TouchableOpacity>
     </View>
   );
