@@ -653,6 +653,12 @@ export default function HistoryScreenComponent({
       <View style={styles.hero}>
         <View style={styles.heroInner}>
           <View style={styles.logoRow}>
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => navigation.goBack()}
+            >
+              <Ionicons name="arrow-back" size={20} color="white" />
+            </TouchableOpacity>
             <View style={styles.logoIconWrapper}>
               <Image
                 source={require("../../assets/easyspot-logo.png")}
@@ -931,7 +937,7 @@ const styles = StyleSheet.create({
   logoRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 5,
   },
   logoIconWrapper: {
     width: 34,
@@ -964,5 +970,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+  },
+  backBtn: {
+    width: 34,
+    height: 34,
+    backgroundColor: "rgba(255,255,255,0.15)",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 4,
   },
 });
