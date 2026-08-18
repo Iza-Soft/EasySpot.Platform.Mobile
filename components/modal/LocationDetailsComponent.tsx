@@ -12,6 +12,7 @@ import { colors } from "../../themes/main";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 import { typography } from "../../themes/typography";
+import AppText from "../AppTextComponent";
 
 export type LocationDetails = {
   id?: string;
@@ -93,11 +94,12 @@ export default function LocationDetailsComponent({
   ) {
     return (
       <View>
-        <Text style={{ marginBottom: 4 }}>{label}</Text>
+        <AppText style={{ marginBottom: 4 }}>{label}</AppText>
 
         <TextInput
           placeholder={placeholder}
           value={value}
+          maxFontSizeMultiplier={1.0}
           editable={isEdit} // <-- disables in view mode
           onChangeText={setter}
           maxLength={maxLength}
@@ -120,9 +122,9 @@ export default function LocationDetailsComponent({
         {localize("location_details.title")}
       </Text> */}
       <View style={styles.headerRow}>
-        <Text style={typography.header}>
+        <AppText style={typography.header}>
           {localize("location_details.title")}
-        </Text>
+        </AppText>
       </View>
       {renderInput(
         localize("location_details.fields.title"),
@@ -136,11 +138,11 @@ export default function LocationDetailsComponent({
           onPress={() => setShowDetails(!showDetails)}
           style={{ marginBottom: 8, paddingVertical: 4 }}
         >
-          <Text style={{ color: colors.tab, fontWeight: "600" }}>
+          <AppText style={{ color: colors.tab, fontWeight: "600" }}>
             {!showDetails
               ? localize("location_details.add_details")
               : localize("location_details.hide_details")}
-          </Text>
+          </AppText>
         </TouchableOpacity>
       )}
       {action === "parking" && showDetails && (
@@ -184,10 +186,10 @@ export default function LocationDetailsComponent({
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
             >
-              <Text style={{ fontSize: 16 }}>🔔</Text>
-              <Text style={{ color: colors.text }}>
+              <AppText style={{ fontSize: 16 }}>🔔</AppText>
+              <AppText style={{ color: colors.text }}>
                 {localize("location_details.parking_reminder")}
-              </Text>
+              </AppText>
             </View>
 
             <Switch
@@ -198,12 +200,13 @@ export default function LocationDetailsComponent({
             />
           </View>
         )}
-      <Text style={{ marginBottom: 4 }}>
+      <AppText style={{ marginBottom: 4 }}>
         {localize("location_details.fields.comments")}
-      </Text>
+      </AppText>
       <TextInput
         placeholder={localize("location_details.placeholders.comments")}
         value={comments}
+        maxFontSizeMultiplier={1.0}
         editable={isEdit}
         multiline
         numberOfLines={3}
@@ -229,13 +232,13 @@ export default function LocationDetailsComponent({
             marginBottom: 8,
           }}
         >
-          <Text
+          <AppText
             style={{ color: colors.bg, textAlign: "center", fontWeight: "600" }}
           >
             {mode === "edit"
               ? localize("common.save")
               : localize("common.update")}
-          </Text>
+          </AppText>
         </TouchableOpacity>
       )}
     </View>

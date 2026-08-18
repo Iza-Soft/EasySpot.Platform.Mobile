@@ -1,11 +1,12 @@
 import { ActivityIndicator, View, Text, StyleSheet } from "react-native";
 import { colors } from "../themes/main";
+import AppText from "./AppTextComponent";
 
 const LoadingComponent = ({ message }: { message: string }) => {
   return (
     <View style={styles.loadingOverlay}>
       <ActivityIndicator size="large" />
-      <Text style={styles.loadingText}>{message}</Text>
+      <AppText style={styles.loadingText}>{message}</AppText>
     </View>
   );
 };

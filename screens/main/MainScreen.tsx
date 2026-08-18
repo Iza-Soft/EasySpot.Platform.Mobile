@@ -31,6 +31,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { typography } from "../../themes/typography";
 import { getPreferredMap } from "../../services/map-preference-service";
 import Constants from "expo-constants";
+import AppText from "../../components/AppTextComponent";
 
 export type LocationDetails = {
   id?: string;
@@ -80,9 +81,9 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
   }, []);
 
   const slides = SLIDE_ITEMS.map((item) =>
-    item.action === "navigate"
-      ? { ...item, disabled: !hasSavedLocation }
-      : item,
+    item.action === "navigate" ?
+      { ...item, disabled: !hasSavedLocation }
+    : item,
   );
 
   const navigateIndex = slides.findIndex((item) => item.action === "navigate");
@@ -114,13 +115,12 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
             type: "success",
             text1: localize("common.success"),
             text2:
-              action === "favorites"
-                ? localize("main.success.favorite_saved")
-                : scheduled
-                  ? localize("main.success.parking_with_reminder", {
-                      minutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
-                    })
-                  : localize("main.success.parking_saved"),
+              action === "favorites" ? localize("main.success.favorite_saved")
+              : scheduled ?
+                localize("main.success.parking_with_reminder", {
+                  minutes: REMINDER_CONFIG.DEFAULT_NOTIFY_BEFORE_MINUTES,
+                })
+              : localize("main.success.parking_saved"),
           });
 
           setTimeout(() => {
@@ -285,8 +285,8 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
               <View
                 style={{ flexDirection: "row", alignItems: "baseline", gap: 6 }}
               >
-                <Text style={styles.logoText}>easy spot</Text>
-                <Text
+                <AppText style={styles.logoText}>easy spot</AppText>
+                <AppText
                   style={{
                     fontSize: 11,
                     color: "rgba(255,255,255,0.55)",
@@ -295,9 +295,11 @@ export default function MainScreenComponent({ navigation, onMenuPress }: any) {
                   }}
                 >
                   v{appVersion}
-                </Text>
+                </AppText>
               </View>
-              <Text style={styles.logoSub}>{localize("about.tagline")}</Text>
+              <AppText style={styles.logoSub}>
+                {localize("about.tagline")}
+              </AppText>
             </View>
           </View>
           <TouchableOpacity style={styles.menuBtn} onPress={onMenuPress}>

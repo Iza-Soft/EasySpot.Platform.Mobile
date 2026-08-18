@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Modal, View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { colors } from "../../themes/main";
 import { useTranslation } from "react-i18next";
+import AppText from "../AppTextComponent";
 
 type WidthType = number | `${number}%`;
 
@@ -36,11 +37,11 @@ export default function ModalComponent({
             }}
             style={[styles.closeBtn, { opacity: canClose ? 1 : 0.4 }]}
           >
-            <Text style={styles.closeText}>
-              {canClose
-                ? localize("common.close")
-                : localize("common.accept_to_continue")}
-            </Text>
+            <AppText style={styles.closeText}>
+              {canClose ?
+                localize("common.close")
+              : localize("common.accept_to_continue")}
+            </AppText>
           </TouchableOpacity>
         </View>
       </View>

@@ -3,31 +3,40 @@ import { Text, ScrollView, StyleSheet } from "react-native";
 import { colors } from "../../themes/main";
 import { useTranslation } from "react-i18next";
 import { typography } from "../../themes/typography";
+import AppText from "../../components/AppTextComponent";
 
 const AboutScreenComponent = () => {
   const { t: localize } = useTranslation();
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>{localize("about.title")}</Text>
+      <AppText style={styles.title}>{localize("about.title")}</AppText>
 
-      <Text style={styles.tagline}>{localize("about.tagline")}</Text>
+      <AppText style={styles.tagline}>{localize("about.tagline")}</AppText>
 
-      <Text style={styles.paragraph}>{localize("about.description")}</Text>
+      <AppText style={styles.paragraph}>
+        {localize("about.description")}
+      </AppText>
 
-      <Text style={styles.paragraph}>{localize("about.can_do")}</Text>
+      <AppText style={styles.paragraph}>{localize("about.can_do")}</AppText>
 
-      <Text style={styles.listItem}>{localize("about.features.parking")}</Text>
-      <Text style={styles.listItem}>
+      <AppText style={styles.listItem}>
+        {localize("about.features.parking")}
+      </AppText>
+      <AppText style={styles.listItem}>
         {localize("about.features.favorites")}
-      </Text>
-      <Text style={styles.listItem}>{localize("about.features.share")}</Text>
+      </AppText>
+      <AppText style={styles.listItem}>
+        {localize("about.features.share")}
+      </AppText>
 
-      <Text style={styles.paragraph}>{localize("about.privacy_note")}</Text>
+      <AppText style={styles.paragraph}>
+        {localize("about.privacy_note")}
+      </AppText>
 
-      <Text style={styles.paragraph}>{localize("about.closing")}</Text>
-      <Text style={styles.footer}>
+      <AppText style={styles.paragraph}>{localize("about.closing")}</AppText>
+      <AppText style={styles.footer}>
         {localize("common.footer", { year: new Date().getFullYear() })}
-      </Text>
+      </AppText>
     </ScrollView>
   );
 };

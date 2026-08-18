@@ -1,10 +1,11 @@
 import { View, Text, StyleSheet } from "react-native";
 import { colors } from "../themes/main";
+import AppText from "./AppTextComponent";
 
 const EmptyComponent = ({ text }: { text: string }) => {
   return (
     <View style={styles.emptyContainer}>
-      <Text style={styles.subtitle}>{text}</Text>
+      <AppText style={styles.subtitle}>{text}</AppText>
     </View>
   );
 };

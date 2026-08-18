@@ -3,6 +3,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { colors } from "../themes/main";
 import { useTranslation } from "react-i18next";
+import AppText from "./AppTextComponent";
 
 const BatteryOptimizationBannerComponent = ({
   deviceInfo,
@@ -23,36 +24,36 @@ const BatteryOptimizationBannerComponent = ({
       <View style={styles.banner}>
         <View style={styles.bannerContent}>
           <View style={styles.bannerHeader}>
-            <Text style={styles.bannerIcon}>⚙️</Text>
-            <Text style={styles.bannerTitle}>
+            <AppText style={styles.bannerIcon}>⚙️</AppText>
+            <AppText style={styles.bannerTitle}>
               {localize("battery_banner.title")}
-            </Text>
+            </AppText>
           </View>
 
           <View style={styles.bannerMainContent}>
-            <Text style={styles.bannerSubtitle}>
+            <AppText style={styles.bannerSubtitle}>
               {localize("battery_banner.subtitle", {
                 manufacturer: deviceInfo.manufacturer,
               })}
-            </Text>
+            </AppText>
 
             <View style={styles.bannerButtons}>
               <TouchableOpacity
                 style={styles.instructionsButton}
                 onPress={onInstructionsPress}
               >
-                <Text style={styles.instructionsButtonText}>
+                <AppText style={styles.instructionsButtonText}>
                   {localize("battery_banner.instructions")}
-                </Text>
+                </AppText>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.dismissButton}
                 onPress={onDismiss}
               >
-                <Text style={styles.dismissButtonText}>
+                <AppText style={styles.dismissButtonText}>
                   {localize("battery_banner.dismiss")}
-                </Text>
+                </AppText>
               </TouchableOpacity>
             </View>
           </View>

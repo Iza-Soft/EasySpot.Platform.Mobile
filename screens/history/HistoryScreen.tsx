@@ -48,6 +48,8 @@ import { TABS_CONFIG } from "../../config/tabs.config";
 import { Ionicons } from "@expo/vector-icons";
 import { getPreferredMap } from "../../services/map-preference-service";
 import Constants from "expo-constants";
+import AppText from "../../components/AppTextComponent";
+import AppAlertComponent from "../../components/AppAlertComponent";
 
 export default function HistoryScreenComponent({
   navigation,
@@ -82,6 +84,21 @@ export default function HistoryScreenComponent({
   const [selectedLocations, setSelectedLocations] = useState<number[]>([]);
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const appVersion = Constants.expoConfig?.version || "1.1.0";
+  const [alertConfig, setAlertConfig] = useState<{
+    visible: boolean;
+    title: string;
+    message: string;
+    buttons: {
+      text: string;
+      onPress: () => void;
+      style?: "default" | "cancel" | "destructive";
+    }[];
+  }>({
+    visible: false,
+    title: "",
+    message: "",
+    buttons: [],
+  });
 
   useEffect(() => {
     loadPage(0, true);
@@ -154,6 +171,18 @@ export default function HistoryScreenComponent({
     }
   };
 
+  const showAlert = (
+    title: string,
+    message: string,
+    buttons: {
+      text: string;
+      onPress: () => void;
+      style?: "default" | "cancel" | "destructive";
+    }[],
+  ) => {
+    setAlertConfig({ visible: true, title, message, buttons });
+  };
+
   const deleteLocation = async (id: number | undefined) => {
     if (!id) {
       Toast.show({
@@ -164,11 +193,11 @@ export default function HistoryScreenComponent({
       return;
     }
 
-    Alert.alert(
+    showAlert(
       localize("history.delete_confirm_title"),
       localize("history.delete_confirm_message"),
       [
-        { text: localize("common.cancel"), style: "cancel" },
+        { text: localize("common.cancel"), style: "cancel", onPress: () => {} },
         {
           text: localize("common.delete"),
           style: "destructive",
@@ -258,11 +287,11 @@ export default function HistoryScreenComponent({
       return;
     }
 
-    Alert.alert(
+    showAlert(
       localize("history.delete_confirm_title"),
       localize("history.delete_all_confirm_message"),
       [
-        { text: localize("common.cancel"), style: "cancel" },
+        { text: localize("common.cancel"), style: "cancel", onPress: () => {} },
         {
           text: localize("common.delete"),
           style: "destructive",
@@ -668,8 +697,8 @@ export default function HistoryScreenComponent({
               <View
                 style={{ flexDirection: "row", alignItems: "baseline", gap: 6 }}
               >
-                <Text style={styles.logoText}>easy spot</Text>
-                <Text
+                <AppText style={styles.logoText}>easy spot</AppText>
+                <AppText
                   style={{
                     fontSize: 11,
                     color: "rgba(255,255,255,0.55)",
@@ -678,9 +707,11 @@ export default function HistoryScreenComponent({
                   }}
                 >
                   v{appVersion}
-                </Text>
+                </AppText>
               </View>
-              <Text style={styles.logoSub}>{localize("about.tagline")}</Text>
+              <AppText style={styles.logoSub}>
+                {localize("about.tagline")}
+              </AppText>
             </View>
           </View>
           <TouchableOpacity style={styles.menuBtn} onPress={onMenuPress}>
@@ -696,7 +727,7 @@ export default function HistoryScreenComponent({
               onPress={() => setSelectedTab(tab as typeof selectedTab)}
               style={[styles.tab, selectedTab === tab && styles.tabSelected]}
             >
-              <Text
+              <AppText
                 style={[
                   styles.tabText,
                   selectedTab === tab && styles.tabTextSelected,
@@ -704,7 +735,7 @@ export default function HistoryScreenComponent({
               >
                 {/* {tab.charAt(0).toUpperCase() + tab.slice(1)} */}
                 {localize(`history.tabs.${tab}`)}
-              </Text>
+              </AppText>
             </Pressable>
           ),
         )}
@@ -723,6 +754,7 @@ export default function HistoryScreenComponent({
             <TextInput
               placeholder={localize("history.search_placeholder")}
               value={searchText}
+              maxFontSizeMultiplier={1.0}
               onChangeText={setSearchText}
               style={{
                 backgroundColor: "#fff",
@@ -750,7 +782,9 @@ export default function HistoryScreenComponent({
                 onPress={() => toggleSelectionAll(!selectedAll)}
                 style={styles.button}
               >
-                <Text style={styles.emoji}>{selectedAll ? "☑️" : "⬜️"}</Text>
+                <AppText style={styles.emoji}>
+                  {selectedAll ? "☑️" : "⬜️"}
+                </AppText>
               </TouchableOpacity>
 
               {/* Exit */}
@@ -762,12 +796,12 @@ export default function HistoryScreenComponent({
                 }}
                 style={styles.button}
               >
-                <Text style={styles.emoji}>❌</Text>
+                <AppText style={styles.emoji}>❌</AppText>
               </TouchableOpacity>
 
               {/* Count */}
               <View style={styles.selectedCount}>
-                <Text>{selectedLocations.length} selected</Text>
+                <AppText>{selectedLocations.length} selected</AppText>
               </View>
 
               {/* Delete */}
@@ -776,7 +810,7 @@ export default function HistoryScreenComponent({
                 onPress={isDisabled ? undefined : deleteAllLocations}
                 style={[styles.button, isDisabled && styles.buttonDisabled]}
               >
-                <Text style={styles.emoji}>🗑️</Text>
+                <AppText style={styles.emoji}>🗑️</AppText>
               </TouchableOpacity>
             </View>
           </Animated.View>
@@ -866,6 +900,14 @@ export default function HistoryScreenComponent({
       />
 
       {loading && <LoadingComponent message={loadingMessage} />}
+
+      <AppAlertComponent
+        visible={alertConfig.visible}
+        title={alertConfig.title}
+        message={alertConfig.message}
+        buttons={alertConfig.buttons}
+        onClose={() => setAlertConfig((prev) => ({ ...prev, visible: false }))}
+      />
     </View>
   );
 }
