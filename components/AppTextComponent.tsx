@@ -2,7 +2,7 @@ import { Text, TextProps } from "react-native";
 
 export default function AppText({ children, style, ...props }: TextProps) {
   return (
-    <Text allowFontScaling={false} style={style} {...props}>
+    <Text maxFontSizeMultiplier={1.0} style={style} {...props}>
       {children}
     </Text>
   );

@@ -57,32 +57,31 @@ export default function AdjustParkTimeComponent({
   };
 
   const getReminderTime = () => {
-    const totalMins =
-      isOther ?
-        parseInt(customHours || "0") * 60 + parseInt(customMinutes || "0") - 15
+    const totalMins = isOther
+      ? parseInt(customHours || "0") * 60 + parseInt(customMinutes || "0") - 15
       : HOUR_OPTIONS[selectedIndex] * 60 - 15;
 
     if (totalMins <= 0) return localize("adjust_park_time.no_reminder");
     const h = Math.floor(totalMins / 60);
     const m = totalMins % 60;
-    return h > 0 ?
-        `${h}${localize("adjust_park_time.hours_short")} ${m}${localize("adjust_park_time.min")}`
+    return h > 0
+      ? `${h}${localize("adjust_park_time.hours_short")} ${m}${localize("adjust_park_time.min")}`
       : `${m}${localize("adjust_park_time.min")}`;
   };
 
   const getSelectedLabel = () => {
     if (!isOther) {
       const h = HOUR_OPTIONS[selectedIndex];
-      return (
-        h === 1 ? localize("adjust_park_time.label_1h")
-        : h === 2 ? localize("adjust_park_time.label_2h")
-        : localize("adjust_park_time.label_4h")
-      );
+      return h === 1
+        ? localize("adjust_park_time.label_1h")
+        : h === 2
+          ? localize("adjust_park_time.label_2h")
+          : localize("adjust_park_time.label_4h");
     }
     const h = parseInt(customHours || "0");
     const m = parseInt(customMinutes || "0");
-    return h || m ?
-        `${h}${localize("adjust_park_time.hours_short")} ${String(m).padStart(2, "0")}${localize("adjust_park_time.min")}`
+    return h || m
+      ? `${h}${localize("adjust_park_time.hours_short")} ${String(m).padStart(2, "0")}${localize("adjust_park_time.min")}`
       : localize("adjust_park_time.custom");
   };
 
@@ -140,6 +139,7 @@ export default function AdjustParkTimeComponent({
               keyboardType="numeric"
               maxLength={2}
               value={customHours}
+              maxFontSizeMultiplier={1.0}
               onChangeText={(v) => {
                 setCustomHours(v);
                 handleCustomChange(v, customMinutes);
@@ -160,16 +160,17 @@ export default function AdjustParkTimeComponent({
               keyboardType="numeric"
               maxLength={2}
               value={customMinutes}
+              maxFontSizeMultiplier={1.0}
               onChangeText={(v) => {
                 const numeric = v.replace(/[^0-9]/g, "").slice(0, 2);
                 const minMinutes =
                   customHours === "" || customHours === "0" ? 16 : 0;
                 const clamped =
-                  numeric.length === 2 ?
-                    String(
-                      Math.min(59, Math.max(minMinutes, parseInt(numeric))),
-                    )
-                  : numeric;
+                  numeric.length === 2
+                    ? String(
+                        Math.min(59, Math.max(minMinutes, parseInt(numeric))),
+                      )
+                    : numeric;
                 setCustomMinutes(clamped);
                 handleCustomChange(customHours, clamped);
               }}

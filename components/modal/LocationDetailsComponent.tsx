@@ -99,6 +99,7 @@ export default function LocationDetailsComponent({
         <TextInput
           placeholder={placeholder}
           value={value}
+          maxFontSizeMultiplier={1.0}
           editable={isEdit} // <-- disables in view mode
           onChangeText={setter}
           maxLength={maxLength}
@@ -138,9 +139,9 @@ export default function LocationDetailsComponent({
           style={{ marginBottom: 8, paddingVertical: 4 }}
         >
           <AppText style={{ color: colors.tab, fontWeight: "600" }}>
-            {!showDetails ?
-              localize("location_details.add_details")
-            : localize("location_details.hide_details")}
+            {!showDetails
+              ? localize("location_details.add_details")
+              : localize("location_details.hide_details")}
           </AppText>
         </TouchableOpacity>
       )}
@@ -205,6 +206,7 @@ export default function LocationDetailsComponent({
       <TextInput
         placeholder={localize("location_details.placeholders.comments")}
         value={comments}
+        maxFontSizeMultiplier={1.0}
         editable={isEdit}
         multiline
         numberOfLines={3}
@@ -233,9 +235,9 @@ export default function LocationDetailsComponent({
           <AppText
             style={{ color: colors.bg, textAlign: "center", fontWeight: "600" }}
           >
-            {mode === "edit" ?
-              localize("common.save")
-            : localize("common.update")}
+            {mode === "edit"
+              ? localize("common.save")
+              : localize("common.update")}
           </AppText>
         </TouchableOpacity>
       )}

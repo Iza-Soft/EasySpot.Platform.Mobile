@@ -49,6 +49,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { getPreferredMap } from "../../services/map-preference-service";
 import Constants from "expo-constants";
 import AppText from "../../components/AppTextComponent";
+import AppAlertComponent from "../../components/AppAlertComponent";
 
 export default function HistoryScreenComponent({
   navigation,
@@ -83,6 +84,21 @@ export default function HistoryScreenComponent({
   const [selectedLocations, setSelectedLocations] = useState<number[]>([]);
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const appVersion = Constants.expoConfig?.version || "1.1.0";
+  const [alertConfig, setAlertConfig] = useState<{
+    visible: boolean;
+    title: string;
+    message: string;
+    buttons: {
+      text: string;
+      onPress: () => void;
+      style?: "default" | "cancel" | "destructive";
+    }[];
+  }>({
+    visible: false,
+    title: "",
+    message: "",
+    buttons: [],
+  });
 
   useEffect(() => {
     loadPage(0, true);
@@ -155,6 +171,18 @@ export default function HistoryScreenComponent({
     }
   };
 
+  const showAlert = (
+    title: string,
+    message: string,
+    buttons: {
+      text: string;
+      onPress: () => void;
+      style?: "default" | "cancel" | "destructive";
+    }[],
+  ) => {
+    setAlertConfig({ visible: true, title, message, buttons });
+  };
+
   const deleteLocation = async (id: number | undefined) => {
     if (!id) {
       Toast.show({
@@ -165,11 +193,11 @@ export default function HistoryScreenComponent({
       return;
     }
 
-    Alert.alert(
+    showAlert(
       localize("history.delete_confirm_title"),
       localize("history.delete_confirm_message"),
       [
-        { text: localize("common.cancel"), style: "cancel" },
+        { text: localize("common.cancel"), style: "cancel", onPress: () => {} },
         {
           text: localize("common.delete"),
           style: "destructive",
@@ -259,11 +287,11 @@ export default function HistoryScreenComponent({
       return;
     }
 
-    Alert.alert(
+    showAlert(
       localize("history.delete_confirm_title"),
       localize("history.delete_all_confirm_message"),
       [
-        { text: localize("common.cancel"), style: "cancel" },
+        { text: localize("common.cancel"), style: "cancel", onPress: () => {} },
         {
           text: localize("common.delete"),
           style: "destructive",
@@ -416,38 +444,38 @@ export default function HistoryScreenComponent({
         onSuccess: () => {
           setLocations((prev) =>
             prev.map((item) =>
-              item.id === selectedItem?.id ?
-                {
-                  ...item,
+              item.id === selectedItem?.id
+                ? {
+                    ...item,
+                    title: data.title?.trim(),
+                    level: data.level?.trim(),
+                    section: data.section?.trim(),
+                    spot: data.spot?.trim(),
+                    comments: data.comments?.trim(),
+                  }
+                : item,
+            ),
+          );
+          setSelectedItem((prev) =>
+            prev
+              ? {
+                  ...prev,
                   title: data.title?.trim(),
                   level: data.level?.trim(),
                   section: data.section?.trim(),
                   spot: data.spot?.trim(),
                   comments: data.comments?.trim(),
                 }
-              : item,
-            ),
-          );
-          setSelectedItem((prev) =>
-            prev ?
-              {
-                ...prev,
-                title: data.title?.trim(),
-                level: data.level?.trim(),
-                section: data.section?.trim(),
-                spot: data.spot?.trim(),
-                comments: data.comments?.trim(),
-              }
-            : prev,
+              : prev,
           );
           setLoading(false);
           Toast.show({
             type: "success",
             text1: localize("common.success"),
             text2:
-              selectedItem?.type === "favorites" ?
-                localize("history.success.favorite_updated")
-              : localize("history.success.parking_updated"),
+              selectedItem?.type === "favorites"
+                ? localize("history.success.favorite_updated")
+                : localize("history.success.parking_updated"),
           });
         },
         onError: (message) => {
@@ -548,9 +576,9 @@ export default function HistoryScreenComponent({
   };
 
   const filteredLocations =
-    selectedTab === TABS_CONFIG.ALL ?
-      locations
-    : locations.filter((item) => item.type === TAB_TO_TYPE[selectedTab]);
+    selectedTab === TABS_CONFIG.ALL
+      ? locations
+      : locations.filter((item) => item.type === TAB_TO_TYPE[selectedTab]);
 
   const renderItem = ({ item }: { item: CardItem }) => (
     <LocationCard
@@ -609,13 +637,11 @@ export default function HistoryScreenComponent({
 
       Toast.show({
         type: "success",
-        text1:
-          missingFields ?
-            `⚠️ ${localize("history.success.copied")}`
+        text1: missingFields
+          ? `⚠️ ${localize("history.success.copied")}`
           : localize("history.success.copied"),
-        text2:
-          missingFields ?
-            localize("history.success.address_copied_missing")
+        text2: missingFields
+          ? localize("history.success.address_copied_missing")
           : localize("history.success.address_copied"),
       });
     } else {
@@ -634,8 +660,9 @@ export default function HistoryScreenComponent({
 
   const toggleSelection = (id: number) => {
     setSelectedLocations((prev) => {
-      const next =
-        prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
+      const next = prev.includes(id)
+        ? prev.filter((x) => x !== id)
+        : [...prev, id];
 
       setSelectedAll(
         locations.length > 0 &&
@@ -727,6 +754,7 @@ export default function HistoryScreenComponent({
             <TextInput
               placeholder={localize("history.search_placeholder")}
               value={searchText}
+              maxFontSizeMultiplier={1.0}
               onChangeText={setSearchText}
               style={{
                 backgroundColor: "#fff",
@@ -789,9 +817,10 @@ export default function HistoryScreenComponent({
         </View>
       </View>
 
-      {filteredLocations.length === 0 ?
+      {filteredLocations.length === 0 ? (
         <EmptyComponent text={localize("history.no_locations")} />
-      : <FlatList
+      ) : (
+        <FlatList
           data={filteredLocations}
           keyExtractor={(item) => String(item.id)}
           renderItem={renderItem}
@@ -805,36 +834,39 @@ export default function HistoryScreenComponent({
           }}
           showsVerticalScrollIndicator={true}
         />
-      }
+      )}
 
       <ModalComponent
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
       >
-        {parkTimeMode === "adjust" ?
+        {parkTimeMode === "adjust" ? (
           <AdjustParkTimeComponent
             onSubmit={(minutes) => {
               console.log(selectedItem);
               handleUpdateReminder(minutes);
             }}
           />
-        : <LocationDetailsComponent
+        ) : (
+          <LocationDetailsComponent
             mode={detailsMode}
             action={selectedItem?.type}
             initialData={{
               title: selectedItem?.title ? selectedItem?.title?.trim() : "",
               level: selectedItem?.level ? selectedItem?.level?.trim() : "",
-              section:
-                selectedItem?.section ? selectedItem?.section?.trim() : "",
+              section: selectedItem?.section
+                ? selectedItem?.section?.trim()
+                : "",
               spot: selectedItem?.spot ? selectedItem?.spot?.trim() : "",
-              comments:
-                selectedItem?.comments ? selectedItem?.comments?.trim() : "",
+              comments: selectedItem?.comments
+                ? selectedItem?.comments?.trim()
+                : "",
             }}
             onSubmit={(data) => {
               handleUpdateLocation(data);
             }}
           />
-        }
+        )}
       </ModalComponent>
 
       <LocationCardOptionsComponent
@@ -868,6 +900,14 @@ export default function HistoryScreenComponent({
       />
 
       {loading && <LoadingComponent message={loadingMessage} />}
+
+      <AppAlertComponent
+        visible={alertConfig.visible}
+        title={alertConfig.title}
+        message={alertConfig.message}
+        buttons={alertConfig.buttons}
+        onClose={() => setAlertConfig((prev) => ({ ...prev, visible: false }))}
+      />
     </View>
   );
 }
