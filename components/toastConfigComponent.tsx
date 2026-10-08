@@ -1,46 +1,52 @@
-import {
-  BaseToast,
-  ToastConfig,
-  ToastConfigParams,
-} from "react-native-toast-message";
-import { StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { ToastConfig, ToastConfigParams } from "react-native-toast-message";
 import { colors } from "../themes/main";
 
+const ToastContent = ({
+  text1,
+  text2,
+  borderColor,
+}: {
+  text1?: string;
+  text2?: string;
+  borderColor: string;
+}) => (
+  <View style={[styles.toastBase, { borderLeftColor: borderColor }]}>
+    <View style={styles.contentContainer}>
+      {text1 && (
+        <Text
+          style={styles.title}
+          maxFontSizeMultiplier={1.0}
+          numberOfLines={0}
+        >
+          {text1}
+        </Text>
+      )}
+      {text2 && (
+        <Text
+          style={styles.message}
+          maxFontSizeMultiplier={1.0}
+          numberOfLines={0}
+        >
+          {text2}
+        </Text>
+      )}
+    </View>
+  </View>
+);
+
 export const toastConfigComponent: ToastConfig = {
-  success: (props: ToastConfigParams<any>) => (
-    <BaseToast
-      {...props}
-      style={[styles.toastBase, { borderLeftColor: colors.success }]}
-      contentContainerStyle={styles.contentContainer}
-      text1Style={styles.title}
-      text2Style={styles.message}
-      text1NumberOfLines={0} // Позволява неограничен брой редове за text1
-      text2NumberOfLines={0} // Позволява неограничен брой редове за text2
-    />
+  success: ({ text1, text2 }: ToastConfigParams<any>) => (
+    <ToastContent text1={text1} text2={text2} borderColor={colors.success} />
   ),
-
-  error: (props: ToastConfigParams<any>) => (
-    <BaseToast
-      {...props}
-      style={[styles.toastBase, { borderLeftColor: colors.error }]}
-      contentContainerStyle={styles.contentContainer}
-      text1Style={styles.title}
-      text2Style={styles.message}
-      text1NumberOfLines={0}
-      text2NumberOfLines={0}
-    />
+  error: ({ text1, text2 }: ToastConfigParams<any>) => (
+    <ToastContent text1={text1} text2={text2} borderColor={colors.error} />
   ),
-
-  info: (props: ToastConfigParams<any>) => (
-    <BaseToast
-      {...props}
-      style={[styles.toastBase, { borderLeftColor: colors.info }]}
-      contentContainerStyle={styles.contentContainer}
-      text1Style={styles.title}
-      text2Style={styles.message}
-      text1NumberOfLines={0}
-      text2NumberOfLines={0}
-    />
+  info: ({ text1, text2 }: ToastConfigParams<any>) => (
+    <ToastContent text1={text1} text2={text2} borderColor={colors.info} />
+  ),
+  warning: ({ text1, text2 }: ToastConfigParams<any>) => (
+    <ToastContent text1={text1} text2={text2} borderColor={colors.warning} />
   ),
 };
 
@@ -54,7 +60,6 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 4,
     paddingHorizontal: 15,
-    //paddingVertical: 3,
     maxWidth: 500,
     alignSelf: "center",
     minWidth: 200,
@@ -74,6 +79,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.muted,
     flexWrap: "nowrap",
-    marginTop: 2, // Малко разстояние между title и message
+    marginTop: 2,
   },
 });

@@ -4,6 +4,7 @@ import { checkBatteryOptimizations } from "../../utils/deviceUtils";
 import { colors } from "../../themes/main";
 import { useTranslation } from "react-i18next";
 import { typography } from "../../themes/typography";
+import AppText from "../../components/AppTextComponent";
 
 const BatteryOptimizationScreenComponent = () => {
   const { t: localize } = useTranslation();
@@ -32,33 +33,33 @@ const BatteryOptimizationScreenComponent = () => {
     if (manufacturerLower.includes("huawei")) {
       return (
         <>
-          <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
+          <AppText style={[styles.sectionTitle, { marginTop: 10 }]}>
             {localize("battery_screen.manufacturers.huawei.title")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.huawei.steps.1")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.huawei.steps.2")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.huawei.steps.3")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.huawei.steps.4")}
-          </Text>
-          <Text style={styles.subListItem}>
+          </AppText>
+          <AppText style={styles.subListItem}>
             {localize("battery_screen.manufacturers.huawei.steps.4a")}
-          </Text>
-          <Text style={styles.subListItem}>
+          </AppText>
+          <AppText style={styles.subListItem}>
             {localize("battery_screen.manufacturers.huawei.steps.4b")}
-          </Text>
-          <Text style={styles.subListItem}>
+          </AppText>
+          <AppText style={styles.subListItem}>
             {localize("battery_screen.manufacturers.huawei.steps.4c")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.huawei.steps.5")}
-          </Text>
+          </AppText>
         </>
       );
     }
@@ -66,33 +67,33 @@ const BatteryOptimizationScreenComponent = () => {
     if (manufacturerLower.includes("xiaomi")) {
       return (
         <>
-          <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
+          <AppText style={[styles.sectionTitle, { marginTop: 10 }]}>
             {localize("battery_screen.manufacturers.xiaomi.title")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.xiaomi.steps.1")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.xiaomi.steps.2")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.xiaomi.steps.3")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.xiaomi.steps.4")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.xiaomi.steps.5")}
-          </Text>
-          <Text style={styles.subListItem}>
+          </AppText>
+          <AppText style={styles.subListItem}>
             {localize("battery_screen.manufacturers.xiaomi.steps.5a")}
-          </Text>
-          <Text style={styles.subListItem}>
+          </AppText>
+          <AppText style={styles.subListItem}>
             {localize("battery_screen.manufacturers.xiaomi.steps.5b")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.xiaomi.steps.6")}
-          </Text>
+          </AppText>
         </>
       );
     }
@@ -100,27 +101,27 @@ const BatteryOptimizationScreenComponent = () => {
     if (manufacturerLower.includes("oneplus")) {
       return (
         <>
-          <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
+          <AppText style={[styles.sectionTitle, { marginTop: 10 }]}>
             {localize("battery_screen.manufacturers.oneplus.title")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.oneplus.steps.1")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.oneplus.steps.2")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.oneplus.steps.3")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.oneplus.steps.4")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.oneplus.steps.5")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.oneplus.steps.6")}
-          </Text>
+          </AppText>
         </>
       );
     }
@@ -128,51 +129,51 @@ const BatteryOptimizationScreenComponent = () => {
     if (manufacturerLower.includes("samsung")) {
       return (
         <>
-          <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
+          <AppText style={[styles.sectionTitle, { marginTop: 10 }]}>
             {localize("battery_screen.manufacturers.samsung.title")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.samsung.steps.1")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.samsung.steps.2")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.samsung.steps.3")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.samsung.steps.4")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.samsung.steps.5")}
-          </Text>
-          <Text style={styles.listItem}>
+          </AppText>
+          <AppText style={styles.listItem}>
             {localize("battery_screen.manufacturers.samsung.steps.6")}
-          </Text>
+          </AppText>
         </>
       );
     }
 
     return (
       <>
-        <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
+        <AppText style={[styles.sectionTitle, { marginTop: 10 }]}>
           {localize("battery_screen.manufacturers.default.title")}
-        </Text>
-        <Text style={styles.listItem}>
+        </AppText>
+        <AppText style={styles.listItem}>
           {localize("battery_screen.manufacturers.default.steps.1")}
-        </Text>
-        <Text style={styles.listItem}>
+        </AppText>
+        <AppText style={styles.listItem}>
           {localize("battery_screen.manufacturers.default.steps.2")}
-        </Text>
-        <Text style={styles.listItem}>
+        </AppText>
+        <AppText style={styles.listItem}>
           {localize("battery_screen.manufacturers.default.steps.3")}
-        </Text>
-        <Text style={styles.listItem}>
+        </AppText>
+        <AppText style={styles.listItem}>
           {localize("battery_screen.manufacturers.default.steps.4")}
-        </Text>
-        <Text style={styles.listItem}>
+        </AppText>
+        <AppText style={styles.listItem}>
           {localize("battery_screen.manufacturers.default.steps.5")}
-        </Text>
+        </AppText>
       </>
     );
   };
@@ -180,64 +181,66 @@ const BatteryOptimizationScreenComponent = () => {
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>{localize("battery_screen.title")}</Text>
+        <AppText style={styles.title}>
+          {localize("battery_screen.title")}
+        </AppText>
 
-        <Text style={styles.deviceInfo}>
+        <AppText style={styles.deviceInfo}>
           {localize("battery_screen.your_device", {
             manufacturer: deviceInfo.manufacturer,
             model: deviceInfo.model,
           })}
-        </Text>
+        </AppText>
 
-        <Text style={styles.paragraph}>
+        <AppText style={styles.paragraph}>
           {localize("battery_screen.description", {
             manufacturer: deviceInfo.manufacturer,
           })}
-        </Text>
+        </AppText>
 
-        <Text style={styles.sectionTitle}>
+        <AppText style={styles.sectionTitle}>
           {localize("battery_screen.how_to_setup")}
-        </Text>
-        <Text style={styles.paragraph}>
+        </AppText>
+        <AppText style={styles.paragraph}>
           {localize("battery_screen.follow_steps")}
-        </Text>
+        </AppText>
 
-        <Text style={styles.listItem}>
+        <AppText style={styles.listItem}>
           {localize("battery_screen.steps.1")}
-        </Text>
-        <Text style={styles.listItem}>
+        </AppText>
+        <AppText style={styles.listItem}>
           {localize("battery_screen.steps.2")}
-        </Text>
-        <Text style={styles.listItem}>
+        </AppText>
+        <AppText style={styles.listItem}>
           {localize("battery_screen.steps.3")}
-        </Text>
-        <Text style={styles.listItem}>
+        </AppText>
+        <AppText style={styles.listItem}>
           {localize("battery_screen.steps.4")}
-        </Text>
-        <Text style={styles.subListItem}>
+        </AppText>
+        <AppText style={styles.subListItem}>
           {localize("battery_screen.steps.4a")}
-        </Text>
-        <Text style={styles.subListItem}>
+        </AppText>
+        <AppText style={styles.subListItem}>
           {localize("battery_screen.steps.4b")}
-        </Text>
-        <Text style={styles.subListItem}>
+        </AppText>
+        <AppText style={styles.subListItem}>
           {localize("battery_screen.steps.4c")}
-        </Text>
-        <Text style={styles.listItem}>
+        </AppText>
+        <AppText style={styles.listItem}>
           {localize("battery_screen.steps.5")}
-        </Text>
+        </AppText>
 
         {getBatteryInstructions()}
 
-        <Text style={styles.footer}>
+        <AppText style={styles.footer}>
           {localize("battery_screen.footer_warning")}
-        </Text>
-        <Text style={styles.footerDetail}>
+        </AppText>
+        <AppText style={styles.footerDetail}>
           {localize("battery_screen.footer_without")}
-        </Text>
-        <Text style={styles.footerDetail}>
+        </AppText>
+        <AppText style={styles.footerDetail}>
           {localize("battery_screen.footer_with")}
-        </Text>
+        </AppText>
       </ScrollView>
     </>
   );

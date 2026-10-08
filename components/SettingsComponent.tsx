@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNotifications } from "../hook/useNotifications";
 import { useTranslation } from "react-i18next";
 import { typography } from "../themes/typography";
+import AppText from "./AppTextComponent";
 
 const screenHeight = Dimensions.get("window").height;
 export default function SettingsComponent({
@@ -89,7 +90,9 @@ export default function SettingsComponent({
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>{localize("settings.title")}</Text>
+          <AppText style={styles.headerText}>
+            {localize("settings.title")}
+          </AppText>
           <TouchableOpacity onPress={onClose}>
             <Ionicons name="close" size={28} color={colors.tab} />
           </TouchableOpacity>
@@ -97,16 +100,16 @@ export default function SettingsComponent({
 
         {/* App Preferences */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
+          <AppText style={styles.sectionTitle}>
             {localize("settings.sections.preferences")}
-          </Text>
+          </AppText>
 
           <View style={styles.itemWithSwitch}>
             <View style={styles.itemLeft}>
-              <Text style={styles.emoji}>🔔</Text>
-              <Text style={styles.itemText}>
+              <AppText style={styles.emoji}>🔔</AppText>
+              <AppText style={styles.itemText}>
                 {localize("settings.items.reminder")}
-              </Text>
+              </AppText>
             </View>
             <Switch
               value={reminderEnabled} // ← false по подразбиране
@@ -120,61 +123,61 @@ export default function SettingsComponent({
           </View>
 
           <TouchableOpacity style={styles.item} onPress={onMapProviderView}>
-            <Text style={styles.emoji}>🗺️</Text>
-            <Text style={styles.itemText}>
+            <AppText style={styles.emoji}>🗺️</AppText>
+            <AppText style={styles.itemText}>
               {localize("settings.items.map_provider")}
-            </Text>
+            </AppText>
           </TouchableOpacity>
         </View>
 
         {/* Privacy & Tearms */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
+          <AppText style={styles.sectionTitle}>
             {localize("settings.sections.privacy")}
-          </Text>
+          </AppText>
 
           <TouchableOpacity style={styles.item} onPress={onPrivacyView}>
-            <Text style={styles.emoji}>🛡️</Text>
-            <Text style={styles.itemText}>
+            <AppText style={styles.emoji}>🛡️</AppText>
+            <AppText style={styles.itemText}>
               {localize("settings.items.privacy_policy")}
-            </Text>
+            </AppText>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.item} onPress={onTermsView}>
-            <Text style={styles.emoji}>📄</Text>
-            <Text style={styles.itemText}>
+            <AppText style={styles.emoji}>📄</AppText>
+            <AppText style={styles.itemText}>
               {localize("settings.items.terms_of_service")}
-            </Text>
+            </AppText>
           </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
+          <AppText style={styles.sectionTitle}>
             {localize("settings.sections.device")}
-          </Text>
+          </AppText>
 
           <TouchableOpacity
             style={styles.item}
             onPress={onBatteryOptimizationView}
           >
-            <Text style={styles.emoji}>⚡</Text>
-            <Text style={styles.itemText}>
+            <AppText style={styles.emoji}>⚡</AppText>
+            <AppText style={styles.itemText}>
               {localize("settings.items.battery_optimization")}
-            </Text>
+            </AppText>
           </TouchableOpacity>
         </View>
 
         {/* About */}
         <View style={[styles.section, { marginBottom: 20 }]}>
-          <Text style={styles.sectionTitle}>
+          <AppText style={styles.sectionTitle}>
             {localize("settings.sections.about")}
-          </Text>
+          </AppText>
 
           <TouchableOpacity style={styles.item} onPress={onAboutView}>
-            <Text style={styles.emoji}>ℹ️</Text>
-            <Text style={styles.itemText}>
+            <AppText style={styles.emoji}>ℹ️</AppText>
+            <AppText style={styles.itemText}>
               {localize("settings.items.about")}
-            </Text>
+            </AppText>
           </TouchableOpacity>
         </View>
       </Animated.View>

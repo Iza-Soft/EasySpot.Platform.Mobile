@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../themes/main";
 import { SlideCardProps } from "../types/props";
 import { typography } from "../themes/typography";
+import AppText from "./AppTextComponent";
 
 const ICON_COLORS: Record<string, { bg: string }> = {
   parking: { bg: "#e6fbfa" },
@@ -85,11 +86,11 @@ export function SlideCardComponent({
               { backgroundColor: iconBg, opacity: contentOpacity },
             ]}
           >
-            <Text style={styles.iconEmoji}>{item.emoji}</Text>
+            <AppText style={styles.iconEmoji}>{item.emoji}</AppText>
           </View>
           <View style={[{ flex: 1 }, { opacity: contentOpacity }]}>
-            <Text style={styles.cardTitle}>{item.title}</Text>
-            <Text style={styles.cardDesc}>{item.description}</Text>
+            <AppText style={styles.cardTitle}>{item.title}</AppText>
+            <AppText style={styles.cardDesc}>{item.description}</AppText>
           </View>
           <Animated.View style={lockStyle} pointerEvents="none">
             <Ionicons name="lock-closed" size={15} color={colors.muted} />
@@ -119,11 +120,11 @@ export function SlideCardComponent({
             { opacity: contentOpacity },
           ]}
         >
-          <Text style={styles.iconEmoji}>{item.emoji}</Text>
+          <AppText style={styles.iconEmoji}>{item.emoji}</AppText>
         </View>
         <View style={{ opacity: contentOpacity }}>
-          <Text style={styles.cardTitle}>{item.title}</Text>
-          <Text style={styles.cardDesc}>{item.description}</Text>
+          <AppText style={styles.cardTitle}>{item.title}</AppText>
+          <AppText style={styles.cardDesc}>{item.description}</AppText>
         </View>
         <Animated.View
           style={[lockStyle, { position: "absolute", top: 12, right: 12 }]}

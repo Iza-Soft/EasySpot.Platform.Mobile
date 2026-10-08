@@ -8,6 +8,7 @@ import { useMemo } from "react";
 import { useSQLiteContext } from "expo-sqlite";
 import { useTranslation } from "react-i18next";
 import { typography } from "../themes/typography";
+import AppText from "./AppTextComponent";
 
 export default function LocationItemCard({
   item,
@@ -63,49 +64,51 @@ export default function LocationItemCard({
       >
         <View style={styles.row}>
           <View style={styles.leftRow}>
-            <Text style={styles.emoji}>
+            <AppText style={styles.emoji}>
               {item.type === "favorites" ? "⭐️" : "🚙"}
-            </Text>
+            </AppText>
             <View style={styles.textContainer}>
-              <Text style={styles.title}>
+              <AppText style={styles.title}>
                 {item.title?.trim() || localize("common.no_title")}
-              </Text>
-              <Text style={styles.address}>
+              </AppText>
+              <AppText style={styles.address}>
                 {item.street || localize("common.unnamed_street")},{" "}
                 {item.city || item.region || ""}, {item.postalCode || ""},{" "}
                 {item.country || ""}
-              </Text>
+              </AppText>
 
               <View style={styles.timeRow}>
-                <Text style={styles.time}>
+                <AppText style={styles.time}>
                   {formatDistanceToNow(new Date(item.timestamp), {
                     addSuffix: true,
                   })}
-                </Text>
+                </AppText>
                 {shouldShowTimer && hasActiveTimer && (
                   <View style={styles.timerInline}>
-                    <Text
+                    <AppText
                       style={[
                         styles.timerTextInline,
                         timer.isExpired && styles.expiredTimer,
                       ]}
                     >
                       ⏱️ {timer.formattedTime}
-                    </Text>
+                    </AppText>
                     {timer.isExpired ?
-                      <Text style={styles.expiredTextInline}>
+                      <AppText style={styles.expiredTextInline}>
                         {localize("card_options.timer.expired")}
-                      </Text>
-                    : <Text style={styles.remainingTextInline}>
+                      </AppText>
+                    : <AppText style={styles.remainingTextInline}>
                         {localize("card_options.timer.remaining")}
-                      </Text>
+                      </AppText>
                     }
                   </View>
                 )}
               </View>
             </View>
             {isMultiSelectMode && (
-              <Text style={styles.checkbox}>{isSelected ? "☑️" : "⬜️"}</Text>
+              <AppText style={styles.checkbox}>
+                {isSelected ? "☑️" : "⬜️"}
+              </AppText>
             )}
           </View>
         </View>

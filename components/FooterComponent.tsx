@@ -1,5 +1,6 @@
 import { StyleSheet, View, Text, Image } from "react-native";
 import { useTranslation } from "react-i18next";
+import AppText from "./AppTextComponent";
 
 export default function FooterComponent() {
   const { t: localize } = useTranslation();
@@ -7,9 +8,9 @@ export default function FooterComponent() {
   return (
     <View style={styles.footer}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Text style={styles.footerText}>
+        <AppText style={styles.footerText}>
           {localize("common.footer", { year: new Date().getFullYear() })}
-        </Text>
+        </AppText>
       </View>
     </View>
   );

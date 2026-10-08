@@ -20,6 +20,7 @@ import { colors } from "./themes/main";
 import Toast from "react-native-toast-message";
 import { toastConfigComponent } from "./components/toastConfigComponent";
 import { useTranslation } from "react-i18next";
+import AppText from "./components/AppTextComponent";
 
 export default function App() {
   const { t: localize } = useTranslation();
@@ -121,9 +122,9 @@ export default function App() {
           <Animated.View
             style={[styles.initRow, { opacity: initializingOpacity }]}
           >
-            <Text style={styles.initializingText}>
+            <AppText style={styles.initializingText}>
               {localize("app.getting_ready")}
-            </Text>
+            </AppText>
             <Animated.Text
               style={[styles.gear, { transform: [{ rotate: spin }] }]}
             >
@@ -132,7 +133,7 @@ export default function App() {
           </Animated.View>
         )}
         {dbError && (
-          <Text style={styles.errorText}>{localize("app.db_error")}</Text>
+          <AppText style={styles.errorText}>{localize("app.db_error")}</AppText>
         )}
       </View>
     );

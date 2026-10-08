@@ -15,6 +15,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { useTimer } from "../hook/useTimer";
 import { useTranslation } from "react-i18next";
 import { typography } from "../themes/typography";
+import AppText from "./AppTextComponent";
 
 const screenHeight = Dimensions.get("window").height;
 export default function LocationCardOptionsComponent({
@@ -103,93 +104,93 @@ export default function LocationCardOptionsComponent({
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>
+          <AppText style={styles.headerText}>
             {(item as CardItem).title?.trim() || localize("common.no_title")}
-          </Text>
+          </AppText>
           <TouchableOpacity onPress={onClose}>
             <Ionicons name="close" size={28} color={colors.tab} />
           </TouchableOpacity>
         </View>
         <View style={styles.section}>
           {/* GENERAL */}
-          <Text style={styles.sectionTitle}>
+          <AppText style={styles.sectionTitle}>
             {localize("card_options.sections.location_tools")}
-          </Text>
+          </AppText>
 
           <TouchableOpacity style={styles.item} onPress={onViewDetails}>
-            <Text style={styles.emoji}>🔎</Text>
+            <AppText style={styles.emoji}>🔎</AppText>
             <View>
-              <Text style={styles.itemText}>
+              <AppText style={styles.itemText}>
                 {localize("card_options.actions.view_details")}
-              </Text>
-              <Text style={styles.itemSubText}>
+              </AppText>
+              <AppText style={styles.itemSubText}>
                 {localize("card_options.actions.view_details_sub")}
-              </Text>
+              </AppText>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.item} onPress={onUpdateDetails}>
-            <Text style={styles.emoji}>✏️</Text>
+            <AppText style={styles.emoji}>✏️</AppText>
             <View>
-              <Text style={styles.itemText}>
+              <AppText style={styles.itemText}>
                 {localize("card_options.actions.edit_details")}
-              </Text>
-              <Text style={styles.itemSubText}>
+              </AppText>
+              <AppText style={styles.itemSubText}>
                 {localize("card_options.actions.edit_details_sub")}
-              </Text>
+              </AppText>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.item} onPress={onNavigate}>
-            <Text style={styles.emoji}>🗺️</Text>
+            <AppText style={styles.emoji}>🗺️</AppText>
             <View>
-              <Text style={styles.itemText}>
+              <AppText style={styles.itemText}>
                 {localize("card_options.actions.open_maps")}
-              </Text>
-              <Text style={styles.itemSubText}>
+              </AppText>
+              <AppText style={styles.itemSubText}>
                 {localize("card_options.actions.open_maps_sub")}
-              </Text>
+              </AppText>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.item} onPress={onCopyCoordinates}>
-            <Text style={styles.emoji}>📍</Text>
+            <AppText style={styles.emoji}>📍</AppText>
             <View>
-              <Text style={styles.itemText}>
+              <AppText style={styles.itemText}>
                 {localize("card_options.actions.copy_coordinates")}
-              </Text>
-              <Text style={styles.itemSubText}>
+              </AppText>
+              <AppText style={styles.itemSubText}>
                 {localize("card_options.actions.copy_coordinates_sub")}
-              </Text>
+              </AppText>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.item} onPress={onCopyAddress}>
-            <Text style={styles.emoji}>📋</Text>
+            <AppText style={styles.emoji}>📋</AppText>
             <View>
-              <Text style={styles.itemText}>
+              <AppText style={styles.itemText}>
                 {localize("card_options.actions.copy_address")}
-              </Text>
-              <Text style={styles.itemSubText}>
+              </AppText>
+              <AppText style={styles.itemSubText}>
                 {localize("card_options.actions.copy_address_sub")}
-              </Text>
+              </AppText>
             </View>
           </TouchableOpacity>
 
           {/* SHARE */}
-          <Text style={[styles.sectionTitle, { marginTop: 12 }]}>
+          <AppText style={[styles.sectionTitle, { marginTop: 12 }]}>
             {localize("card_options.sections.share")}
-          </Text>
+          </AppText>
 
           <TouchableOpacity style={styles.item} onPress={onShare}>
-            <Text style={styles.emoji}>📤</Text>
+            <AppText style={styles.emoji}>📤</AppText>
             <View>
-              <Text style={styles.itemText}>
+              <AppText style={styles.itemText}>
                 {localize("card_options.actions.share_location")}
-              </Text>
-              <Text style={styles.itemSubText}>
+              </AppText>
+              <AppText style={styles.itemSubText}>
                 {localize("card_options.actions.share_location_sub")}
-              </Text>
+              </AppText>
             </View>
           </TouchableOpacity>
 
@@ -197,26 +198,26 @@ export default function LocationCardOptionsComponent({
           {shouldShowActiveTimer && (
             <>
               <View style={styles.reminderHeader}>
-                <Text style={[styles.sectionTitle, { marginTop: 12 }]}>
+                <AppText style={[styles.sectionTitle, { marginTop: 12 }]}>
                   {localize("card_options.sections.reminder")}
-                </Text>
+                </AppText>
 
                 <View style={[styles.timerInline, { marginTop: 16 }]}>
-                  <Text
+                  <AppText
                     style={[
                       styles.timerTextInline,
                       timer.isExpired && styles.expiredTimer,
                     ]}
                   >
                     ⏱️ {timer.formattedTime}
-                  </Text>
+                  </AppText>
                   {timer.isExpired ?
-                    <Text style={styles.expiredTextInline}>
+                    <AppText style={styles.expiredTextInline}>
                       {localize("card_options.timer.expired")}
-                    </Text>
-                  : <Text style={styles.remainingTextInline}>
+                    </AppText>
+                  : <AppText style={styles.remainingTextInline}>
                       {localize("card_options.timer.remaining")}
-                    </Text>
+                    </AppText>
                   }
                 </View>
               </View>
@@ -233,13 +234,13 @@ export default function LocationCardOptionsComponent({
                 }}
                 activeOpacity={!hasActiveTimer ? 1 : 0.2}
               >
-                <Text
+                <AppText
                   style={[styles.emoji, !hasActiveTimer && styles.disabledText]}
                 >
                   🔀
-                </Text>
+                </AppText>
                 <View>
-                  <Text
+                  <AppText
                     style={[
                       styles.itemText,
                       !hasActiveTimer && styles.disabledText,
@@ -247,39 +248,41 @@ export default function LocationCardOptionsComponent({
                   >
                     {/* Adjust parking time */}
                     {localize("card_options.actions.parking_duration")}
-                  </Text>
-                  <Text
+                  </AppText>
+                  <AppText
                     style={[
                       styles.itemSubText,
                       !hasActiveTimer && styles.disabledText,
                     ]}
                   >
                     {localize("card_options.actions.parking_duration_sub")}
-                  </Text>
+                  </AppText>
                 </View>
               </TouchableOpacity>
             </>
           )}
 
           {/* DANGER ZONE */}
-          <Text
+          <AppText
             style={[
               styles.sectionTitle,
               { marginTop: 12, color: colors.danger },
             ]}
           >
             {localize("card_options.sections.danger_zone")}
-          </Text>
+          </AppText>
 
           <TouchableOpacity style={styles.item} onPress={onDelete}>
-            <Text style={[styles.emoji, { color: colors.danger }]}>🗑️</Text>
+            <AppText style={[styles.emoji, { color: colors.danger }]}>
+              🗑️
+            </AppText>
             <View>
-              <Text style={[styles.itemText, { color: colors.danger }]}>
+              <AppText style={[styles.itemText, { color: colors.danger }]}>
                 {localize("card_options.actions.delete_location")}
-              </Text>
-              <Text style={[styles.itemSubText, { color: colors.danger }]}>
+              </AppText>
+              <AppText style={[styles.itemSubText, { color: colors.danger }]}>
                 {localize("card_options.actions.delete_location_sub")}
-              </Text>
+              </AppText>
             </View>
           </TouchableOpacity>
         </View>
