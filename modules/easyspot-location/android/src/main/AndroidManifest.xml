@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <!-- Android 11+ package visibility: needed to detect Google / Huawei services. -->
+  <queries>
+    <package android:name="com.google.android.gms" />
+    <package android:name="com.huawei.hwid" />
+  </queries>
+</manifest>

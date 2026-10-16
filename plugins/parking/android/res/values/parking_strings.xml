@@ -1,0 +1,6 @@
+<resources>
+  <string name="notification_title">⏰ Your parking is expiring soon!</string>
+  <string name="notification_body">%1$s - %2$d minutes left</string>
+    <string name="notification_test_title">✅ EasySpot reminders work</string>
+    <string name="notification_test_body">This is how the “paid time ends” reminder will arrive.</string>
+</resources>

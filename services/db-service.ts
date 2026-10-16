@@ -1,9 +1,7 @@
 import { SQLiteDatabase } from "expo-sqlite";
-import { SQL } from "../constants/queries";
-import { LocationData } from "../types/common";
-import { CardItem } from "../types/common";
 import * as FileSystem from "expo-file-system/legacy";
 import * as SQLite from "expo-sqlite";
+import { migrateDb } from "./db-migrations";
 
 export const DB_NAME = "easyspot.db";
 
@@ -37,167 +35,14 @@ export async function openPersistentDB(): Promise<SQLiteDatabase> {
   }
 }
 
+/**
+ * SQLiteProvider onInit hook. Schema changes live in db-migrations.ts
+ * (versioned, transactional) — v1/v2 users upgrade in place to v3.
+ */
 export const createDBifNeeded = async (db: SQLiteDatabase) => {
-  //await db.execAsync(SQL.DROP_LOCATION_TABLE); - DO NOT USE DROP IN PRODUCTION
-
-  const DATABASE_VERSION = 2;
-
-  const row = await db.getFirstAsync<{ user_version: number }>(
-    "PRAGMA user_version",
-  );
-  const currentDbVersion = row?.user_version ?? 0;
-
-  if (currentDbVersion >= DATABASE_VERSION) return;
-
-  await db.execAsync("PRAGMA foreign_keys = ON;");
-  console.log("✅ Foreign keys enabled");
-
-  if (currentDbVersion < 1) {
-    await db.execAsync(SQL.CREATE_LOCATION_TABLE);
-  }
-
-  if (currentDbVersion < 2) {
-    await db.execAsync(SQL.CREATE_SCHEDULER_TABLE);
-  }
-
-  await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
-  console.log("✅ Database migrated to version", DATABASE_VERSION);
+  await migrateDb(db);
 };
 
-export const saveLocationDB = async (
-  db: SQLiteDatabase,
-  params: any[] = [],
-) => {
-  try {
-    const pragmaResult = await db.getFirstAsync<{ foreign_keys: number }>(
-      "PRAGMA foreign_keys;",
-    );
-    console.log("Foreign keys enabled:", pragmaResult?.foreign_keys === 1);
-
-    await db.runAsync(SQL.INSERT_LOCATION, params);
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const updateLocationDB = async (
-  db: SQLiteDatabase,
-  params: any[] = [],
-) => {
-  try {
-    await db.runAsync(SQL.UPDATE_LOCATION, params);
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getLastSavedLocationDB = async (
-  db: SQLiteDatabase,
-): Promise<LocationData | null> => {
-  try {
-    const result = await db.getFirstAsync<LocationData>(
-      SQL.SELECT_LAST_LOCATION,
-    );
-    return result || null;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getAllSavedLocationDB = async (
-  db: SQLiteDatabase,
-  searchText?: string | undefined,
-  limit?: number,
-  offset?: number,
-): Promise<CardItem[] | null> => {
-  try {
-    if (limit == undefined || offset == undefined) {
-      throw new Error("Pagination requires limit and offset values.");
-    }
-
-    if (!searchText || searchText.trim() === "") {
-      const result = await db.getAllAsync<CardItem>(SQL.SELECT_ALL_LOCATION, [
-        limit,
-        offset,
-      ]);
-      return result || null;
-    }
-
-    const query = `%${searchText}%`; // LIKE pattern
-
-    const result = await db.getAllAsync<CardItem>(SQL.SELECT_SEARCH_LOCATION, [
-      query,
-      query,
-      query,
-      query,
-      query,
-      limit,
-      offset,
-    ]);
-
-    return result || null;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const deleteLocationDB = async (
-  db: SQLiteDatabase,
-  params: any[] = [],
-) => {
-  try {
-    await db.runAsync(SQL.DELETE_LOCATION, params);
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const deleteAllLocationDB = async (
-  db: SQLiteDatabase,
-  params: any[] = [],
-) => {
-  try {
-    const placeholders = params.map(() => "?").join(",");
-    const sql = SQL.DELETE_ALL_LOCATION.replace("?", `(${placeholders})`);
-    await db.runAsync(sql, params);
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const saveSchedulerDB = async (
-  db: SQLiteDatabase,
-  params: any[],
-): Promise<SQLite.SQLiteRunResult> => {
-  try {
-    if (params.length !== 7) {
-      throw new Error(`Expected 7 params, got ${params.length}`);
-    }
-
-    return await db.runAsync(SQL.INSERT_SCHEDULER, params);
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const deactivateSchedulerDB = async (
-  db: SQLiteDatabase,
-  params: any[] = [],
-) => {
-  try {
-    await db.runAsync(SQL.DEACTIVATE_SCHEDULER, params);
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const reactivateSchedulerDB = async (
-  db: SQLiteDatabase,
-  params: any[],
-) => {
-  try {
-    await db.runAsync(SQL.REACTIVATE_SCHEDULER, params);
-  } catch (error) {
-    throw error;
-  }
-};
+// 1.x helpers (save/delete locations and schedulers directly) were removed in 2.0:
+// everything goes through services/spots-service.ts, which also cancels the
+// reminder when a parking is deleted or ended.

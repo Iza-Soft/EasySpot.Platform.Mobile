@@ -1,0 +1,6 @@
+<resources>
+  <string name="notification_title">⏰ Parcarea ta expiră în curând!</string>
+  <string name="notification_body">%1$s - mai sunt %2$d minute</string>
+    <string name="notification_test_title">✅ Mementourile EasySpot funcționează</string>
+    <string name="notification_test_body">Așa va sosi mementoul „timpul plătit se termină”.</string>
+</resources>

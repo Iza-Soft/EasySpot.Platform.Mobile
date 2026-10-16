@@ -1,71 +1,41 @@
 import { Linking, Share, Platform } from "react-native";
 import { NavigationProps } from "../types/props";
-import { Maps } from "../constants/maps";
-import * as Location from "expo-location";
+import { Maps, packageForChoice, providerById } from "../constants/maps";
+import { EasySpotLocation } from "../modules/easyspot-location";
+import { getCurrentFix } from "../platform/location";
 import i18n from "../i18n";
 import { getPreferredMap } from "./map-preference-service";
 
 export async function openMapsAsync(navigation: NavigationProps) {
   const { latitude, longitude } = navigation;
+  // The chosen app if still installed, else the phone's main map (map-preference-service).
   const preferredMap = await getPreferredMap();
-
-  let nativeUrl: string | null = null;
-  let webUrl: string;
-
-  switch (preferredMap) {
-    case Maps.google:
-      // geo: directly open Andtorid Google Maps
-      nativeUrl =
-        Platform.OS === "ios"
-          ? `comgooglemaps://?q=${latitude},${longitude}`
-          : `geo:${latitude},${longitude}?q=${latitude},${longitude}`;
-      webUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
-      break;
-
-    case Maps.waze:
-      // waze:// is the official deep link scheme
-      nativeUrl = `waze://?ll=${latitude},${longitude}&navigate=yes`;
-      webUrl = `https://waze.com/ul?ll=${latitude},${longitude}&navigate=yes`;
-      break;
-
-    case Maps.apple:
-      // work only for iOS
-      nativeUrl = `maps://?q=${latitude},${longitude}`;
-      webUrl = `https://maps.apple.com/?q=${latitude},${longitude}`;
-      break;
-
-    case Maps.bing:
-      // bingmaps: work with Windows, Android/iOS → web
-      nativeUrl = `bingmaps:?cp=${latitude}~${longitude}&lvl=16`;
-      webUrl = `https://www.bing.com/maps?q=${latitude},${longitude}`;
-      break;
-
-    case Maps.here:
-      // here-location:// е official HERE WeGo deep link
-      nativeUrl = `here-location://${latitude},${longitude}`;
-      webUrl = `https://share.here.com/l/${latitude},${longitude}`;
-      break;
-
-    case Maps.osm:
-      // OpenStreetMap there isn't native app deep link — only web
-      nativeUrl = null;
-      webUrl = `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}&zoom=16`;
-      break;
-
-    default:
-      webUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
-  }
+  const osmUrl = `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}#map=17/${latitude}/${longitude}`;
 
   try {
-    if (nativeUrl) {
-      const canOpen = await Linking.canOpenURL(nativeUrl);
-      if (canOpen) {
-        await Linking.openURL(nativeUrl); // ← open native app
+    if (preferredMap !== Maps.osm) {
+      if (Platform.OS === "android") {
+        // Open exactly the chosen app with a geo: point (Kotlin) — works for any map app.
+        const pkg = packageForChoice(preferredMap);
+        if (pkg && EasySpotLocation?.openGeoInApp?.(pkg, latitude, longitude, "EasySpot")) return;
+        // Any app that can show a geo: point.
+        const geo = `geo:${latitude},${longitude}?q=${latitude},${longitude}(EasySpot)`;
+        if (await Linking.canOpenURL(geo)) {
+          await Linking.openURL(geo);
+          return;
+        }
+      } else {
+        const url = providerById(preferredMap)?.iosUrl?.(latitude, longitude);
+        if (url && (await Linking.canOpenURL(url).catch(() => false))) {
+          await Linking.openURL(url);
+          return;
+        }
+        await Linking.openURL(`maps://?q=${latitude},${longitude}`);
         return;
       }
     }
-    // Fallback → web if the app isn't isntall
-    await Linking.openURL(webUrl);
+    // OpenStreetMap — and the fallback when no app can open the point.
+    await Linking.openURL(osmUrl);
   } catch (err) {
     console.error("❌ Failed to open maps:", err);
   }
@@ -82,9 +52,8 @@ export async function ShareLocationAsync(coordinates?: {
     latitude = coordinates.latitude;
     longitude = coordinates.longitude;
   } else {
-    const loc = await Location.getCurrentPositionAsync({});
-    latitude = loc.coords.latitude;
-    longitude = loc.coords.longitude;
+    // v2: Huawei-safe position (platform/location.ts)
+    ({ latitude, longitude } = await getCurrentFix());
   }
 
   const preferredMap = await getPreferredMap();

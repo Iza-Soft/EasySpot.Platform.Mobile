@@ -58,6 +58,33 @@ class ParkingNativeService {
     }
   }
 
+  /** Test reminder in N seconds — same alarm + receiver as a real one. */
+  async scheduleTestReminder(seconds: number): Promise<boolean> {
+    if (Platform.OS !== "android") return false;
+    try {
+      await ParkingModule.scheduleTestReminder(seconds);
+      return true;
+    } catch (error) {
+      console.error("❌ Failed to schedule test reminder:", error);
+      return false;
+    }
+  }
+
+  /** Delivered reminders, newest first (JSON from ParkingAlarms.kt). */
+  async getReminderLog(): Promise<string> {
+    if (Platform.OS !== "android") return "[]";
+    try {
+      return await ParkingModule.getReminderLog();
+    } catch {
+      return "[]";
+    }
+  }
+
+  async clearReminderLog(): Promise<void> {
+    if (Platform.OS !== "android") return;
+    await ParkingModule.clearReminderLog().catch(() => undefined);
+  }
+
   // Отказване на напомняне
   async cancelReminder(locationId: number): Promise<boolean> {
     if (Platform.OS !== "android") {

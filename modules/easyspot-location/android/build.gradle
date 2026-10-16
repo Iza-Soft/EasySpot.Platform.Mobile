@@ -1,0 +1,23 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'com.ilkoadamov.easyspot'
+version = '1.0.0'
+
+android {
+  namespace "com.ilkoadamov.easyspot.location"
+  defaultConfig {
+    versionCode 1
+    versionName "1.0.0"
+  }
+}
+
+dependencies {
+  implementation "androidx.core:core-ktx:1.13.1"
+  // Google's fused engine — used ONLY when the phone has Google Play services
+  // (checked at runtime). Same version expo-location already brings in.
+  // On Huawei without GMS it is never called; LocationManager is used instead.
+  implementation "com.google.android.gms:play-services-location:21.0.1"
+}

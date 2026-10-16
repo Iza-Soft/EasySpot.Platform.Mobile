@@ -1,12 +1,6 @@
 import { SQLiteDatabase } from "expo-sqlite";
-import { SlideItem } from "./slides";
-import { Maps } from "../constants/maps";
+import { MapChoice } from "../constants/maps";
 import { CardItem, LocationData, Scheduler, SchedulerData } from "./common";
-
-export type SlideCardProps = {
-  item: SlideItem;
-  onPress: (action: SlideItem["action"]) => void;
-};
 
 export type LocationProps<T = LocationData | CardItem[]> = {
   database: SQLiteDatabase;
@@ -28,7 +22,7 @@ export type LocationProps<T = LocationData | CardItem[]> = {
 export type NavigationProps = {
   latitude: number;
   longitude: number;
-  map: Maps;
+  map: MapChoice;
 };
 
 export type LocationCardProps = {

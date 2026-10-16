@@ -1,198 +1,93 @@
 import "intl-pluralrules";
-import "./i18n";
+import i18n from "./i18n";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import { SQLiteProvider } from "expo-sqlite";
-import {
-  createDBifNeeded,
-  DB_NAME,
-  openPersistentDB,
-} from "./services/db-service";
-import NavigatorComponent from "./components/NavigatorComponent";
-import { useEffect, useRef, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  Animated,
-  Easing,
-  StatusBar,
-} from "react-native";
-import { colors } from "./themes/main";
-import Toast from "react-native-toast-message";
-import { toastConfigComponent } from "./components/toastConfigComponent";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import AppText from "./components/AppTextComponent";
+import { View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useLanguageSync } from "./hook/useLanguageSync";
+import { loadPrefs } from "./state/prefs";
+import RootNavigator from "./navigation/RootNavigator";
+import ParkingNativeService from "./native/ParkingModule";
+import { createDBifNeeded, DB_NAME, openPersistentDB } from "./services/db-service";
+import { resyncReminders } from "./services/spots-service";
+import { watchIosReminders } from "./services/reminder-log";
+import { IosNotifications } from "./platform/ios-only";
+import { appFonts } from "./theme/fonts";
+import { ThemeProvider } from "./theme/ThemeProvider";
+import { palette } from "./theme/tokens";
+import { Logo, Text } from "./ui";
+import { ThemedToast } from "./ui/toast";
+
+// Keep the native splash (dark + Bay icon) up until fonts and the DB are ready.
+SplashScreen.preventAutoHideAsync().catch(() => undefined);
+
+// iPhone: show the reminder (and the test one) as a banner even while EasySpot is open.
+// Android reminders do not go through expo-notifications (ParkingReceiver.kt).
+IosNotifications?.setNotificationHandler({
+  handleNotification: async () => ({ shouldShowBanner: true, shouldShowList: true, shouldPlaySound: true, shouldSetBadge: false }),
+});
+
+/** DB ready → bring back every reminder that is still ahead (restart / update / 1.x safety net). */
+async function initDb(db: Parameters<typeof createDBifNeeded>[0]) {
+  await createDBifNeeded(db);
+  resyncReminders(db, i18n.t("v2.parked.title")).catch((e) => console.warn("reminder resync failed:", e));
+}
 
 export default function App() {
-  const { t: localize } = useTranslation();
-  const [isReady, setIsReady] = useState(false);
-  const [dbError, setDbError] = useState(false);
-  const [isSplashVisible, setIsSplashVisible] = useState(true);
-
-  // Animation values
-  const logoY = useRef(new Animated.Value(-200)).current;
-  const textOpacity = useRef(new Animated.Value(0)).current;
-  const gearRotation = useRef(new Animated.Value(0)).current;
-  const initializingOpacity = useRef(new Animated.Value(1)).current;
+  // Texts follow the phone's language live (no restart).
+  useLanguageSync();
+  const [fontsLoaded, fontError] = useFonts(appFonts);
+  const [dbState, setDbState] = useState<"loading" | "ready" | "error">("loading");
 
   useEffect(() => {
-    // Splash animation
-    Animated.sequence([
-      Animated.timing(logoY, {
-        toValue: 0,
-        duration: 1200,
-        easing: Easing.out(Easing.bounce),
-        useNativeDriver: true,
-      }),
-      Animated.timing(textOpacity, {
-        toValue: 1,
-        duration: 1500,
-        easing: Easing.inOut(Easing.ease),
-        useNativeDriver: true,
-      }),
-    ]).start(() =>
-      (async () => {
-        try {
-          // Start gear rotation indefinitely
-          Animated.loop(
-            Animated.timing(gearRotation, {
-              toValue: 1,
-              duration: 1600,
-              easing: Easing.linear,
-              useNativeDriver: true,
-            }),
-          ).start();
-
-          const timer = setTimeout(async () => {
-            setIsReady(true); // wait before starting DB init animation for 3 seconds
-          }, 300);
-
-          // this should be uncommented in production - TODO
-          // await openPersistentDB(); // just ensures persistence setup
-          // setIsReady(false);
-          // setIsSplashVisible(false);
-          // this should be uncommented in production -TODO
-
-          // simulate longer init for demo - this should be removed in production - TODO
-          const new_timer = setTimeout(async () => {
-            try {
-              //throw new Error("Database initialization timeout!"); //- simulate error
-              await openPersistentDB(); // just ensures persistence setup
-              setIsReady(false);
-              setIsSplashVisible(false);
-            } catch (error) {
-              setDbError(true);
-              setIsReady(false);
-            }
-          }, 3000);
-          // simulate longer init for demo - TODO
-
-          return () => clearTimeout(timer);
-        } catch (error) {
-          console.error("❌ Database open failed:", error);
-          setDbError(true);
-          setIsReady(false);
-        }
-      })(),
-    );
+    openPersistentDB()
+      .then(() => setDbState("ready"))
+      .catch((e) => {
+        console.error("❌ Database open failed:", e);
+        setDbState("error");
+      });
+    loadPrefs();
+    // Creates the Android notification channel for parking reminders.
+    ParkingNativeService.initialize();
+    // iPhone: note reminders that arrive while the app is open / are tapped (history, Reminders screen).
+    return watchIosReminders();
   }, []);
 
-  const spin = gearRotation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
-  });
+  const ready = (fontsLoaded || !!fontError) && dbState !== "loading";
 
-  if (isSplashVisible) {
-    return (
-      <View style={styles.loadingContainer}>
-        <StatusBar
-          barStyle="dark-content"
-          translucent
-          backgroundColor="transparent"
-        />
-        <Animated.Image
-          source={require("./assets/easyspot-logo.png")}
-          style={[styles.logo, { transform: [{ translateY: logoY }] }]}
-          resizeMode="contain"
-        />
-        <Animated.Text style={[styles.appName, { opacity: textOpacity }]}>
-          Easy Spot
-        </Animated.Text>
+  // The splash is hidden by RootNavigator once Home or the privacy screen is up
+  // (no blank frame, no Home flash). Only the DB-error screen hides it here.
+  useEffect(() => {
+    if (ready && dbState === "error") SplashScreen.hideAsync().catch(() => undefined);
+  }, [ready, dbState]);
 
-        {isReady && (
-          <Animated.View
-            style={[styles.initRow, { opacity: initializingOpacity }]}
-          >
-            <AppText style={styles.initializingText}>
-              {localize("app.getting_ready")}
-            </AppText>
-            <Animated.Text
-              style={[styles.gear, { transform: [{ rotate: spin }] }]}
-            >
-              ⚙️
-            </Animated.Text>
-          </Animated.View>
-        )}
-        {dbError && (
-          <AppText style={styles.errorText}>{localize("app.db_error")}</AppText>
-        )}
-      </View>
-    );
-  }
+  if (!ready) return null;
 
   return (
-    <>
-      <SQLiteProvider databaseName={DB_NAME} onInit={createDBifNeeded}>
-        <NavigatorComponent />
-      </SQLiteProvider>
-      <Toast
-        config={toastConfigComponent}
-        position="bottom"
-        visibilityTime={3000}
-        bottomOffset={80}
-      />
-    </>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        {dbState === "error" ? (
+          <DbError />
+        ) : (
+          <SQLiteProvider databaseName={DB_NAME} onInit={initDb}>
+            <RootNavigator />
+          </SQLiteProvider>
+        )}
+        <ThemedToast />
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    backgroundColor: "#F3F6FA", // Light gray background
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  logo: {
-    width: 120,
-    height: 120,
-    marginBottom: 20,
-  },
-  appName: {
-    fontSize: 36, // larger text
-    fontWeight: "900", // maximum boldness
-    color: colors.tab, // keep your theme color
-    textShadowColor: "rgba(0, 0, 0, 0.2)",
-    textShadowOffset: { width: 1, height: 3 },
-    textShadowRadius: 6,
-  },
-  errorText: {
-    color: "red",
-    fontSize: 14,
-    position: "absolute",
-    bottom: 80, // distance from bottom of screen
-  },
-  initRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    position: "absolute",
-    bottom: 80, // distance from bottom of screen
-  },
-  initializingText: {
-    fontSize: 16,
-    color: colors.muted,
-    marginRight: 6,
-    fontWeight: "600",
-  },
-  gear: {
-    fontSize: 22,
-  },
-});
+function DbError() {
+  const { t } = useTranslation();
+  return (
+    <View style={{ flex: 1, backgroundColor: palette.ink, alignItems: "center", justifyContent: "center", gap: 16, padding: 32 }}>
+      <Logo size={64} />
+      <Text variant="body" tone="alert" style={{ textAlign: "center" }}>{t("app.db_error")}</Text>
+    </View>
+  );
+}
