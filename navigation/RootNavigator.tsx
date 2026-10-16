@@ -13,6 +13,7 @@ import SpotDetailsScreen from "../screens/spots/SpotDetailsScreen";
 import AboutScreen from "../screens/info/AboutScreen";
 import LanguageScreen from "../screens/info/LanguageScreen";
 import RemindersScreen from "../screens/reminders/RemindersScreen";
+import OcrTestScreen from "../screens/dev/OcrTestScreen";
 import PrivacyScreen from "../screens/info/PrivacyScreen";
 import TermsScreen from "../screens/info/TermsScreen";
 import SettingsScreen from "../screens/settings/SettingsScreen";
@@ -106,6 +107,7 @@ export default function RootNavigator() {
         <Stack.Screen name="About" component={AboutScreen} options={{ animation: "slide_from_right" }} />
         <Stack.Screen name="Language" component={LanguageScreen} options={{ animation: "slide_from_right" }} />
         <Stack.Screen name="Reminders" component={RemindersScreen} options={{ animation: "slide_from_right" }} />
+        {__DEV__ ? <Stack.Screen name="OcrTest" component={OcrTestScreen} options={{ animation: "slide_from_bottom" }} /> : null}
         <Stack.Screen
           name="SaveSpot"
           component={SaveSpotScreen}

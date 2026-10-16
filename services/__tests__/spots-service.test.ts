@@ -24,6 +24,13 @@ jest.mock("../../platform/timer", () => ({
   }),
 }));
 
+const deletedPhotos: string[] = [];
+jest.mock("../spot-photos", () => ({
+  deletePhoto: jest.fn((rel: string) => {
+    deletedPhotos.push(rel);
+  }),
+}));
+
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { DatabaseSync } = require("node:sqlite");
 
@@ -75,6 +82,17 @@ test("PARK creates an active parking with address and accuracy", async () => {
   expect(active?.city).toBe("Sofia");
   expect(active?.accuracyM).toBe(6);
   expect(active?.reminderEndsAt).toBeNull();
+});
+
+test("PARK keeps the air pressure (floors to the car later); a favourite place does not", async () => {
+  const db = await freshDb();
+  const loc = { latitude: 1, longitude: 2, accuracy: 5, street: null, district: null, city: null, region: null, postalCode: null, country: null };
+  const p = await svc.insertSpot(db, "parking", { ...loc, pressureHPa: 1009.4 });
+  const f = await svc.insertSpot(db, "favorites", { ...loc, pressureHPa: 1009.4 });
+  const none = await svc.insertSpot(db, "parking", loc);
+  expect((await svc.getSpot(db, p))?.parkPressureHPa).toBeCloseTo(1009.4);
+  expect((await svc.getSpot(db, f))?.parkPressureHPa).toBeNull();
+  expect((await svc.getSpot(db, none))?.parkPressureHPa).toBeNull();
 });
 
 test("a second PARK keeps the first one active (your car + a friend's)", async () => {
@@ -225,4 +243,58 @@ test("app start: reminders still ahead are scheduled again; ended or already-rem
   expect(await svc.resyncReminders(db, "Parking", now)).toBe(2); // ahead + soon (still ahead now)
   expect(await svc.resyncReminders(db, "Parking", now + 10 * 60_000)).toBe(1); // only "ahead"
   expect((scheduled as { locationId: number }[]).map((r) => r.locationId)).not.toContain(ended);
+});
+
+test("photo, zone colour and plate are saved; End parking keeps the photo, Delete removes it", async () => {
+  const db = await freshDb();
+  deletedPhotos.length = 0;
+  const id = await svc.createSpot(db, "parking");
+  await svc.updateSpotDetails(db, id, {
+    title: "Office garage - SA63USM",
+    level: "B2",
+    section: "C",
+    spot: "214",
+    zoneColor: "blue",
+    photoUri: "photos/spot-1.jpg",
+    plate: "SA63 USM",
+  });
+  let s = await svc.getSpot(db, id);
+  expect([s?.zoneColor, s?.photoUri, s?.plate]).toEqual(["blue", "photos/spot-1.jpg", "SA63 USM"]);
+
+  // Editing the name only leaves photo / colour / plate alone.
+  await svc.updateSpotDetails(db, id, { title: "Office", level: "B2", section: "C", spot: "214" });
+  s = await svc.getSpot(db, id);
+  expect([s?.title, s?.photoUri, s?.zoneColor]).toEqual(["Office", "photos/spot-1.jpg", "blue"]);
+
+  // Search finds it by the plate.
+  expect((await svc.listSpots(db, { search: "SA63", limit: 10, offset: 0 })).map((x) => x.id)).toEqual([id]);
+
+  await svc.endParking(db, id);
+  expect(deletedPhotos).toEqual([]);
+  expect((await svc.getSpot(db, id))?.photoUri).toBe("photos/spot-1.jpg");
+
+  await svc.deleteSpot(db, id);
+  expect(deletedPhotos).toEqual(["photos/spot-1.jpg"]);
+});
+
+test("+30 min then Undo puts the time limit back; an expired time is not reminded again", async () => {
+  const db = await freshDb();
+  const now = Date.now();
+  const id = await svc.createSpot(db, "parking");
+  await svc.setTimeLimit(db, id, "Car", now + 60 * 60_000);
+  const before = svc.limitSnapshot((await svc.getSpot(db, id))!)!;
+  await svc.setTimeLimit(db, id, "Car", before.endsAt + 30 * 60_000);
+  expect((await svc.getSpot(db, id))?.reminderEndsAt).toBe(before.endsAt + 30 * 60_000);
+
+  scheduled.length = 0;
+  await svc.restoreTimeLimit(db, id, "Car", before);
+  const s = await svc.getSpot(db, id);
+  expect([s?.reminderEndsAt, s?.reminderStartedAt, s?.notifyBeforeMinutes]).toEqual([before.endsAt, before.startedAt, before.notifyBeforeMinutes]);
+  expect(scheduled).toHaveLength(1);
+
+  // Time already up when +30 was pressed → Undo makes it expired again, without a reminder.
+  scheduled.length = 0;
+  await svc.restoreTimeLimit(db, id, "Car", { endsAt: now - 5 * 60_000, startedAt: now - 65 * 60_000, notifyBeforeMinutes: 15 });
+  expect(scheduled).toHaveLength(0);
+  expect((await svc.getSpot(db, id))?.reminderEndsAt).toBe(now - 5 * 60_000);
 });

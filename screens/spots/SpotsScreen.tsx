@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import * as Clipboard from "expo-clipboard";
 import { useSQLiteContext } from "expo-sqlite";
@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Pressable, SectionList, StyleSheet, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-import { dayBucket, DayBucket, formatClock, formatDayMonth, formatDuration } from "../../domain/time";
+import { dayBucket, DayBucket, formatClock, formatDayMonth, formatDuration, formatEnd } from "../../domain/time";
 import { getPreferredMap } from "../../services/map-preference-service";
 import { openMapsAsync, ShareLocationAsync } from "../../services/navigation-service";
 import { RootStackParamList } from "../../navigation/types";
@@ -23,6 +23,9 @@ import {
   spotName,
 } from "../../services/spots-service";
 import { useNow } from "../../hook/useSpots";
+import { canShowFloors, useLivePressure } from "../../hook/useFloorsToCar";
+import { floorsAboveCar } from "../../domain/floors";
+import { FloorsLine } from "../../ui/FloorsLine";
 import { useSpotsVersion } from "../../state/spotsStore";
 import { usePrefs } from "../../state/prefs";
 import { displayLevel } from "../../domain/level";
@@ -51,7 +54,11 @@ export default function SpotsScreen() {
   const version = useSpotsVersion();
   const now = useNow(30_000);
   const [actives, setActives] = useState<Spot[]>([]);
-  const { levelLabels } = usePrefs();
+  // One live pressure reading for all active rows (mockup B4), only while Spots is in front.
+  const focused = useIsFocused();
+  const { levelLabels, floorsEnabled } = usePrefs();
+  const pressure = useLivePressure(floorsEnabled && focused && actives.some((a) => canShowFloors(a, now)));
+  const lastFloors = useRef<Record<number, number | null>>({});
   const { t } = useTranslation();
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
@@ -226,13 +233,13 @@ export default function SpotsScreen() {
     const place = [s.section, s.spot].filter(Boolean).join("");
     const dur =
       s.type === "parking" && s.endedAt
-        ? formatDuration(s.endedAt - at.getTime(), { h: t("v2.units.h"), min: t("v2.units.min") })
+        ? formatDuration(s.endedAt - at.getTime(), { d: t("v2.units.d"), h: t("v2.units.h"), min: t("v2.units.min") })
         : null;
     return [place || null, when, dur].filter(Boolean).join(" · ");
   };
 
   const empty = loaded && items.length === 0 && actives.length === 0;
-  const units = { h: t("v2.units.h"), min: t("v2.units.min") };
+  const units = { d: t("v2.units.d"), h: t("v2.units.h"), min: t("v2.units.min") };
 
   const moreButton = (item: Spot) => (
     <Pressable
@@ -257,6 +264,10 @@ export default function SpotsScreen() {
     const ends = item.reminderActive && item.reminderEndsAt ? item.reminderEndsAt : null;
     const expired = !!ends && ends <= now;
     const total = ends ? Math.max(1, ends - (item.reminderStartedAt ?? parkedAt)) : 1;
+    const floors = floorsEnabled
+      ? floorsAboveCar(item.parkPressureHPa, pressure, parkedAt, Date.now(), lastFloors.current[item.id])
+      : null;
+    lastFloors.current[item.id] = floors;
     return (
       <Pressable
         accessibilityRole="button"
@@ -294,11 +305,12 @@ export default function SpotsScreen() {
                 {expired ? t("v2.parked.expired") : t("v2.parked.left_long", { d: formatDuration(ends - now, units) })}
               </Text>
               <Text variant="small" tone="muted" numberOfLines={1}>
-                {expired ? t("v2.parked.ended_at", { time: formatClock(ends) }) : t("v2.parked.until_short", { time: formatClock(ends) })}
+                {expired ? t("v2.parked.ended_at", { time: formatEnd(ends) }) : t("v2.parked.until_short", { time: formatEnd(ends) })}
               </Text>
             </View>
           </>
         ) : null}
+        {floors != null ? <FloorsLine floors={floors} compact /> : null}
       </Pressable>
     );
   };

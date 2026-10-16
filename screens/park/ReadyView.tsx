@@ -131,7 +131,7 @@ export function ReadyView({ navigation }: { navigation: NativeStackNavigationPro
           onPress={share}
         />
       </View>
-      {__DEV__ ? <DebugAddressSheet visible={debugOpen} onClose={() => setDebugOpen(false)} /> : null}
+      {__DEV__ ? <DebugAddressSheet visible={debugOpen} onClose={() => setDebugOpen(false)} onOcrTest={() => navigation.navigate("OcrTest")} /> : null}
     </Screen>
   );
 }

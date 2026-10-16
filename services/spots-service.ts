@@ -5,6 +5,7 @@ import { publishHere } from "../state/hereStore";
 import { bumpSpots } from "../state/spotsStore";
 import { getPrefs } from "../state/prefs";
 import { cancelParkingReminder, scheduleParkingReminder } from "../platform/timer";
+import { deletePhoto } from "./spot-photos";
 
 /**
  * v2 data access for saved spots (parking + favourite places).
@@ -34,6 +35,17 @@ export interface Spot {
   endedAt: number | null;
   /** When a favourite place was first opened (it is "New" until then, max 24 h). */
   viewedAt: number | null;
+  /** Photo of the spot, relative to the app's documents folder ("photos/spot-….jpg"). */
+  photoUri: string | null;
+  /** Zone colour key (domain/zone-color.ts), e.g. "blue". */
+  zoneColor: string | null;
+  /** The car plate read from the photo, as shown ("SA63 USM"). */
+  plate: string | null;
+  /** Mall / garage entry ticket: when the car went in (ms) and how long parking is free from then. */
+  ticketEntryAt: number | null;
+  freeMinutes: number | null;
+  /** Air pressure when parking (hPa), null without a barometer. */
+  parkPressureHPa: number | null;
   /** From the joined scheduler row (parking time limit). */
   reminderEndsAt: number | null;
   reminderStartedAt: number | null;
@@ -71,6 +83,8 @@ export interface PendingLocation {
   region: string | null;
   postalCode: string | null;
   country: string | null;
+  /** Air pressure when parking (hPa) — later "2 floors below you" (domain/floors.ts). */
+  pressureHPa?: number | null;
 }
 
 /** Permission → position → (optional) address. Writes nothing. */
@@ -98,9 +112,21 @@ export async function locateHere(): Promise<PendingLocation> {
 /** Saves a located spot. Other active parkings stay active. Returns the new id. */
 export async function insertSpot(db: SQLiteDatabase, kind: SpotKind, loc: PendingLocation): Promise<number> {
   const result = await db.runAsync(
-    `INSERT INTO locations (latitude, longitude, street, city, region, postalCode, country, type, accuracyM, timestamp)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [loc.latitude, loc.longitude, loc.street, loc.city, loc.region, loc.postalCode, loc.country, kind, loc.accuracy, new Date().toISOString()],
+    `INSERT INTO locations (latitude, longitude, street, city, region, postalCode, country, type, accuracyM, parkPressureHPa, timestamp)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      loc.latitude,
+      loc.longitude,
+      loc.street,
+      loc.city,
+      loc.region,
+      loc.postalCode,
+      loc.country,
+      kind,
+      loc.accuracy,
+      kind === "parking" ? (loc.pressureHPa ?? null) : null,
+      new Date().toISOString(),
+    ],
   );
   bumpSpots();
   return result.lastInsertRowId;
@@ -158,15 +184,34 @@ export interface SpotDetails {
   section?: string | null;
   spot?: string | null;
   comments?: string | null;
+  /** The three below are written only when given (undefined = leave as is). */
+  zoneColor?: string | null;
+  photoUri?: string | null;
+  plate?: string | null;
+  ticketEntryAt?: number | null;
+  freeMinutes?: number | null;
 }
 
 export async function updateSpotDetails(db: SQLiteDatabase, id: number, d: SpotDetails): Promise<void> {
   const clean = (v?: string | null) => (v && v.trim() ? v.trim() : null);
+  const extra: string[] = [];
+  const extraArgs: (string | number | null)[] = [];
+  for (const key of ["zoneColor", "photoUri", "plate"] as const) {
+    if (d[key] === undefined) continue;
+    extra.push(`${key} = ?`);
+    extraArgs.push(clean(d[key]));
+  }
+  for (const key of ["ticketEntryAt", "freeMinutes"] as const) {
+    if (d[key] === undefined) continue;
+    extra.push(`${key} = ?`);
+    extraArgs.push(d[key] ?? null);
+  }
   await db.runAsync(
     `UPDATE locations SET title = ?, level = ?, section = ?, spot = ?, comments = ?,
        levelSource = CASE WHEN ? IS NULL THEN NULL ELSE COALESCE(levelSource, 'manual') END
+       ${extra.map((e) => `, ${e}`).join("")}
      WHERE id = ?`,
-    [clean(d.title), clean(d.level), clean(d.section), clean(d.spot), clean(d.comments), clean(d.level), id],
+    [clean(d.title), clean(d.level), clean(d.section), clean(d.spot), clean(d.comments), clean(d.level), ...extraArgs, id],
   );
   bumpSpots();
 }
@@ -204,19 +249,22 @@ export async function listSpots(db: SQLiteDatabase, o: ListOptions): Promise<Spo
   const q = o.search?.trim();
   if (q) {
     where.push(
-      "(l.title LIKE ? OR l.street LIKE ? OR l.city LIKE ? OR l.level LIKE ? OR l.section LIKE ? OR l.spot LIKE ? OR l.comments LIKE ?)",
+      "(l.title LIKE ? OR l.street LIKE ? OR l.city LIKE ? OR l.level LIKE ? OR l.section LIKE ? OR l.spot LIKE ? OR l.comments LIKE ? OR l.plate LIKE ?)",
     );
     const like = `%${q}%`;
-    args.push(like, like, like, like, like, like, like);
+    args.push(like, like, like, like, like, like, like, like);
   }
   const sql = `${SELECT_SPOT} ${where.length ? "WHERE " + where.join(" AND ") : ""}
     ORDER BY l.timestamp DESC LIMIT ? OFFSET ?`;
   return db.getAllAsync<Spot>(sql, [...args, o.limit, o.offset]);
 }
 
+/** Deletes the spot, its reminder and its photo (the photo goes only here, with Remove / Retake, or as an orphan). */
 export async function deleteSpot(db: SQLiteDatabase, id: number): Promise<void> {
   await cancelParkingReminder(id).catch(() => undefined);
+  const row = await db.getFirstAsync<{ photoUri: string | null }>("SELECT photoUri FROM locations WHERE id = ?", [id]);
   await db.runAsync("DELETE FROM locations WHERE id = ?", [id]);
+  if (row?.photoUri) deletePhoto(row.photoUri);
   bumpSpots();
 }
 
@@ -256,6 +304,38 @@ export async function setTimeLimit(db: SQLiteDatabase, id: number, title: string
   }
   bumpSpots();
   return scheduleParkingReminder({ locationId: id, title, endsAt, remindBeforeMinutes: before });
+}
+
+/** What a time limit was before a change (+30 min), so Undo can put it back exactly. */
+export interface LimitSnapshot {
+  endsAt: number;
+  startedAt: number | null;
+  notifyBeforeMinutes: number | null;
+}
+
+export function limitSnapshot(s: Spot): LimitSnapshot | null {
+  if (!s.reminderActive || !s.reminderEndsAt) return null;
+  return { endsAt: s.reminderEndsAt, startedAt: s.reminderStartedAt, notifyBeforeMinutes: s.notifyBeforeMinutes ?? null };
+}
+
+/**
+ * Undo (mockup E2): the time limit goes back to what it was. The reminder is
+ * scheduled again only if its moment is still ahead — an already expired
+ * time stays expired, no late reminder pops up.
+ */
+export async function restoreTimeLimit(db: SQLiteDatabase, id: number, title: string, snap: LimitSnapshot, now = Date.now()): Promise<void> {
+  const before = snap.notifyBeforeMinutes ?? remindBeforeFor(snap.endsAt, now);
+  const start = snap.startedAt ?? now;
+  await db.runAsync(
+    `UPDATE schedulers SET startTime = ?, endTime = ?, durationMinutes = ?, notifyBeforeMinutes = ?, isActive = 1, updatedAt = ?
+     WHERE locationId = ?`,
+    [start, snap.endsAt, Math.max(1, Math.round((snap.endsAt - start) / 60_000)), before, now, id],
+  );
+  await cancelParkingReminder(id).catch(() => undefined);
+  if (snap.endsAt - before * 60_000 > now) {
+    await scheduleParkingReminder({ locationId: id, title, endsAt: snap.endsAt, remindBeforeMinutes: before });
+  }
+  bumpSpots();
 }
 
 /**

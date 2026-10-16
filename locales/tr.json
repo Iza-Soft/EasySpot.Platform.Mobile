@@ -314,7 +314,8 @@
     },
     "units": {
       "h": "sa",
-      "min": "dk"
+      "min": "dk",
+      "d": "g"
     },
     "eco": {
       "gms": "Google",
@@ -373,7 +374,11 @@
       "until_short": "{{time}}'e kadar",
       "ended_at": "{{time}} bitti",
       "over": "{{d}} aşıldı",
-      "title_default": "Park edildi"
+      "title_default": "Park edildi",
+      "undo": "Geri al",
+      "undone": "{{time}} olarak geri alındı",
+      "changed": "{{time}} saatine kadar ödendi",
+      "change_time": "Ücretli süreyi değiştir"
     },
     "save": {
       "title_parking": "Park",
@@ -409,7 +414,9 @@
       "note_placeholder_place": "ör. giriş arka sokaktan",
       "accuracy": "Doğruluk ±{{m}} m",
       "hide": "Gizle",
-      "limit_too_short": "{{n}} dk kullanılamaz — hatırlatıcı bitişten {{n}} dk önce gelir (Ayarlar)."
+      "limit_too_short": "{{n}} dk kullanılamaz — hatırlatıcı bitişten {{n}} dk önce gelir (Ayarlar).",
+      "zone_color": "Bölge rengi",
+      "other": "Diğer"
     },
     "spots": {
       "title": "Yerler",
@@ -473,7 +480,11 @@
       "change": "Değiştir",
       "engine": "Konum: {{eco}}",
       "version_code": "Sürüm {{version}} ({{build}})",
-      "theme_system_hint": "Telefon gibi · şu an {{mode}}"
+      "theme_system_hint": "Telefon gibi · şu an {{mode}}",
+      "floors": "Arabaya kadar katlar",
+      "floors_hint": "Barometreyle: araban kaç kat yukarıda veya aşağıda",
+      "floors_on_hint": "Bundan sonra kaydedilen park yerleri için",
+      "floors_none": "Bu telefonda barometre yok"
     },
     "errors": {
       "permission": "Yeri kaydetmek için konum izni gerekli.",
@@ -524,6 +535,10 @@
       "s_collect": "EasySpot yalnızca yerlerini kaydetmek ve bulmak için gerekeni toplar: uygulama açıkken konumun ve girdiğin bilgiler (kat, bölge, yer, ad, not, ücretli süre).",
       "s_location_h": "Konum",
       "s_location": "Yaklaşık ve kesin konum yalnızca uygulama kullanılırken kullanılır. EasySpot konumunu asla arka planda okumaz.",
+      "s_camera_h": "Kamera ve fotoğraflar",
+      "s_camera": "Yerini fotoğraflarsan fotoğraf yalnızca bu telefondaki EasySpot dosyalarında saklanır — galerinde değil — ve park kaydını sildiğinde silinir. Kat, bölge, yer ve aracının plakası telefonda okunur; fotoğraf hiçbir yere yüklenmez. Android'de metni telefonda çalışan Google ML Kit okur ve Google'a anonim kullanım istatistikleri gönderebilir (fotoğrafı ya da metnini asla). iPhone'da Apple'ın cihaz üzerindeki metin tanıma özelliği kullanılır.",
+      "s_pressure_h": "Hava basıncı",
+      "s_pressure": "Park ettiğinde EasySpot, telefonun barometresinden (varsa) hava basıncını kaydeder; böylece daha sonra arabandan kaç kat uzakta olduğunu gösterebilir. Yalnızca uygulama açıkken ölçülür — asla arka planda —, bu telefonda kalır ve hiçbir yere yüklenmez. Ayarlar → “Arabaya kadar katlar” bölümünden kapatabilirsin.",
       "s_storage_h": "Verilerin nerede saklanır",
       "s_storage": "Yalnızca bu telefonda, sen silene veya uygulamayı kaldırana kadar. Hesap yok, EasySpot sunucusu yok.",
       "s_services_h": "Telefonundaki hizmetler",
@@ -642,6 +657,82 @@
       "st_idle": "derin uyku",
       "st_saver": "pil tasarrufu",
       "launch_note_battery": "“Pil” açılırsa orada “Uygulama başlatma”ya dokun."
+    },
+    "photo": {
+      "title": "Yerin fotoğrafı",
+      "button_hint": "Araç, kolon ya da zemindeki numara — görüneni okuruz",
+      "row_hint": "Görmek ya da yeniden çekmek için dokun",
+      "camera_hint": "Kolon, zemin numarası ya da araç",
+      "light": "Işık",
+      "take": "Fotoğraf çek",
+      "check_title": "Fotoğraf net mi?",
+      "only_here": "Yalnızca bu telefonda saklanır",
+      "retake": "Yeniden çek",
+      "remove": "Kaldır",
+      "reading": "Fotoğraf okunuyor…",
+      "tap_enlarge": "Büyütmek için dokun",
+      "no_plate": "plaka okunamadı",
+      "plate": "plaka {{plate}}",
+      "camera_needed": "EasySpot, park ettiğin yeri çekmek için kameraya ihtiyaç duyar.",
+      "allow_camera": "Kameraya izin ver",
+      "open_settings": "Ayarları aç",
+      "failed": "Fotoğraf çekilemedi. Tekrar dene."
+    },
+    "duration": {
+      "title": "Ücretli süre",
+      "up_to": "En fazla {{n}} gün",
+      "days": "gün",
+      "hours": "saat",
+      "minutes": "dk",
+      "cancel": "İptal",
+      "done": "Tamam",
+      "too_short": "{{n}} dk'dan fazla — bitişten {{n}} dk önce hatırlatılır",
+      "from_now": "Şu andan itibaren kalan süre · en fazla {{n}} gün"
+    },
+    "colors": {
+      "red": "Kırmızı",
+      "orange": "Turuncu",
+      "yellow": "Sarı",
+      "green": "Yeşil",
+      "blue": "Mavi",
+      "purple": "Mor",
+      "white": "Beyaz",
+      "grey": "Gri"
+    },
+    "ticket": {
+      "scan": "Bileti tara",
+      "camera_hint": "Bilet — bitiş saatinin olduğu yer",
+      "check": "Saati kontrol et",
+      "entry_head": "Giriş bileti",
+      "not_kept": "Bilet fotoğrafı saklanmaz",
+      "reading": "Bilet okunuyor…",
+      "ticket": "Otopark bileti",
+      "read_near": "Biletten okundu · “{{word}}” yanında",
+      "read_latest": "Biletten okundu · üzerindeki en geç saat",
+      "valid_until": "Geçerlilik",
+      "left_remind": "{{left}} · {{at}} saatinde hatırlatırız",
+      "use": "Kullan",
+      "set_by_hand": "Elle gir",
+      "expired_title": "Bu biletin süresi {{time}} saatinde doldu",
+      "expired_text": "Daha yeni bir bileti çek ya da saati elle gir.",
+      "none_title": "Bilette saat bulunamadı",
+      "none_text": "Daha yakından, düz ve ışıkta çek — ya da saati elle gir.",
+      "until": "{{time}} saatine kadar",
+      "hint": "Biletten · {{end}} bitiyor · {{at}} saatinde hatırlatırız",
+      "entry_at": "Giriş bileti · giriş {{time}}",
+      "free_q": "Ne kadar süre ücretsiz?",
+      "free_until": "{{end}} saatine kadar ücretsiz · {{at}} saatinde hatırlatırız",
+      "free_over": "Ücretsiz süre {{time}} saatinde zaten bitti",
+      "free_hint": "Giriş bileti · giriş {{entry}} · {{end}} saatine kadar ücretsiz · {{at}} saatinde hatırlatırız",
+      "parked_line": "Giriş bileti · giriş {{time}} · {{free}} ücretsiz"
+    },
+    "floors": {
+      "below_one": "1 kat aşağıda",
+      "below_other": "{{n}} kat aşağıda",
+      "above_one": "1 kat yukarıda",
+      "above_other": "{{n}} kat yukarıda",
+      "same": "Arabanın katındasın",
+      "live": "Canlı · hava basıncına göre"
     }
   }
 }

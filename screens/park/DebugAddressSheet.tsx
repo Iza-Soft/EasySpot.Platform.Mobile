@@ -20,7 +20,7 @@ const POINTS: { key: string; label: string; lat: number; lng: number }[] = [
   { key: "sof", label: "София · бул. Витоша", lat: 42.693, lng: 23.319 },
 ];
 
-export function DebugAddressSheet({ visible, onClose }: { visible: boolean; onClose: () => void }) {
+export function DebugAddressSheet({ visible, onClose, onOcrTest }: { visible: boolean; onClose: () => void; onOcrTest?: () => void }) {
   const run = async (p: (typeof POINTS)[number]) => {
     onClose();
     const a = await reverseGeocode(p.lat, p.lng);
@@ -35,6 +35,11 @@ export function DebugAddressSheet({ visible, onClose }: { visible: boolean; onCl
     : info.gmsUsable === undefined
       ? `OLD native build — rebuild the app · GMS package: ${info.gms} · HMS: ${info.hms}`
       : `GMS package: ${info.gms ? info.gmsLabel ?? "yes" : "none"} · usable: ${info.gmsUsable} · HMS: ${info.hms}`;
-  const actions: SheetAction[] = POINTS.map((p) => ({ key: p.key, label: p.label, icon: "globe-outline", onPress: () => run(p) }));
+  const actions: SheetAction[] = [
+    ...(onOcrTest
+      ? [{ key: "ocr", label: "Text recognition test (camera)", icon: "scan-outline", onPress: () => (onClose(), onOcrTest()) } as SheetAction]
+      : []),
+    ...POINTS.map((p) => ({ key: p.key, label: p.label, icon: "globe-outline", onPress: () => run(p) }) as SheetAction),
+  ];
   return <ActionSheet visible={visible} title="Debug (dev only)" subtitle={servicesLine} actions={actions} onClose={onClose} />;
 }

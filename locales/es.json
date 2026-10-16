@@ -24,7 +24,8 @@
     },
     "units": {
       "h": "h",
-      "min": "min"
+      "min": "min",
+      "d": "d"
     },
     "eco": {
       "gms": "Google",
@@ -83,7 +84,11 @@
       "until_short": "hasta las {{time}}",
       "ended_at": "terminó a las {{time}}",
       "over": "excedido en {{d}}",
-      "title_default": "Aparcado"
+      "title_default": "Aparcado",
+      "undo": "Deshacer",
+      "undone": "Vuelta a {{time}}",
+      "changed": "Pagado hasta {{time}}",
+      "change_time": "Cambiar el tiempo pagado"
     },
     "save": {
       "title_parking": "Aparcamiento",
@@ -119,7 +124,9 @@
       "note_placeholder_place": "p. ej. entrada por la calle de atrás",
       "accuracy": "Precisión ±{{m}} m",
       "hide": "Ocultar",
-      "limit_too_short": "{{n}} min no disponible — el aviso llega {{n}} min antes del final (Ajustes)."
+      "limit_too_short": "{{n}} min no disponible — el aviso llega {{n}} min antes del final (Ajustes).",
+      "zone_color": "Color de la zona",
+      "other": "Otro"
     },
     "spots": {
       "title": "Lugares",
@@ -183,7 +190,11 @@
       "change": "Cambiar",
       "engine": "Ubicación: {{eco}}",
       "version_code": "Versión {{version}} ({{build}})",
-      "theme_system_hint": "Como el teléfono · ahora {{mode}}"
+      "theme_system_hint": "Como el teléfono · ahora {{mode}}",
+      "floors": "Plantas hasta tu coche",
+      "floors_hint": "Con el barómetro: cuántas plantas arriba o abajo está tu coche",
+      "floors_on_hint": "Para los aparcamientos guardados a partir de ahora",
+      "floors_none": "Este teléfono no tiene barómetro"
     },
     "errors": {
       "permission": "Se necesita permiso de ubicación para guardar tu lugar.",
@@ -234,6 +245,10 @@
       "s_collect": "EasySpot recopila solo lo necesario para guardar y encontrar tus lugares: tu ubicación mientras la app está abierta y los datos que escribes (planta, zona, plaza, nombre, nota, tiempo pagado).",
       "s_location_h": "Ubicación",
       "s_location": "La ubicación aproximada y precisa se usa solo mientras usas la app. EasySpot nunca lee tu ubicación en segundo plano.",
+      "s_camera_h": "Cámara y fotos",
+      "s_camera": "Si fotografías tu sitio, la foto se guarda solo en los archivos de EasySpot en este teléfono — no en tu galería — y se borra al borrar el aparcamiento. El nivel, la zona, la plaza y la matrícula se leen en el propio teléfono; la foto nunca se sube. En Android el texto lo lee Google ML Kit, que funciona en el teléfono y puede enviar a Google estadísticas de uso anónimas (nunca la foto ni su texto). En iPhone se usa el reconocimiento de texto de Apple en el dispositivo.",
+      "s_pressure_h": "Presión del aire",
+      "s_pressure": "Cuando aparcas, EasySpot guarda la presión del aire del barómetro del teléfono (si lo tiene), para mostrarte después a cuántas plantas estás de tu coche. Solo se mide con la app abierta —nunca en segundo plano—, se queda en este teléfono y nunca se sube. Puedes desactivarlo en Ajustes → «Plantas hasta tu coche».",
       "s_storage_h": "Dónde se guardan tus datos",
       "s_storage": "Solo en este teléfono, hasta que los borres o desinstales la app. No hay cuenta ni servidor de EasySpot.",
       "s_services_h": "Servicios de tu teléfono",
@@ -352,6 +367,82 @@
       "st_idle": "reposo profundo",
       "st_saver": "ahorro de batería",
       "launch_note_battery": "Si se abre «Batería», toca allí «Inicio de aplicaciones»."
+    },
+    "photo": {
+      "title": "Foto del sitio",
+      "button_hint": "Coche, columna o número del suelo — leemos lo que se vea",
+      "row_hint": "Toca para verla o repetirla",
+      "camera_hint": "Columna, número del suelo o coche",
+      "light": "Luz",
+      "take": "Hacer foto",
+      "check_title": "¿Se ve bien la foto?",
+      "only_here": "Se guarda solo en este teléfono",
+      "retake": "Repetir",
+      "remove": "Quitar",
+      "reading": "Leyendo la foto…",
+      "tap_enlarge": "Toca para ampliar",
+      "no_plate": "matrícula no leída",
+      "plate": "matrícula {{plate}}",
+      "camera_needed": "EasySpot necesita la cámara para fotografiar dónde aparcaste.",
+      "allow_camera": "Permitir cámara",
+      "open_settings": "Abrir ajustes",
+      "failed": "No se pudo hacer la foto. Inténtalo de nuevo."
+    },
+    "duration": {
+      "title": "Tiempo pagado",
+      "up_to": "Hasta {{n}} días",
+      "days": "días",
+      "hours": "horas",
+      "minutes": "min",
+      "cancel": "Cancelar",
+      "done": "Listo",
+      "too_short": "Más de {{n}} min — te avisamos {{n}} min antes del final",
+      "from_now": "Tiempo restante desde ahora · hasta {{n}} días"
+    },
+    "colors": {
+      "red": "Rojo",
+      "orange": "Naranja",
+      "yellow": "Amarillo",
+      "green": "Verde",
+      "blue": "Azul",
+      "purple": "Morado",
+      "white": "Blanco",
+      "grey": "Gris"
+    },
+    "ticket": {
+      "scan": "Escanear ticket",
+      "camera_hint": "El ticket — donde está la hora de fin",
+      "check": "Comprueba la hora",
+      "entry_head": "Ticket de entrada",
+      "not_kept": "La foto del ticket no se guarda",
+      "reading": "Leyendo el ticket…",
+      "ticket": "Ticket de aparcamiento",
+      "read_near": "Leído del ticket · junto a «{{word}}»",
+      "read_latest": "Leído del ticket · la hora más tardía",
+      "valid_until": "Válido hasta",
+      "left_remind": "{{left}} · te avisamos a las {{at}}",
+      "use": "Usar",
+      "set_by_hand": "Poner a mano",
+      "expired_title": "Este ticket caducó a las {{time}}",
+      "expired_text": "Fotografía un ticket más reciente o pon la hora a mano.",
+      "none_title": "No se encontró hora en el ticket",
+      "none_text": "Acércate, recto y con luz — o pon la hora a mano.",
+      "until": "hasta {{time}}",
+      "hint": "Del ticket · termina {{end}} · te avisamos a las {{at}}",
+      "entry_at": "Ticket de entrada · entrada a las {{time}}",
+      "free_q": "¿Cuánto tiempo es gratis?",
+      "free_until": "Gratis hasta las {{end}} · te avisamos a las {{at}}",
+      "free_over": "El tiempo gratis ya terminó a las {{time}}",
+      "free_hint": "Ticket de entrada · entrada a las {{entry}} · gratis hasta las {{end}} · te avisamos a las {{at}}",
+      "parked_line": "Ticket de entrada · entrada a las {{time}} · {{free}} gratis"
+    },
+    "floors": {
+      "below_one": "1 planta por debajo",
+      "below_other": "{{n}} plantas por debajo",
+      "above_one": "1 planta por encima",
+      "above_other": "{{n}} plantas por encima",
+      "same": "En la planta del coche",
+      "live": "En vivo · por la presión del aire"
     }
   }
 }

@@ -11,16 +11,23 @@ export interface PillarFields {
   spot?: string;
 }
 
-const LEVEL_WORDS = "LEVEL|LVL|FLOOR|DECK|ETAGE|ÉTAGE|EBENE|NIVEAU|KAT|ЕТАЖ|НИВО|УРОВЕНЬ";
-const ZONE_WORDS = "ZONE|SECTION|SECTOR|SEKTOR|SECTEUR|BEREICH|BÖLGE|ЗОНА|СЕКТОР";
-const SPOT_WORDS = "SPOT|SPACE|PLACE|PLATZ|BAY|NO\\.?|№|МЯСТО|МЕСТО";
+// Android's OCR (ML Kit) has no Cyrillic model: it reads Cyrillic signs as the Latin letters they
+// look like — НИВО → "HMBO"/"HNBO", ЕТАЖ → "ETAX", ЗОНА → "30HA"/"3OHA", МЯСТО → "MACTO"/"MRCTO".
+const LEVEL_WORDS = "LEVEL|LVL|FLOOR|DECK|ETAGE|ÉTAGE|EBENE|NIVEAU|KAT|ЕТАЖ|НИВО|УРОВЕНЬ|HMBO|HNBO|HIBO|ETAX|ETAЖ";
+const ZONE_WORDS = "ZONE|SECTION|SECTOR|SEKTOR|SECTEUR|BEREICH|BÖLGE|ЗОНА|СЕКТОР|30HA|3OHA|ZOHA|CEKTOP";
+const SPOT_WORDS = "SPOT|SPACE|PLACE|PLATZ|BAY|NO\\.?|№|МЯСТО|МЕСТО|MACTO|MRCTO|MЯCTO|MECTO";
 
-export function parsePillarText(raw: string): PillarFields {
+/**
+ * opts.level: the level already decided from the BIGGEST text in the photo
+ * (services/ocr-service.ts) — the sign being photographed. It beats a
+ * "LEVEL -2" keyword on a smaller sign further away.
+ */
+export function parsePillarText(raw: string, opts: { level?: string } = {}): PillarFields {
   const text = normalise(raw);
-  const out: PillarFields = {};
+  const out: PillarFields = opts.level ? { level: opts.level } : {};
 
-  // 1) Explicit keywords win.
-  const kwLevel = text.match(new RegExp(`(?:${LEVEL_WORDS})\\s*[:#]?\\s*(-?\\d{1,2}|[A-Z]-?\\d{1,2})\\b`));
+  // 1) Explicit keywords win (unless the level is already known).
+  const kwLevel = out.level ? null : text.match(new RegExp(`(?:${LEVEL_WORDS})\\s*[:#]?\\s*(-?\\d{1,2}|[A-Z]-?\\d{1,2})\\b`));
   if (kwLevel) out.level = cleanLevel(kwLevel[1]);
   const kwZone = text.match(new RegExp(`(?:${ZONE_WORDS})\\s*[:#]?\\s*([A-Z]{1,2}|\\d{1,2})\\b`));
   if (kwZone) out.zone = kwZone[1];
@@ -41,6 +48,8 @@ export function parsePillarText(raw: string): PillarFields {
       const [, letter, num] = m.trim().match(/^([A-Z])\s?-?\s?(\d{1,4})$/) ?? [];
       if (!letter) continue;
       if (out.level && cleanLevel(letter + num) === out.level) continue;
+      // Another level code ("B2" from a second sign in the photo) is not zone B / spot 2.
+      if (out.level && /^[BPUL]-?\d{1,2}$/.test(m.trim())) continue;
       if (!out.zone) out.zone = letter;
       if (!out.spot) out.spot = num;
       break;
@@ -55,41 +64,6 @@ export function parsePillarText(raw: string): PillarFields {
   }
 
   return out;
-}
-
-export interface TicketTime {
-  hours: number;
-  minutes: number;
-  /** true when found next to a "valid until"-style keyword, false when guessed (latest time on the ticket). */
-  fromKeyword: boolean;
-}
-
-const UNTIL_WORDS =
-  "VALID UNTIL|VALID TILL|EXPIRES?|EXPIRY|EXP\\.?|UNTIL|GÜLTIG BIS|BIS|VALABLE JUSQU'?À|JUSQU'?À|ВАЛИДЕН ДО|ВАЛИДНО ДО|ДЕЙСТВИТЕЛЕН ДО|ДЕЙСТВУЕТ ДО|ДО|SON GEÇERLİLİK|GEÇERLİLİK";
-
-/** Finds the expiry time printed on a pay-and-display / garage ticket. */
-export function parseTicketExpiry(raw: string): TicketTime | null {
-  const text = normalise(raw);
-  const time = "([01]?\\d|2[0-3])[:.h]([0-5]\\d)";
-
-  const kw = text.match(new RegExp(`(?:${UNTIL_WORDS})\\s*[:\\-]?\\s*(?:\\S+\\s+)?${time}`));
-  if (kw) return { hours: +kw[1], minutes: +kw[2], fromKeyword: true };
-
-  const all = [...text.matchAll(new RegExp(time, "g"))].map((m) => ({ hours: +m[1], minutes: +m[2] }));
-  if (all.length === 0) return null;
-  const latest = all.reduce((a, b) => (b.hours * 60 + b.minutes > a.hours * 60 + a.minutes ? b : a));
-  return { ...latest, fromKeyword: false };
-}
-
-/**
- * Converts a printed time into an absolute expiry. A time already more than
- * 12 h in the past is taken to mean "tomorrow" (overnight tickets).
- */
-export function resolveExpiry(now: Date, t: { hours: number; minutes: number }): Date {
-  const d = new Date(now);
-  d.setHours(t.hours, t.minutes, 0, 0);
-  if (now.getTime() - d.getTime() > 12 * 3_600_000) d.setDate(d.getDate() + 1);
-  return d;
 }
 
 function normalise(raw: string): string {

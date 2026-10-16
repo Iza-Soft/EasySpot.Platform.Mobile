@@ -1,0 +1,24 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'com.ilkoadamov.easyspot'
+version = '1.0.0'
+
+android {
+  namespace "com.ilkoadamov.easyspot.ocr"
+  defaultConfig {
+    versionCode 1
+    versionName "1.0.0"
+  }
+}
+
+dependencies {
+  // ML Kit text recognition with the model BUNDLED in the app (Latin script):
+  // works offline and without Google Play services (Huawei) — nothing is
+  // downloaded at runtime. Free, no API key. ~4 MB per CPU architecture.
+  implementation "com.google.mlkit:text-recognition:16.0.1"
+  // Photo of the spot: turn the camera picture upright before it is resized and saved.
+  implementation "androidx.exifinterface:exifinterface:1.3.7"
+}

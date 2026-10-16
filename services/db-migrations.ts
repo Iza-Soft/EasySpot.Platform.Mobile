@@ -62,6 +62,24 @@ export const MIGRATIONS: Migration[] = [
     description: "2.0 — viewedAt (a new favourite place is marked \"New\" until opened)",
     up: (db) => db.execAsync("ALTER TABLE locations ADD COLUMN viewedAt INTEGER;"),
   },
+  {
+    version: 5,
+    description: "2.0 — photo of the spot: zone colour + the car plate read from the photo",
+    up: (db) =>
+      db.execAsync(`
+        ALTER TABLE locations ADD COLUMN zoneColor TEXT;
+        ALTER TABLE locations ADD COLUMN plate TEXT;
+      `),
+  },
+  {
+    version: 6,
+    description: "2.0 — mall / garage entry ticket: entry time + free minutes (free time counts from the entry)",
+    up: (db) =>
+      db.execAsync(`
+        ALTER TABLE locations ADD COLUMN ticketEntryAt INTEGER;
+        ALTER TABLE locations ADD COLUMN freeMinutes INTEGER;
+      `),
+  },
 ];
 
 export const LATEST_DB_VERSION = MIGRATIONS[MIGRATIONS.length - 1].version;

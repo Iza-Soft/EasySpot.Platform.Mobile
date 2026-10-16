@@ -24,7 +24,8 @@
     },
     "units": {
       "h": "h",
-      "min": "min"
+      "min": "min",
+      "d": "z"
     },
     "eco": {
       "gms": "Google",
@@ -83,7 +84,11 @@
       "until_short": "până la {{time}}",
       "ended_at": "a expirat la {{time}}",
       "over": "depășit cu {{d}}",
-      "title_default": "Parcat"
+      "title_default": "Parcat",
+      "undo": "Anulează",
+      "undone": "Revenit la {{time}}",
+      "changed": "Plătit până la {{time}}",
+      "change_time": "Modifică timpul plătit"
     },
     "save": {
       "title_parking": "Parcare",
@@ -119,7 +124,9 @@
       "note_placeholder_place": "ex. intrarea din strada din spate",
       "accuracy": "Precizie ±{{m}} m",
       "hide": "Ascunde",
-      "limit_too_short": "{{n}} min nu este disponibil — mementoul vine cu {{n}} min înainte de final (Setări)."
+      "limit_too_short": "{{n}} min nu este disponibil — mementoul vine cu {{n}} min înainte de final (Setări).",
+      "zone_color": "Culoarea zonei",
+      "other": "Altul"
     },
     "spots": {
       "title": "Locuri",
@@ -183,7 +190,11 @@
       "change": "Schimbă",
       "engine": "Locație: {{eco}}",
       "version_code": "Versiunea {{version}} ({{build}})",
-      "theme_system_hint": "Ca telefonul · acum {{mode}}"
+      "theme_system_hint": "Ca telefonul · acum {{mode}}",
+      "floors": "Etaje până la mașină",
+      "floors_hint": "Cu barometrul: câte etaje mai sus sau mai jos este mașina",
+      "floors_on_hint": "Pentru parcările salvate de acum înainte",
+      "floors_none": "Acest telefon nu are barometru"
     },
     "errors": {
       "permission": "Este nevoie de permisiunea de locație pentru a salva locul.",
@@ -234,6 +245,10 @@
       "s_collect": "EasySpot colectează doar ce este necesar pentru a salva și găsi locurile tale: locația cât timp aplicația este deschisă și detaliile introduse (nivel, zonă, loc, nume, notă, timp plătit).",
       "s_location_h": "Locație",
       "s_location": "Locația aproximativă și precisă este folosită doar cât timp folosești aplicația. EasySpot nu citește niciodată locația în fundal.",
+      "s_camera_h": "Camera și poze",
+      "s_camera": "Dacă fotografiezi locul, poza este păstrată doar în fișierele EasySpot de pe acest telefon — nu în galerie — și se șterge odată cu parcarea. Nivelul, zona, locul și numărul mașinii sunt citite pe telefon; poza nu este încărcată nicăieri. Pe Android textul este citit de Google ML Kit, care rulează pe telefon și poate trimite către Google statistici anonime de utilizare (niciodată poza sau textul ei). Pe iPhone se folosește recunoașterea de text Apple de pe dispozitiv.",
+      "s_pressure_h": "Presiunea aerului",
+      "s_pressure": "Când parchezi, EasySpot salvează presiunea aerului de la barometrul telefonului (dacă are unul), ca să-ți arate apoi la câte etaje ești de mașină. Este măsurată doar cât aplicația e deschisă — niciodată în fundal —, rămâne pe acest telefon și nu este trimisă nicăieri. O poți opri din Setări → „Etaje până la mașină”.",
       "s_storage_h": "Unde sunt stocate datele",
       "s_storage": "Doar pe acest telefon, până le ștergi sau dezinstalezi aplicația. Nu există cont și nici server EasySpot.",
       "s_services_h": "Servicii de pe telefon",
@@ -352,6 +367,82 @@
       "st_idle": "somn profund",
       "st_saver": "economisire baterie",
       "launch_note_battery": "Dacă se deschide „Baterie”, atinge acolo „Lansare aplicații”."
+    },
+    "photo": {
+      "title": "Poza locului",
+      "button_hint": "Mașina, stâlpul sau numărul de pe jos — citim ce se vede",
+      "row_hint": "Atinge pentru a o vedea sau a o reface",
+      "camera_hint": "Stâlp, număr de pe jos sau mașina",
+      "light": "Lumină",
+      "take": "Fă poza",
+      "check_title": "Poza e clară?",
+      "only_here": "Salvată doar pe acest telefon",
+      "retake": "Refă",
+      "remove": "Elimină",
+      "reading": "Citesc poza…",
+      "tap_enlarge": "Atinge pentru a mări",
+      "no_plate": "numărul nu a fost citit",
+      "plate": "număr {{plate}}",
+      "camera_needed": "EasySpot are nevoie de cameră pentru a fotografia unde ai parcat.",
+      "allow_camera": "Permite camera",
+      "open_settings": "Deschide setările",
+      "failed": "Poza nu a putut fi făcută. Încearcă din nou."
+    },
+    "duration": {
+      "title": "Timp plătit",
+      "up_to": "Până la {{n}} zile",
+      "days": "zile",
+      "hours": "ore",
+      "minutes": "min",
+      "cancel": "Anulează",
+      "done": "Gata",
+      "too_short": "Peste {{n}} min — memento cu {{n}} min înainte de final",
+      "from_now": "Timp rămas de acum · până la {{n}} zile"
+    },
+    "colors": {
+      "red": "Roșu",
+      "orange": "Portocaliu",
+      "yellow": "Galben",
+      "green": "Verde",
+      "blue": "Albastru",
+      "purple": "Mov",
+      "white": "Alb",
+      "grey": "Gri"
+    },
+    "ticket": {
+      "scan": "Scanează biletul",
+      "camera_hint": "Biletul — unde e ora de final",
+      "check": "Verifică ora",
+      "entry_head": "Bilet de intrare",
+      "not_kept": "Poza biletului nu se păstrează",
+      "reading": "Citesc biletul…",
+      "ticket": "Bilet de parcare",
+      "read_near": "Citit de pe bilet · lângă „{{word}}”",
+      "read_latest": "Citit de pe bilet · cea mai târzie oră",
+      "valid_until": "Valabil până la",
+      "left_remind": "{{left}} · îți amintim la {{at}}",
+      "use": "Folosește",
+      "set_by_hand": "Setează manual",
+      "expired_title": "Acest bilet a expirat la {{time}}",
+      "expired_text": "Fă poza unui bilet mai nou sau setează ora manual.",
+      "none_title": "Nicio oră găsită pe bilet",
+      "none_text": "Apropie-te, drept și la lumină — sau setează ora manual.",
+      "until": "până la {{time}}",
+      "hint": "De pe bilet · se termină {{end}} · îți amintim la {{at}}",
+      "entry_at": "Bilet de intrare · intrat la {{time}}",
+      "free_q": "Cât timp e gratuit?",
+      "free_until": "Gratuit până la {{end}} · îți amintim la {{at}}",
+      "free_over": "Timpul gratuit s-a terminat deja la {{time}}",
+      "free_hint": "Bilet de intrare · intrat la {{entry}} · gratuit până la {{end}} · îți amintim la {{at}}",
+      "parked_line": "Bilet de intrare · intrat la {{time}} · {{free}} gratuit"
+    },
+    "floors": {
+      "below_one": "1 etaj sub tine",
+      "below_other": "{{n}} etaje sub tine",
+      "above_one": "1 etaj deasupra ta",
+      "above_other": "{{n}} etaje deasupra ta",
+      "same": "La etajul mașinii",
+      "live": "Live · după presiunea aerului"
     }
   }
 }

@@ -314,7 +314,8 @@
     },
     "units": {
       "h": "Std",
-      "min": "Min"
+      "min": "Min",
+      "d": "T"
     },
     "eco": {
       "gms": "Google",
@@ -373,7 +374,11 @@
       "until_short": "bis {{time}}",
       "ended_at": "abgelaufen {{time}}",
       "over": "{{d}} überzogen",
-      "title_default": "Geparkt"
+      "title_default": "Geparkt",
+      "undo": "Rückgängig",
+      "undone": "Zurück auf {{time}}",
+      "changed": "Bezahlt bis {{time}}",
+      "change_time": "Bezahlte Zeit ändern"
     },
     "save": {
       "title_parking": "Parken",
@@ -409,7 +414,9 @@
       "note_placeholder_place": "z. B. Eingang von der Hinterstraße",
       "accuracy": "Genauigkeit ±{{m}} m",
       "hide": "Ausblenden",
-      "limit_too_short": "{{n}} Min. nicht verfügbar — die Erinnerung kommt {{n}} Min. vor dem Ende (Einstellungen)."
+      "limit_too_short": "{{n}} Min. nicht verfügbar — die Erinnerung kommt {{n}} Min. vor dem Ende (Einstellungen).",
+      "zone_color": "Zonenfarbe",
+      "other": "Andere"
     },
     "spots": {
       "title": "Orte",
@@ -473,7 +480,11 @@
       "change": "Ändern",
       "engine": "Standortdienst: {{eco}}",
       "version_code": "Version {{version}} ({{build}})",
-      "theme_system_hint": "Wie das Handy · jetzt {{mode}}"
+      "theme_system_hint": "Wie das Handy · jetzt {{mode}}",
+      "floors": "Etagen zum Auto",
+      "floors_hint": "Mit dem Barometer: wie viele Etagen das Auto über oder unter dir ist",
+      "floors_on_hint": "Für Parkvorgänge ab jetzt",
+      "floors_none": "Dieses Handy hat kein Barometer"
     },
     "errors": {
       "permission": "Zum Speichern wird die Standortberechtigung benötigt.",
@@ -524,6 +535,10 @@
       "s_collect": "EasySpot erhebt nur, was nötig ist, um deine Orte zu speichern und zu finden: deinen Standort, solange die App geöffnet ist, und deine Eingaben (Ebene, Zone, Platz, Name, Notiz, bezahlte Zeit).",
       "s_location_h": "Standort",
       "s_location": "Ungefährer und genauer Standort werden nur verwendet, während die App genutzt wird. EasySpot liest deinen Standort nie im Hintergrund.",
+      "s_camera_h": "Kamera und Fotos",
+      "s_camera": "Wenn du deinen Platz fotografierst, wird das Foto nur in EasySpots eigenen Dateien auf diesem Handy gespeichert — nicht in deiner Galerie — und mit dem Parkplatz gelöscht. Ebene, Zone, Platz und dein Kennzeichen werden auf dem Handy daraus gelesen; das Foto wird nie hochgeladen. Auf Android liest Google ML Kit den Text — es läuft auf dem Handy und kann anonyme Nutzungsstatistiken an Google senden (nie das Foto oder seinen Text). Auf dem iPhone wird Apples Texterkennung auf dem Gerät verwendet.",
+      "s_pressure_h": "Luftdruck",
+      "s_pressure": "Wenn du parkst, speichert EasySpot den Luftdruck vom Barometer des Handys (falls vorhanden), um dir später zu zeigen, wie viele Etagen du vom Auto entfernt bist. Er wird nur bei geöffneter App gemessen — nie im Hintergrund —, bleibt auf diesem Handy und wird nie hochgeladen. Du kannst das in den Einstellungen → „Etagen zum Auto“ ausschalten.",
       "s_storage_h": "Wo deine Daten gespeichert sind",
       "s_storage": "Nur auf diesem Handy, bis du sie löschst oder die App deinstallierst. Es gibt kein Konto und keinen EasySpot-Server.",
       "s_services_h": "Dienste auf deinem Handy",
@@ -642,6 +657,82 @@
       "st_idle": "Tiefschlaf",
       "st_saver": "Energiesparmodus",
       "launch_note_battery": "Wenn „Akku“ geöffnet wird, dort auf „App-Start“ tippen."
+    },
+    "photo": {
+      "title": "Foto vom Platz",
+      "button_hint": "Auto, Säule oder Bodennummer — wir lesen, was zu sehen ist",
+      "row_hint": "Tippen zum Ansehen oder neu aufnehmen",
+      "camera_hint": "Säule, Bodennummer oder Auto",
+      "light": "Licht",
+      "take": "Foto aufnehmen",
+      "check_title": "Ist das Foto scharf?",
+      "only_here": "Nur auf diesem Handy gespeichert",
+      "retake": "Neu aufnehmen",
+      "remove": "Entfernen",
+      "reading": "Foto wird gelesen…",
+      "tap_enlarge": "Tippen zum Vergrößern",
+      "no_plate": "Kennzeichen nicht erkannt",
+      "plate": "Kennzeichen {{plate}}",
+      "camera_needed": "EasySpot braucht die Kamera, um deinen Parkplatz zu fotografieren.",
+      "allow_camera": "Kamera erlauben",
+      "open_settings": "Einstellungen öffnen",
+      "failed": "Das Foto konnte nicht aufgenommen werden. Bitte erneut versuchen."
+    },
+    "duration": {
+      "title": "Bezahlte Zeit",
+      "up_to": "Bis zu {{n}} Tage",
+      "days": "Tage",
+      "hours": "Std.",
+      "minutes": "Min.",
+      "cancel": "Abbrechen",
+      "done": "Fertig",
+      "too_short": "Mehr als {{n}} Min. — die Erinnerung kommt {{n}} Min. vor Ende",
+      "from_now": "Restzeit ab jetzt · bis zu {{n}} Tage"
+    },
+    "colors": {
+      "red": "Rot",
+      "orange": "Orange",
+      "yellow": "Gelb",
+      "green": "Grün",
+      "blue": "Blau",
+      "purple": "Lila",
+      "white": "Weiß",
+      "grey": "Grau"
+    },
+    "ticket": {
+      "scan": "Parkschein scannen",
+      "camera_hint": "Der Parkschein — wo die Endzeit steht",
+      "check": "Zeit prüfen",
+      "entry_head": "Einfahrtsticket",
+      "not_kept": "Das Foto des Parkscheins wird nicht gespeichert",
+      "reading": "Parkschein wird gelesen…",
+      "ticket": "Parkschein",
+      "read_near": "Vom Parkschein · neben „{{word}}“",
+      "read_latest": "Vom Parkschein · die späteste Zeit darauf",
+      "valid_until": "Gültig bis",
+      "left_remind": "{{left}} · Erinnerung um {{at}}",
+      "use": "Übernehmen",
+      "set_by_hand": "Von Hand",
+      "expired_title": "Dieser Parkschein ist um {{time}} abgelaufen",
+      "expired_text": "Neueren Parkschein fotografieren oder die Zeit von Hand einstellen.",
+      "none_title": "Keine Zeit auf dem Parkschein gefunden",
+      "none_text": "Näher, gerade und bei Licht fotografieren — oder die Zeit von Hand einstellen.",
+      "until": "bis {{time}}",
+      "hint": "Vom Parkschein · endet {{end}} · Erinnerung um {{at}}",
+      "entry_at": "Einfahrtsticket · eingefahren {{time}}",
+      "free_q": "Wie lange ist das Parken kostenlos?",
+      "free_until": "Kostenlos bis {{end}} · Erinnerung um {{at}}",
+      "free_over": "Die kostenlose Zeit endete schon um {{time}}",
+      "free_hint": "Einfahrtsticket · eingefahren {{entry}} · kostenlos bis {{end}} · Erinnerung um {{at}}",
+      "parked_line": "Einfahrtsticket · eingefahren {{time}} · {{free}} kostenlos"
+    },
+    "floors": {
+      "below_one": "1 Etage unter dir",
+      "below_other": "{{n}} Etagen unter dir",
+      "above_one": "1 Etage über dir",
+      "above_other": "{{n}} Etagen über dir",
+      "same": "Auf der Etage des Autos",
+      "live": "Live · nach Luftdruck"
     }
   }
 }

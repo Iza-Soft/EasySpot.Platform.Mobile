@@ -13,6 +13,7 @@ import RootNavigator from "./navigation/RootNavigator";
 import ParkingNativeService from "./native/ParkingModule";
 import { createDBifNeeded, DB_NAME, openPersistentDB } from "./services/db-service";
 import { resyncReminders } from "./services/spots-service";
+import { cleanOrphanPhotos } from "./services/spot-photos";
 import { watchIosReminders } from "./services/reminder-log";
 import { IosNotifications } from "./platform/ios-only";
 import { appFonts } from "./theme/fonts";
@@ -34,6 +35,8 @@ IosNotifications?.setNotificationHandler({
 async function initDb(db: Parameters<typeof createDBifNeeded>[0]) {
   await createDBifNeeded(db);
   resyncReminders(db, i18n.t("v2.parked.title")).catch((e) => console.warn("reminder resync failed:", e));
+  // Photos left by a parking that was never saved (the app was closed before Save).
+  cleanOrphanPhotos(db).catch((e) => console.warn("photo cleanup failed:", e));
 }
 
 export default function App() {

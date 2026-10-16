@@ -315,7 +315,8 @@
     },
     "units": {
       "h": "h",
-      "min": "min"
+      "min": "min",
+      "d": "d"
     },
     "eco": {
       "gms": "Google",
@@ -374,7 +375,11 @@
       "until_short": "until {{time}}",
       "ended_at": "ended {{time}}",
       "over": "over by {{d}}",
-      "title_default": "Parked"
+      "title_default": "Parked",
+      "undo": "Undo",
+      "undone": "Back to {{time}}",
+      "changed": "Paid time until {{time}}",
+      "change_time": "Change the paid time"
     },
     "save": {
       "title_parking": "Parking",
@@ -410,7 +415,9 @@
       "note_placeholder_place": "e.g. entrance from the back street",
       "accuracy": "Accuracy ±{{m}} m",
       "hide": "Hide",
-      "limit_too_short": "{{n}} min isn't available — you get reminded {{n}} min before the end (Settings)."
+      "limit_too_short": "{{n}} min isn't available — you get reminded {{n}} min before the end (Settings).",
+      "zone_color": "Zone colour",
+      "other": "Other"
     },
     "spots": {
       "title": "Spots",
@@ -474,7 +481,11 @@
       "change": "Change",
       "engine": "Location engine: {{eco}}",
       "version_code": "Version {{version}} ({{build}})",
-      "theme_system_hint": "Like the phone · now {{mode}}"
+      "theme_system_hint": "Like the phone · now {{mode}}",
+      "floors": "Floors to your car",
+      "floors_hint": "Uses the barometer: how many floors up or down your car is",
+      "floors_on_hint": "For parkings saved from now on",
+      "floors_none": "This phone has no barometer"
     },
     "errors": {
       "permission": "Location permission is needed to save your spot.",
@@ -525,6 +536,10 @@
       "s_collect": "EasySpot collects only what it needs to save and find your spots: your location while the app is open, and the details you type (level, zone, spot, name, note, paid time).",
       "s_location_h": "Location",
       "s_location": "Approximate and precise location are used only while the app is in use. EasySpot never reads your location in the background.",
+      "s_camera_h": "Camera and photos",
+      "s_camera": "If you photograph your spot, the photo is kept only in EasySpot's own files on this phone — not in your gallery — and is deleted when you delete the parking. The level, zone, spot and your car's plate are read from it on the phone; the photo is never uploaded. On Android the text is read by Google ML Kit, which runs on the phone and may send Google anonymous usage statistics (never the photo or its text). On iPhone, Apple's on-device text recognition is used.",
+      "s_pressure_h": "Air pressure",
+      "s_pressure": "When you park, EasySpot saves the air pressure from the phone's barometer (if it has one), so that later it can show how many floors you are from your car. It is measured only while the app is open — never in the background — stays on this phone and is never uploaded. You can turn it off in Settings → “Floors to your car”.",
       "s_storage_h": "Where your data is stored",
       "s_storage": "On this phone only, until you delete it or uninstall the app. There is no account and no EasySpot server.",
       "s_services_h": "Services on your phone",
@@ -643,6 +658,82 @@
       "st_idle": "deep sleep",
       "st_saver": "battery saver",
       "launch_note_battery": "If “Battery” opens, tap “App launch” there."
+    },
+    "photo": {
+      "title": "Photo of the spot",
+      "button_hint": "Car, pillar or floor number — we read what we can",
+      "row_hint": "Tap to view or retake",
+      "camera_hint": "Pillar, floor number or car",
+      "light": "Light",
+      "take": "Take photo",
+      "check_title": "Is the photo clear?",
+      "only_here": "Saved only on this phone",
+      "retake": "Retake",
+      "remove": "Remove",
+      "reading": "Reading the photo…",
+      "tap_enlarge": "Tap to enlarge",
+      "no_plate": "plate not read",
+      "plate": "plate {{plate}}",
+      "camera_needed": "EasySpot needs the camera to photograph where you parked.",
+      "allow_camera": "Allow camera",
+      "open_settings": "Open settings",
+      "failed": "The photo could not be taken. Try again."
+    },
+    "duration": {
+      "title": "Paid time",
+      "up_to": "Up to {{n}} days",
+      "days": "days",
+      "hours": "hours",
+      "minutes": "min",
+      "cancel": "Cancel",
+      "done": "Done",
+      "too_short": "More than {{n}} min — you're reminded {{n}} min before the end",
+      "from_now": "Time left from now · up to {{n}} days"
+    },
+    "colors": {
+      "red": "Red",
+      "orange": "Orange",
+      "yellow": "Yellow",
+      "green": "Green",
+      "blue": "Blue",
+      "purple": "Purple",
+      "white": "White",
+      "grey": "Grey"
+    },
+    "ticket": {
+      "scan": "Scan ticket",
+      "camera_hint": "The ticket — where the end time is",
+      "check": "Check the time",
+      "entry_head": "Entry ticket",
+      "not_kept": "The ticket photo is not kept",
+      "reading": "Reading the ticket…",
+      "ticket": "Parking ticket",
+      "read_near": "Read from the ticket · next to “{{word}}”",
+      "read_latest": "Read from the ticket · the latest time on it",
+      "valid_until": "Valid until",
+      "left_remind": "{{left}} · we'll remind you at {{at}}",
+      "use": "Use",
+      "set_by_hand": "Set by hand",
+      "expired_title": "This ticket ended at {{time}}",
+      "expired_text": "Take a newer ticket, or set the time by hand.",
+      "none_title": "No time found on the ticket",
+      "none_text": "Take it closer, flat and in light — or set the time by hand.",
+      "until": "until {{time}}",
+      "hint": "From the ticket · ends {{end}} · we'll remind you at {{at}}",
+      "entry_at": "Entry ticket · entered {{time}}",
+      "free_q": "Free parking for how long?",
+      "free_until": "Free until {{end}} · we'll remind you at {{at}}",
+      "free_over": "The free time already ended at {{time}}",
+      "free_hint": "Entry ticket · entered {{entry}} · free until {{end}} · we'll remind you at {{at}}",
+      "parked_line": "Entry ticket · entered {{time}} · {{free}} free"
+    },
+    "floors": {
+      "below_one": "1 floor below you",
+      "below_other": "{{n}} floors below you",
+      "above_one": "1 floor above you",
+      "above_other": "{{n}} floors above you",
+      "same": "On the car's floor",
+      "live": "Live · by air pressure"
     }
   }
 }

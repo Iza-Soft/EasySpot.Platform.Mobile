@@ -314,7 +314,8 @@
     },
     "units": {
       "h": "h",
-      "min": "min"
+      "min": "min",
+      "d": "j"
     },
     "eco": {
       "gms": "Google",
@@ -373,7 +374,11 @@
       "until_short": "jusqu'à {{time}}",
       "ended_at": "terminé à {{time}}",
       "over": "dépassé de {{d}}",
-      "title_default": "Garé"
+      "title_default": "Garé",
+      "undo": "Annuler",
+      "undone": "Retour à {{time}}",
+      "changed": "Payé jusqu'à {{time}}",
+      "change_time": "Modifier le temps payé"
     },
     "save": {
       "title_parking": "Stationnement",
@@ -409,7 +414,9 @@
       "note_placeholder_place": "ex. entrée par la rue de derrière",
       "accuracy": "Précision ±{{m}} m",
       "hide": "Masquer",
-      "limit_too_short": "{{n}} min indisponible — le rappel arrive {{n}} min avant la fin (Réglages)."
+      "limit_too_short": "{{n}} min indisponible — le rappel arrive {{n}} min avant la fin (Réglages).",
+      "zone_color": "Couleur de zone",
+      "other": "Autre"
     },
     "spots": {
       "title": "Lieux",
@@ -473,7 +480,11 @@
       "change": "Modifier",
       "engine": "Localisation : {{eco}}",
       "version_code": "Version {{version}} ({{build}})",
-      "theme_system_hint": "Comme le téléphone · actuellement {{mode}}"
+      "theme_system_hint": "Comme le téléphone · actuellement {{mode}}",
+      "floors": "Étages jusqu'à la voiture",
+      "floors_hint": "Avec le baromètre : de combien d'étages la voiture est au-dessus ou en dessous",
+      "floors_on_hint": "Pour les stationnements enregistrés à partir de maintenant",
+      "floors_none": "Ce téléphone n'a pas de baromètre"
     },
     "errors": {
       "permission": "L'autorisation de localisation est nécessaire pour enregistrer la place.",
@@ -524,6 +535,10 @@
       "s_collect": "EasySpot collecte uniquement ce qui est nécessaire pour enregistrer et retrouver vos lieux : votre position pendant que l'app est ouverte et les détails saisis (niveau, zone, place, nom, note, temps payé).",
       "s_location_h": "Position",
       "s_location": "La position approximative et précise n'est utilisée que pendant l'utilisation de l'app. EasySpot ne lit jamais votre position en arrière-plan.",
+      "s_camera_h": "Caméra et photos",
+      "s_camera": "Si vous photographiez votre place, la photo est conservée uniquement dans les fichiers d'EasySpot sur ce téléphone — pas dans votre galerie — et supprimée avec le stationnement. Le niveau, la zone, la place et la plaque de votre voiture y sont lus sur le téléphone ; la photo n'est jamais envoyée. Sur Android, le texte est lu par Google ML Kit, qui fonctionne sur le téléphone et peut envoyer à Google des statistiques d'utilisation anonymes (jamais la photo ni son texte). Sur iPhone, la reconnaissance de texte d'Apple sur l'appareil est utilisée.",
+      "s_pressure_h": "Pression de l'air",
+      "s_pressure": "Quand vous vous garez, EasySpot enregistre la pression de l'air mesurée par le baromètre du téléphone (s'il en a un), pour vous indiquer ensuite à combien d'étages vous êtes de votre voiture. Elle n'est mesurée que lorsque l'app est ouverte — jamais en arrière-plan —, reste sur ce téléphone et n'est jamais envoyée. Vous pouvez la désactiver dans Réglages → « Étages jusqu'à la voiture ».",
       "s_storage_h": "Où sont stockées vos données",
       "s_storage": "Uniquement sur ce téléphone, jusqu'à ce que vous les supprimiez ou désinstalliez l'app. Pas de compte, pas de serveur EasySpot.",
       "s_services_h": "Services du téléphone",
@@ -642,6 +657,82 @@
       "st_idle": "veille profonde",
       "st_saver": "économie d'énergie",
       "launch_note_battery": "Si « Batterie » s'ouvre, touchez-y « Lancement des applis »."
+    },
+    "photo": {
+      "title": "Photo de la place",
+      "button_hint": "Voiture, pilier ou numéro au sol — on lit ce qui est visible",
+      "row_hint": "Touchez pour voir ou reprendre",
+      "camera_hint": "Pilier, numéro au sol ou voiture",
+      "light": "Lumière",
+      "take": "Prendre la photo",
+      "check_title": "La photo est-elle nette ?",
+      "only_here": "Enregistrée uniquement sur ce téléphone",
+      "retake": "Reprendre",
+      "remove": "Supprimer",
+      "reading": "Lecture de la photo…",
+      "tap_enlarge": "Touchez pour agrandir",
+      "no_plate": "plaque non lue",
+      "plate": "plaque {{plate}}",
+      "camera_needed": "EasySpot a besoin de la caméra pour photographier où vous êtes garé.",
+      "allow_camera": "Autoriser la caméra",
+      "open_settings": "Ouvrir les réglages",
+      "failed": "La photo n'a pas pu être prise. Réessayez."
+    },
+    "duration": {
+      "title": "Temps payé",
+      "up_to": "Jusqu'à {{n}} jours",
+      "days": "jours",
+      "hours": "heures",
+      "minutes": "min",
+      "cancel": "Annuler",
+      "done": "OK",
+      "too_short": "Plus de {{n}} min — rappel {{n}} min avant la fin",
+      "from_now": "Temps restant à partir de maintenant · jusqu'à {{n}} jours"
+    },
+    "colors": {
+      "red": "Rouge",
+      "orange": "Orange",
+      "yellow": "Jaune",
+      "green": "Vert",
+      "blue": "Bleu",
+      "purple": "Violet",
+      "white": "Blanc",
+      "grey": "Gris"
+    },
+    "ticket": {
+      "scan": "Scanner le ticket",
+      "camera_hint": "Le ticket — là où est l'heure de fin",
+      "check": "Vérifiez l'heure",
+      "entry_head": "Ticket d'entrée",
+      "not_kept": "La photo du ticket n'est pas conservée",
+      "reading": "Lecture du ticket…",
+      "ticket": "Ticket de stationnement",
+      "read_near": "Lu sur le ticket · à côté de « {{word}} »",
+      "read_latest": "Lu sur le ticket · l'heure la plus tardive",
+      "valid_until": "Valable jusqu'à",
+      "left_remind": "{{left}} · rappel à {{at}}",
+      "use": "Utiliser",
+      "set_by_hand": "Saisir à la main",
+      "expired_title": "Ce ticket a expiré à {{time}}",
+      "expired_text": "Photographiez un ticket plus récent ou réglez l'heure à la main.",
+      "none_title": "Aucune heure trouvée sur le ticket",
+      "none_text": "Rapprochez-vous, à plat et à la lumière — ou réglez l'heure à la main.",
+      "until": "jusqu'à {{time}}",
+      "hint": "Du ticket · fin à {{end}} · rappel à {{at}}",
+      "entry_at": "Ticket d'entrée · entré à {{time}}",
+      "free_q": "Gratuit pendant combien de temps ?",
+      "free_until": "Gratuit jusqu'à {{end}} · rappel à {{at}}",
+      "free_over": "Le temps gratuit s'est déjà terminé à {{time}}",
+      "free_hint": "Ticket d'entrée · entré à {{entry}} · gratuit jusqu'à {{end}} · rappel à {{at}}",
+      "parked_line": "Ticket d'entrée · entré à {{time}} · {{free}} gratuit"
+    },
+    "floors": {
+      "below_one": "1 étage sous vous",
+      "below_other": "{{n}} étages sous vous",
+      "above_one": "1 étage au-dessus de vous",
+      "above_other": "{{n}} étages au-dessus de vous",
+      "same": "À l'étage de la voiture",
+      "live": "En direct · selon la pression de l'air"
     }
   }
 }

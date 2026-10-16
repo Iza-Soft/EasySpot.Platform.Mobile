@@ -4,7 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { spacing } from "../../theme/tokens";
 import { Text } from "../../ui";
 
-const SECTIONS = ["collect", "location", "storage", "services", "reminders", "sharing", "rights", "changes", "contact"] as const;
+const SECTIONS = ["collect", "location", "camera", "pressure", "storage", "services", "reminders", "sharing", "rights", "changes", "contact"] as const;
 
 /** The full privacy policy (mockup L2), in the phone's language. Used at first start and from Settings. */
 export function PrivacyPolicyText() {

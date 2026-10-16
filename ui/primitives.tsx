@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, PressableProps, StyleSheet, View, ViewProps, ViewStyle } from "react-native";
 import { useTheme } from "../theme/ThemeProvider";
@@ -111,31 +112,45 @@ export function Pill({
   label,
   selected,
   disabled,
+  compact,
+  chevron,
+  accessibilityLabel,
   onPress,
 }: {
   label: string;
   selected?: boolean;
   disabled?: boolean;
+  /** Tighter padding — a row of 5 that has to fit one line (Paid time). */
+  compact?: boolean;
+  /** "▾" after the label: the pill opens a picker. */
+  chevron?: boolean;
+  accessibilityLabel?: string;
   onPress?: () => void;
 }) {
   const { colors } = useTheme();
+  const fg = selected ? colors.background : colors.textSecondary;
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
       accessibilityState={{ selected: !!selected, disabled: !!disabled }}
       disabled={disabled}
       onPress={onPress}
       style={[
         styles.pill,
+        compact && { paddingHorizontal: spacing.sm + 2 },
         selected
           ? { backgroundColor: colors.text, borderColor: colors.text }
           : { backgroundColor: "transparent", borderColor: colors.border },
         disabled && { borderStyle: "dashed", opacity: 0.45 },
       ]}
     >
-      <Text variant="smallStrong" style={{ color: selected ? colors.background : colors.textSecondary }}>
-        {label}
-      </Text>
+      <View style={styles.pillRow}>
+        <Text variant="smallStrong" style={{ color: fg }} numberOfLines={1}>
+          {label}
+        </Text>
+        {chevron ? <Ionicons name="chevron-down" size={14} color={fg} /> : null}
+      </View>
     </Pressable>
   );
 }
@@ -162,6 +177,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   stat: { flex: 1, padding: spacing.md, borderRadius: radius.lg, gap: 2 },
+  pillRow: { flexDirection: "row", alignItems: "center", gap: 3 },
   pill: {
     minHeight: touchTarget,
     paddingHorizontal: spacing.lg,

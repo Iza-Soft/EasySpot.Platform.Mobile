@@ -1,0 +1,9 @@
+{
+  "platforms": ["android", "ios"],
+  "android": {
+    "modules": ["com.ilkoadamov.easyspot.ocr.EasySpotOcrModule"]
+  },
+  "ios": {
+    "modules": ["EasySpotOcrModule"]
+  }
+}

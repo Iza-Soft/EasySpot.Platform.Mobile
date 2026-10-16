@@ -13,10 +13,12 @@ export interface Prefs {
   remindBeforeMin: number;
   /** "system" = follow the phone; otherwise a language code chosen in the app. */
   language: string;
+  /** "Floors to your car" (barometer): on by default; works only on phones with a barometer. */
+  floorsEnabled: boolean;
 }
 
 export const REMIND_BEFORE_OPTIONS = [5, 10, 15, 30] as const;
-const DEFAULTS: Prefs = { levelLabels: "letter", remindBeforeMin: 15, language: "system" };
+const DEFAULTS: Prefs = { levelLabels: "letter", remindBeforeMin: 15, language: "system", floorsEnabled: true };
 const KEY = "@prefs_v2";
 
 let prefs: Prefs = DEFAULTS;

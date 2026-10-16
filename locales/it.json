@@ -24,7 +24,8 @@
     },
     "units": {
       "h": "h",
-      "min": "min"
+      "min": "min",
+      "d": "g"
     },
     "eco": {
       "gms": "Google",
@@ -83,7 +84,11 @@
       "until_short": "fino alle {{time}}",
       "ended_at": "scaduto alle {{time}}",
       "over": "superato di {{d}}",
-      "title_default": "Parcheggiato"
+      "title_default": "Parcheggiato",
+      "undo": "Annulla",
+      "undone": "Riportato a {{time}}",
+      "changed": "Pagato fino alle {{time}}",
+      "change_time": "Modifica il tempo pagato"
     },
     "save": {
       "title_parking": "Parcheggio",
@@ -119,7 +124,9 @@
       "note_placeholder_place": "es. ingresso dalla via dietro",
       "accuracy": "Precisione ±{{m}} m",
       "hide": "Nascondi",
-      "limit_too_short": "{{n}} min non disponibile — il promemoria arriva {{n}} min prima della fine (Impostazioni)."
+      "limit_too_short": "{{n}} min non disponibile — il promemoria arriva {{n}} min prima della fine (Impostazioni).",
+      "zone_color": "Colore della zona",
+      "other": "Altro"
     },
     "spots": {
       "title": "Luoghi",
@@ -183,7 +190,11 @@
       "change": "Cambia",
       "engine": "Posizione: {{eco}}",
       "version_code": "Versione {{version}} ({{build}})",
-      "theme_system_hint": "Come il telefono · ora {{mode}}"
+      "theme_system_hint": "Come il telefono · ora {{mode}}",
+      "floors": "Piani fino all'auto",
+      "floors_hint": "Con il barometro: di quanti piani l'auto è sopra o sotto di te",
+      "floors_on_hint": "Per i parcheggi salvati da ora in poi",
+      "floors_none": "Questo telefono non ha un barometro"
     },
     "errors": {
       "permission": "Serve il permesso di posizione per salvare il luogo.",
@@ -234,6 +245,10 @@
       "s_collect": "EasySpot raccoglie solo ciò che serve per salvare e ritrovare i tuoi luoghi: la posizione mentre l'app è aperta e i dettagli che inserisci (piano, zona, posto, nome, nota, tempo pagato).",
       "s_location_h": "Posizione",
       "s_location": "La posizione approssimativa e precisa viene usata solo mentre usi l'app. EasySpot non legge mai la tua posizione in background.",
+      "s_camera_h": "Fotocamera e foto",
+      "s_camera": "Se fotografi il tuo posto, la foto è conservata solo nei file di EasySpot su questo telefono — non nella galleria — e viene eliminata insieme al parcheggio. Livello, zona, posto e targa vengono letti sul telefono; la foto non viene mai caricata. Su Android il testo è letto da Google ML Kit, che funziona sul telefono e può inviare a Google statistiche d'uso anonime (mai la foto o il suo testo). Su iPhone si usa il riconoscimento del testo di Apple sul dispositivo.",
+      "s_pressure_h": "Pressione dell'aria",
+      "s_pressure": "Quando parcheggi, EasySpot salva la pressione dell'aria dal barometro del telefono (se presente), per mostrarti poi a quanti piani sei dall'auto. Viene misurata solo con l'app aperta — mai in background —, resta su questo telefono e non viene mai caricata. Puoi disattivarla in Impostazioni → «Piani fino all'auto».",
       "s_storage_h": "Dove sono salvati i dati",
       "s_storage": "Solo su questo telefono, finché non li elimini o disinstalli l'app. Nessun account e nessun server EasySpot.",
       "s_services_h": "Servizi del telefono",
@@ -352,6 +367,82 @@
       "st_idle": "sospensione profonda",
       "st_saver": "risparmio batteria",
       "launch_note_battery": "Se si apre «Batteria», tocca lì «Avvio app»."
+    },
+    "photo": {
+      "title": "Foto del posto",
+      "button_hint": "Auto, pilastro o numero a terra — leggiamo ciò che si vede",
+      "row_hint": "Tocca per vederla o rifarla",
+      "camera_hint": "Pilastro, numero a terra o auto",
+      "light": "Luce",
+      "take": "Scatta foto",
+      "check_title": "La foto è nitida?",
+      "only_here": "Salvata solo su questo telefono",
+      "retake": "Rifai",
+      "remove": "Rimuovi",
+      "reading": "Lettura della foto…",
+      "tap_enlarge": "Tocca per ingrandire",
+      "no_plate": "targa non letta",
+      "plate": "targa {{plate}}",
+      "camera_needed": "EasySpot ha bisogno della fotocamera per fotografare dove hai parcheggiato.",
+      "allow_camera": "Consenti fotocamera",
+      "open_settings": "Apri impostazioni",
+      "failed": "Impossibile scattare la foto. Riprova."
+    },
+    "duration": {
+      "title": "Tempo pagato",
+      "up_to": "Fino a {{n}} giorni",
+      "days": "giorni",
+      "hours": "ore",
+      "minutes": "min",
+      "cancel": "Annulla",
+      "done": "Fatto",
+      "too_short": "Più di {{n}} min — il promemoria arriva {{n}} min prima della fine",
+      "from_now": "Tempo rimanente da adesso · fino a {{n}} giorni"
+    },
+    "colors": {
+      "red": "Rosso",
+      "orange": "Arancione",
+      "yellow": "Giallo",
+      "green": "Verde",
+      "blue": "Blu",
+      "purple": "Viola",
+      "white": "Bianco",
+      "grey": "Grigio"
+    },
+    "ticket": {
+      "scan": "Scansiona biglietto",
+      "camera_hint": "Il biglietto — dove c'è l'ora di fine",
+      "check": "Controlla l'ora",
+      "entry_head": "Biglietto d'ingresso",
+      "not_kept": "La foto del biglietto non viene salvata",
+      "reading": "Lettura del biglietto…",
+      "ticket": "Biglietto del parcheggio",
+      "read_near": "Letto dal biglietto · accanto a «{{word}}»",
+      "read_latest": "Letto dal biglietto · l'ora più tarda",
+      "valid_until": "Valido fino alle",
+      "left_remind": "{{left}} · promemoria alle {{at}}",
+      "use": "Usa",
+      "set_by_hand": "Imposta a mano",
+      "expired_title": "Questo biglietto è scaduto alle {{time}}",
+      "expired_text": "Fotografa un biglietto più recente o imposta l'ora a mano.",
+      "none_title": "Nessuna ora trovata sul biglietto",
+      "none_text": "Avvicinati, dritto e con luce — o imposta l'ora a mano.",
+      "until": "fino alle {{time}}",
+      "hint": "Dal biglietto · finisce {{end}} · promemoria alle {{at}}",
+      "entry_at": "Biglietto d'ingresso · entrato alle {{time}}",
+      "free_q": "Per quanto tempo è gratis?",
+      "free_until": "Gratis fino alle {{end}} · promemoria alle {{at}}",
+      "free_over": "Il tempo gratuito è già finito alle {{time}}",
+      "free_hint": "Biglietto d'ingresso · entrato alle {{entry}} · gratis fino alle {{end}} · promemoria alle {{at}}",
+      "parked_line": "Biglietto d'ingresso · entrato alle {{time}} · {{free}} gratis"
+    },
+    "floors": {
+      "below_one": "1 piano sotto di te",
+      "below_other": "{{n}} piani sotto di te",
+      "above_one": "1 piano sopra di te",
+      "above_other": "{{n}} piani sopra di te",
+      "same": "Al piano dell'auto",
+      "live": "In tempo reale · dalla pressione dell'aria"
     }
   }
 }

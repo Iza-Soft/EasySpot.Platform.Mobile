@@ -35,8 +35,7 @@ const config: ExpoConfig = {
       NSLocationWhenInUseUsageDescription:
         "EasySpot saves where you parked and guides you back to your car.",
       NSCameraUsageDescription:
-        "EasySpot reads the level and spot number from a pillar or a parking ticket you photograph.",
-      NSMicrophoneUsageDescription: "EasySpot records short voice notes about where you parked.",
+        "EasySpot keeps a photo of where you parked (only on this phone) and reads the level, zone, spot and car plate from it, or the time from a parking ticket.",
       NSMotionUsageDescription:
         "EasySpot uses motion and air-pressure sensors to work out which garage level you parked on.",
       ITSAppUsesNonExemptEncryption: false,
@@ -67,7 +66,6 @@ const config: ExpoConfig = {
       "android.permission.SCHEDULE_EXACT_ALARM",
       "android.permission.USE_EXACT_ALARM",
       "android.permission.CAMERA",
-      "android.permission.RECORD_AUDIO",
     ],
     // Removed in 2.0: not needed, or a Play-policy risk.
     blockedPermissions: [
@@ -75,6 +73,8 @@ const config: ExpoConfig = {
       "android.permission.READ_EXTERNAL_STORAGE",
       "android.permission.WRITE_EXTERNAL_STORAGE",
       "android.permission.ACCESS_BACKGROUND_LOCATION",
+      // No voice notes (dropped 16.10) → no microphone.
+      "android.permission.RECORD_AUDIO",
     ],
   },
   plugins: [
@@ -109,16 +109,10 @@ const config: ExpoConfig = {
     [
       "expo-camera",
       {
-        cameraPermission: "EasySpot reads the level and spot number from a pillar or a parking ticket you photograph.",
+        cameraPermission: "EasySpot keeps a photo of where you parked (only on this phone) and reads the level, zone, spot and car plate from it, or the time from a parking ticket.",
         recordAudioAndroid: false,
-      },
-    ],
-    [
-      "expo-audio",
-      {
-        microphonePermission: "EasySpot records short voice notes about where you parked.",
-        enableBackgroundPlayback: false,
-        enableBackgroundRecording: false,
+        // No video / voice → no microphone permission on iPhone either.
+        microphonePermission: false,
       },
     ],
     [

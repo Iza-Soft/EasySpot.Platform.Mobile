@@ -18,6 +18,8 @@ import { radius, spacing, touchTarget } from "../../theme/tokens";
 import { ActionSheet, AppHeader, Card, Pill, Text } from "../../ui";
 import { Screen } from "../../ui/Screen";
 import { LANGUAGE_NAMES } from "../info/LanguageScreen";
+import { hasBarometer } from "../../platform/barometer";
+import { Toggle } from "../../ui/Toggle";
 
 /** Settings (mockup T1). */
 export default function SettingsScreen() {
@@ -28,6 +30,14 @@ export default function SettingsScreen() {
   const [map, setMap] = useState<MapChoice | null>(null);
   const [mapApps, setMapApps] = useState<MapApp[]>([]);
   const [remindPicker, setRemindPicker] = useState(false);
+  /** null while checking; false → the "Floors to your car" switch is off and disabled. */
+  const [barometer, setBarometer] = useState<boolean | null>(null);
+  useEffect(() => {
+    hasBarometer().then(setBarometer, () => setBarometer(false));
+  }, []);
+  const floorsOn = prefs.floorsEnabled && barometer === true;
+  /** Turned on here (it was off) → "for parkings saved from now on". */
+  const [floorsTurnedOn, setFloorsTurnedOn] = useState(false);
   const reminders = useReminderReadiness();
   const version = Constants.expoConfig?.version ?? "";
   const build = Platform.OS === "android" ? String(Constants.expoConfig?.android?.versionCode ?? "") : Constants.expoConfig?.ios?.buildNumber ?? "";
@@ -138,6 +148,33 @@ export default function SettingsScreen() {
             onPress={() => setRemindPicker(true)}
             divider
           />
+          {/* Mockups S1–S3: on by default; no barometer → off and disabled. */}
+          <Pressable
+            accessibilityRole="switch"
+            accessibilityState={{ checked: floorsOn, disabled: barometer !== true }}
+            disabled={barometer !== true}
+            onPress={() => {
+              setFloorsTurnedOn(!prefs.floorsEnabled);
+              setPref("floorsEnabled", !prefs.floorsEnabled);
+            }}
+            style={({ pressed }) => [
+              styles.row,
+              { borderTopWidth: 1, borderTopColor: colors.border },
+              pressed && { backgroundColor: colors.surfaceRaised },
+            ]}
+          >
+            <View style={barometer === false && styles.faded}>
+              <IconBox name="swap-vertical" />
+            </View>
+            <View style={[{ flex: 1, gap: 2 }, barometer === false && styles.faded]}>
+              <Text variant="bodyStrong">{t("v2.settings.floors")}</Text>
+              <Text variant="small" tone="muted">
+                {barometer === false ? t("v2.settings.floors_none") : t("v2.settings.floors_hint")}
+              </Text>
+              {floorsOn && floorsTurnedOn ? <Text variant="small" tone="level">{t("v2.settings.floors_on_hint")}</Text> : null}
+            </View>
+            <Toggle value={floorsOn} disabled={barometer !== true} />
+          </Pressable>
         </Card>
       </Section>
 
@@ -292,4 +329,5 @@ const styles = StyleSheet.create({
   radioDot: { width: 10, height: 10, borderRadius: 5 },
   chip: { alignSelf: "flex-start", marginTop: 4, height: 24, paddingHorizontal: 9, borderRadius: 999, borderWidth: 1, justifyContent: "center" },
   footer: { alignItems: "center", gap: 2, marginTop: spacing.sm },
+  faded: { opacity: 0.4 },
 });

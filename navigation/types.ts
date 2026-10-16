@@ -26,4 +26,6 @@ export type RootStackParamList = {
   Language: undefined;
   /** Phone settings for on-time reminders (mockups W2/W3) — opened from the Home banner or Settings. */
   Reminders: undefined;
+  /** DEV builds only: camera → on-device OCR → what the parser understands. */
+  OcrTest: undefined;
 };
