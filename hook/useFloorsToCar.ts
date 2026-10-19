@@ -16,7 +16,7 @@ const freshReading = () => (lastReading && Date.now() - lastReading.at <= FRESH_
 
 /**
  * The air pressure now, read again and again while `enabled` and the app is in
- * front (the first reading 0.5 s, then the median of 1.5 s, every ≈ 3 s).
+ * front (the first reading 1 s, then the median of 1.5 s, every ≈ 3 s).
  * Nothing is measured in the background. When `enabled` turns off, the last
  * value stays (no blink while the next screen opens).
  * null = not known (yet) or no barometer.
@@ -37,7 +37,7 @@ export function useLivePressure(enabled: boolean): number | null {
       timer = null;
       if (!alive || !active || running) return;
       running = true;
-      const now = await readPressure(first ? 500 : 1500).catch(() => null);
+      const now = await readPressure(first ? 1000 : 1500).catch(() => null);
       running = false;
       first = false;
       if (!alive) return;

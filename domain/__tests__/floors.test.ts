@@ -17,6 +17,17 @@ describe("floors to the car (barometer)", () => {
   it("less than half a floor → same floor (0, never -0)", () => {
     expect(Object.is(floorsAboveCar(1000, up(1000, -1.2), T, T + 60_000), 0)).toBe(true);
   });
+  it("same floor until 2/3 of a floor (~2 m): drift does not flip it to 1 floor", () => {
+    // 15th floor, back after 20 min: the pressure moved by ~0.2 hPa (≈ 1.8 m).
+    expect(floorsAboveCar(1000, up(1000, 1.8), T, T + 1200_000)).toBe(0);
+    expect(floorsAboveCar(1000, up(1000, -1.8), T, T + 1200_000)).toBe(0);
+    expect(floorsAboveCar(1000, up(1000, 1.8), T, T, 0)).toBe(0);
+    // coming back up from the 14th (-1) → same floor, not "1 below"
+    expect(floorsAboveCar(1000, up(1000, 1.2), T, T, -1)).toBe(0);
+    // a real floor (~2.8 m in a block) is still 1
+    expect(floorsAboveCar(1000, up(1000, 2.8), T, T)).toBe(1);
+    expect(floorsAboveCar(1000, up(1000, -2.2), T, T)).toBe(-1);
+  });
   it("steady near a half floor (no flicker)", () => {
     // 7.4 m = 2.47 floors: on its own 2, after 3 it stays 3; after 2 it stays 2.
     expect(floorsAboveCar(1000, up(1000, 7.4), T, T, null)).toBe(2);

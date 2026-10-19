@@ -11,6 +11,12 @@ export const FLOOR_HEIGHT_M = 3;
 export const FLOORS_MAX_AGE_MS = 6 * 60 * 60 * 1000;
 /** More than this is not "the garage" any more (another place / another town). */
 export const MAX_FLOORS = 10;
+/**
+ * "Same floor" until the difference is 2/3 of a floor (~2 m), not 1/2: weather,
+ * drafts in stairwells and lift shafts move the pressure by up to half a floor
+ * in 15–20 min, which flipped "same floor" to "1 floor below" (tested 17.10, 15th floor).
+ */
+export const SAME_FLOOR_ZONE = 2 / 3;
 /** R·T/g at ~15 °C: metres of height per unit of ln(pressure) near the ground. */
 const SCALE_HEIGHT_M = 8434;
 
@@ -36,7 +42,10 @@ export function floorsAboveCar(
   if (!plausible(parkHPa) || !plausible(nowHPa)) return null;
   if (now - parkedAt > FLOORS_MAX_AGE_MS || now < parkedAt) return null;
   const raw = heightAboveCar(parkHPa, nowHPa) / FLOOR_HEIGHT_M;
-  const floors = previous != null && Math.abs(raw - previous) < 0.7 ? previous : Math.round(raw);
+  let floors: number;
+  if (previous != null && previous !== 0 && Math.abs(raw - previous) < 0.7) floors = previous; // steady near a half floor
+  else if (Math.abs(raw) < SAME_FLOOR_ZONE) floors = 0;
+  else floors = Math.round(raw);
   if (Math.abs(floors) > MAX_FLOORS) return null;
   return floors === 0 ? 0 : floors; // no -0
 }
