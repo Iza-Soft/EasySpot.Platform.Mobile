@@ -3,8 +3,14 @@ import { ScrollView, StyleSheet, View, ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../theme/ThemeProvider";
 import { spacing } from "../theme/tokens";
+import { useGutter } from "./responsive";
 
-/** Full-screen container: theme ground + top safe area + 20 px gutters. */
+/**
+ * Full-screen container: theme ground + top safe area + side gutters
+ * (20 dp, 16 dp on narrow screens). The safe area is padding on the outer
+ * view, outside the ScrollView, so scrolled content never slides under the
+ * status bar (clock, battery) — it stops at its lower edge.
+ */
 export function Screen({
   children,
   scroll = true,
@@ -16,19 +22,19 @@ export function Screen({
 }) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  const padding: ViewStyle = { paddingTop: insets.top + spacing.lg, paddingHorizontal: spacing.xl, paddingBottom: spacing.xxl };
+  const gutter = useGutter();
+  const padding: ViewStyle = { paddingTop: spacing.lg, paddingHorizontal: gutter, paddingBottom: spacing.xxl };
 
-  if (!scroll) {
-    return <View style={[styles.fill, { backgroundColor: colors.background }, padding, contentStyle]}>{children}</View>;
-  }
   return (
-    <ScrollView
-      style={[styles.fill, { backgroundColor: colors.background }]}
-      contentContainerStyle={[padding, contentStyle]}
-      keyboardShouldPersistTaps="handled"
-    >
-      {children}
-    </ScrollView>
+    <View style={[styles.fill, { backgroundColor: colors.background, paddingTop: insets.top }]}>
+      {scroll ? (
+        <ScrollView style={styles.fill} contentContainerStyle={[padding, contentStyle]} keyboardShouldPersistTaps="handled">
+          {children}
+        </ScrollView>
+      ) : (
+        <View style={[styles.fill, padding, contentStyle]}>{children}</View>
+      )}
+    </View>
   );
 }
 

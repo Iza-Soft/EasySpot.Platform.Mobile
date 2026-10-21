@@ -299,10 +299,6 @@
   "timer": {
     "expired": "Expired"
   },
-  "navigation": {
-    "share_message": "📍 Here's my current location: {{url}}",
-    "share_title": "My Current Location"
-  },
   "app": {
     "getting_ready": "Getting ready...",
     "db_error": "Easy Spot hit a small bump! Try reopening the app 🚧"
@@ -734,6 +730,15 @@
       "above_other": "{{n}} floors above you",
       "same": "On the car's floor",
       "live": "Live · by air pressure"
+    },
+    "share": {
+      "here_head": "I'm here:",
+      "car_head": "My car is parked here:",
+      "past_head": "Parking spot:",
+      "place_head": "Favorite place:",
+      "title_here": "Share where I am",
+      "title_car": "Share where my car is",
+      "title_place": "Share this place"
     }
   }
 }

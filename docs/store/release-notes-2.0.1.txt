@@ -1,0 +1,45 @@
+<en-US>
+EasySpot 2.0.1
+• Screens fit properly with larger text, bold text and the default display size
+• Sharing now says what you share — where you are, your car (with level and spot) or a place — with the address, no emoji
+</en-US>
+<bg>
+EasySpot 2.0.1
+• Екраните се подреждат правилно при по-голям или удебелен шрифт и стандартен размер на дисплея
+• Споделянето казва какво споделяш — къде си, колата (с етаж и място) или място — с адреса, без емоджи
+</bg>
+<ru-RU>
+EasySpot 2.0.1
+• Экраны правильно выглядят при крупном и жирном шрифте и стандартном масштабе экрана
+• При отправке сразу ясно, что вы делитесь — где вы, где машина (этаж и место) или место — с адресом, без эмодзи
+</ru-RU>
+<de-DE>
+EasySpot 2.0.1
+• Bildschirme passen jetzt auch bei großer oder fetter Schrift und Standard-Anzeigegröße
+• Beim Teilen steht, was du teilst – wo du bist, dein Auto (mit Ebene und Platz) oder einen Ort – mit Adresse, ohne Emoji
+</de-DE>
+<fr-FR>
+EasySpot 2.0.1
+• Les écrans s'affichent correctement avec un texte agrandi ou en gras et la taille d'affichage par défaut
+• Le partage indique ce que vous partagez — où vous êtes, votre voiture (niveau et place) ou un lieu — avec l'adresse, sans emoji
+</fr-FR>
+<es-ES>
+EasySpot 2.0.1
+• Las pantallas se ven bien con texto grande o en negrita y el tamaño de pantalla predeterminado
+• Al compartir se indica qué compartes — dónde estás, tu coche (planta y plaza) o un lugar — con la dirección, sin emoji
+</es-ES>
+<it-IT>
+EasySpot 2.0.1
+• Le schermate si adattano al testo grande o in grassetto e alle dimensioni di visualizzazione predefinite
+• Condividendo si capisce cosa condividi — dove sei, la tua auto (piano e posto) o un luogo — con l'indirizzo, senza emoji
+</it-IT>
+<ro>
+EasySpot 2.0.1
+• Ecranele arată corect cu text mare sau îngroșat și dimensiunea de afișare implicită
+• La trimitere se vede ce trimiți — unde ești, mașina (nivel și loc) sau un loc — cu adresa, fără emoji
+</ro>
+<tr-TR>
+EasySpot 2.0.1
+• Ekranlar büyük veya kalın yazı ve varsayılan ekran boyutunda düzgün görünüyor
+• Paylaşırken ne paylaştığın yazıyor — neredesin, araban (kat ve yer) veya bir yer — adresiyle, emojisiz
+</tr-TR>

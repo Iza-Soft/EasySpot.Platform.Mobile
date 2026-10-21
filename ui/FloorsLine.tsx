@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 import { useTheme } from "../theme/ThemeProvider";
 import { fontFamily, radius, spacing } from "../theme/tokens";
+import { FONT_CAP } from "./responsive";
 import { Text } from "./Text";
 
 /** "1 floor" / "3 floors" key for the language (ru has a "few" form: 2–4, 22–24 …). */
@@ -59,8 +60,11 @@ export function FloorsLine({ floors, compact = false }: { floors: number; compac
       <View style={[styles.bigIcon, { backgroundColor: colors.accent }]}>
         <Ionicons name={icon} size={22} color={colors.onAccent} />
       </View>
-      <View style={{ flex: 1, gap: 2 }}>
-        <Text variant="bodyStrong" style={styles.big} numberOfLines={2}>{text}</Text>
+      <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
+        {/* Display face in a fixed card: keeps its size, shrinks a little rather than wrapping oddly. */}
+        <Text variant="bodyStrong" maxFontSizeMultiplier={FONT_CAP.FIXED} adjustsFontSizeToFit minimumFontScale={0.8} style={styles.big} numberOfLines={2}>
+          {text}
+        </Text>
         <View style={styles.liveRow}>
           <View style={[styles.liveDot, { backgroundColor: colors.accentFg }]} />
           <Text variant="small" tone="muted" style={{ flexShrink: 1 }}>{t("v2.floors.live")}</Text>

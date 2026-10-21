@@ -3,6 +3,7 @@ import React from "react";
 import { Pressable, PressableProps, StyleSheet, View, ViewProps, ViewStyle } from "react-native";
 import { useTheme } from "../theme/ThemeProvider";
 import { radius, spacing, touchTarget } from "../theme/tokens";
+import { FONT_CAP, useCompact } from "./responsive";
 import { Text } from "./Text";
 
 /** Surface card on the app ground. `highlight` draws the Volt outline (detected level, routine). */
@@ -65,7 +66,7 @@ export function Chip({ label, dot, style }: { label: string; dot?: boolean; styl
   return (
     <View style={[styles.chip, { backgroundColor: colors.surface, borderColor: colors.border }, style]}>
       {dot && <View style={[styles.dot, { backgroundColor: colors.accentFg }]} />}
-      <Text variant="smallStrong">{label}</Text>
+      <Text variant="smallStrong" numberOfLines={1} style={{ flexShrink: 1 }}>{label}</Text>
     </View>
   );
 }
@@ -93,15 +94,47 @@ export function IconButton({
   );
 }
 
-/** Uppercase label + big value + caption — the status tiles on Home. */
+/**
+ * Uppercase label + big value + caption — the status tiles on Home.
+ * Three tiles share one row, so their text keeps a fixed size (FONT_CAP.FIXED)
+ * and shrinks to fit; a word that still can't fit is hyphenated, never cut.
+ */
 export function StatTile({ label, value, caption, highlight }: { label: string; value: string; caption?: string; highlight?: boolean }) {
+  const compact = useCompact();
   return (
-    <Card highlight={highlight} style={styles.stat}>
-      <Text variant="overline" tone="muted" numberOfLines={1}>{label}</Text>
-      <Text variant="metric" tone={highlight ? "level" : "default"} numberOfLines={1} adjustsFontSizeToFit style={{ fontSize: 18 }}>
+    <Card highlight={highlight} style={[styles.stat, compact && styles.statCompact]}>
+      <Text
+        variant="overline"
+        tone="muted"
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.75}
+        style={compact ? { letterSpacing: 0.8 } : undefined}
+      >
+        {label}
+      </Text>
+      <Text
+        variant="metric"
+        tone={highlight ? "level" : "default"}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        style={{ fontSize: compact ? 16 : 18 }}
+      >
         {value}
       </Text>
-      {caption ? <Text variant="small" tone="muted" style={{ fontSize: 12, lineHeight: 16 }} numberOfLines={2}>{caption}</Text> : null}
+      {caption ? (
+        <Text
+          variant="small"
+          tone="muted"
+          maxFontSizeMultiplier={FONT_CAP.FIXED}
+          android_hyphenationFrequency="normal"
+          textBreakStrategy="balanced"
+          style={{ fontSize: compact ? 11 : 12, lineHeight: compact ? 14 : 16 }}
+          numberOfLines={2}
+        >
+          {caption}
+        </Text>
+      ) : null}
     </Card>
   );
 }
@@ -146,7 +179,7 @@ export function Pill({
       ]}
     >
       <View style={styles.pillRow}>
-        <Text variant="smallStrong" style={{ color: fg }} numberOfLines={1}>
+        <Text variant="smallStrong" style={{ color: fg, flexShrink: 1 }} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>
           {label}
         </Text>
         {chevron ? <Ionicons name="chevron-down" size={14} color={fg} /> : null}
@@ -176,8 +209,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  stat: { flex: 1, padding: spacing.md, borderRadius: radius.lg, gap: 2 },
-  pillRow: { flexDirection: "row", alignItems: "center", gap: 3 },
+  stat: { flex: 1, minWidth: 0, padding: spacing.md, borderRadius: radius.lg, gap: 2 },
+  statCompact: { paddingHorizontal: 10, paddingVertical: 10 },
+  pillRow: { flexDirection: "row", alignItems: "center", gap: 3, maxWidth: "100%" },
   pill: {
     minHeight: touchTarget,
     paddingHorizontal: spacing.lg,

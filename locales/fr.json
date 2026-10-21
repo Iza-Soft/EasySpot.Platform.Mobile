@@ -295,10 +295,6 @@
     "disabled_title": "🔔 Notifications désactivées",
     "disabled_message": "Appuyez ici pour ouvrir les paramètres et activer les notifications."
   },
-  "navigation": {
-    "share_message": "📍 Ma position actuelle : {{url}}",
-    "share_title": "Ma position actuelle"
-  },
   "timer": {
     "expired": "Expiré"
   },
@@ -733,6 +729,15 @@
       "above_other": "{{n}} étages au-dessus de vous",
       "same": "À l'étage de la voiture",
       "live": "En direct · selon la pression de l'air"
+    },
+    "share": {
+      "here_head": "Je suis ici :",
+      "car_head": "Ma voiture est garée ici :",
+      "past_head": "Place de parking :",
+      "place_head": "Lieu favori :",
+      "title_here": "Partager où je suis",
+      "title_car": "Partager où est ma voiture",
+      "title_place": "Partager ce lieu"
     }
   }
 }

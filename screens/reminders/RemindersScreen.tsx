@@ -12,6 +12,7 @@ import { useTheme } from "../../theme/ThemeProvider";
 import { radius, spacing } from "../../theme/tokens";
 import { Button, Card, Text } from "../../ui";
 import { InfoLayout } from "../info/InfoLayout";
+import { useCompact } from "../../ui/responsive";
 
 const TEST_SECONDS = 15;
 
@@ -29,6 +30,8 @@ export default function RemindersScreen() {
   const r = useReminderReadiness();
   const [testing, setTesting] = useState(false);
   const [log, setLog] = useState<LogEntry[] | null>(null);
+  /** Narrow screen / large text: Fix / Open / Ready go under the text instead of beside it. */
+  const compact = useCompact();
 
   // History (W4): on open, when coming back to the app, and every 5 s while on screen
   // (so a test reminder shows up here right after it arrives).
@@ -61,6 +64,38 @@ export default function RemindersScreen() {
     Toast.show(ok ? { type: "success", text1: t("v2.reminders.test_sent") } : { type: "error", text1: t("v2.reminders.test_failed") });
   };
 
+  const action = (s: ReminderStep) =>
+    s.ok ? (
+      compact ? (
+        // Narrow: just the tick, it stays beside the text.
+        <View accessible accessibilityLabel={t("v2.reminders.ready")} style={[styles.readyIcon, { backgroundColor: colors.surfaceRaised }]}>
+          <Ionicons name="checkmark" size={16} color={colors.accentFg} />
+        </View>
+      ) : (
+        <View style={[styles.ready, { backgroundColor: colors.surfaceRaised }]}>
+          <Ionicons name="checkmark" size={14} color={colors.accentFg} />
+          <Text variant="smallStrong" tone="accent">{t("v2.reminders.ready")}</Text>
+        </View>
+      )
+    ) : (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${t(s.manual ? "v2.reminders.open" : "v2.reminders.fix")} — ${title(s)}`}
+        onPress={() => fixStep(s.key)}
+        style={({ pressed }) => [
+          styles.fix,
+          s.manual
+            ? { borderWidth: 1, borderColor: colors.alert }
+            : { backgroundColor: colors.alert },
+          pressed && { opacity: 0.8 },
+        ]}
+      >
+        <Text variant="smallStrong" style={{ color: s.manual ? colors.alert : colors.onAlert }}>
+          {t(s.manual ? "v2.reminders.open" : "v2.reminders.fix")}
+        </Text>
+      </Pressable>
+    );
+
   const pct = r.total ? (r.done / r.total) * 100 : 100;
 
   return (
@@ -73,7 +108,7 @@ export default function RemindersScreen() {
       {r.loaded ? (
         <View style={styles.progress} accessibilityLabel={t("v2.reminders.progress", { done: r.done, total: r.total })}>
           <View style={styles.progressText}>
-            <Text variant="smallStrong">{t("v2.reminders.progress", { done: r.done, total: r.total })}</Text>
+            <Text variant="smallStrong" style={{ flexShrink: 1 }}>{t("v2.reminders.progress", { done: r.done, total: r.total })}</Text>
             <Text variant="small" tone="muted">{t("v2.reminders.recheck")}</Text>
           </View>
           <View style={[styles.track, { backgroundColor: colors.border }]}>
@@ -89,37 +124,16 @@ export default function RemindersScreen() {
               <View style={[styles.icon, { backgroundColor: colors.surfaceRaised }]}>
                 <Ionicons name={ICONS[s.key]} size={18} color={s.ok ? colors.accentFg : colors.alert} />
               </View>
-              <View style={{ flex: 1, gap: 2 }}>
+              <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
                 <Text variant="bodyStrong">{title(s)}</Text>
                 <Text variant="small" tone="muted">{subtitle(s)}</Text>
                 {!s.ok && s.key === "battery" ? (
                   <Text variant="small" tone="secondary">{t(`v2.reminders.battery_hint_${r.batteryPage}`)}</Text>
                 ) : null}
               </View>
-              {s.ok ? (
-                <View style={[styles.ready, { backgroundColor: colors.surfaceRaised }]}>
-                  <Ionicons name="checkmark" size={14} color={colors.accentFg} />
-                  <Text variant="smallStrong" tone="accent">{t("v2.reminders.ready")}</Text>
-                </View>
-              ) : (
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel={`${t(s.manual ? "v2.reminders.open" : "v2.reminders.fix")} — ${title(s)}`}
-                  onPress={() => fixStep(s.key)}
-                  style={({ pressed }) => [
-                    styles.fix,
-                    s.manual
-                      ? { borderWidth: 1, borderColor: colors.alert }
-                      : { backgroundColor: colors.alert },
-                    pressed && { opacity: 0.8 },
-                  ]}
-                >
-                  <Text variant="smallStrong" style={{ color: s.manual ? colors.alert : colors.onAlert }}>
-                    {t(s.manual ? "v2.reminders.open" : "v2.reminders.fix")}
-                  </Text>
-                </Pressable>
-              )}
+              {compact && !s.ok ? null : action(s)}
             </View>
+            {compact && !s.ok ? <View style={styles.actionBelow}>{action(s)}</View> : null}
 
             {s.manual && !s.ok ? (
               <View style={styles.mini}>
@@ -237,7 +251,7 @@ const styles = StyleSheet.create({
   tabular: { fontVariant: ["tabular-nums"] },
   head: { gap: spacing.xs },
   progress: { gap: spacing.xs, marginTop: spacing.lg },
-  progressText: { flexDirection: "row", justifyContent: "space-between", gap: spacing.sm },
+  progressText: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", columnGap: spacing.sm },
   track: { height: 8, borderRadius: radius.pill, overflow: "hidden" },
   fill: { height: "100%", borderRadius: radius.pill },
   list: { padding: 0, overflow: "hidden", marginTop: spacing.lg },
@@ -249,6 +263,8 @@ const styles = StyleSheet.create({
   mini: { marginLeft: 48, gap: 6 },
   miniRow: { flexDirection: "row", gap: 8, alignItems: "flex-start" },
   num: { width: 20, height: 20, borderRadius: 10, alignItems: "center", justifyContent: "center" },
+  readyIcon: { width: 32, height: 32, borderRadius: 16, alignItems: "center", justifyContent: "center" },
+  actionBelow: { marginLeft: 48, alignItems: "flex-start" },
   didIt: { alignSelf: "flex-start", marginTop: 4 },
   testHint: { textAlign: "center", marginTop: spacing.xs },
 });

@@ -15,7 +15,7 @@ import { FloorsLine } from "../../ui/FloorsLine";
 import { RootStackParamList } from "../../navigation/types";
 import { areaLine } from "../../services/geocoding";
 import { getPreferredMap } from "../../services/map-preference-service";
-import { openMapsAsync, ShareLocationAsync } from "../../services/navigation-service";
+import { openMapsAsync, shareSpotAsync } from "../../services/navigation-service";
 import {
   endParking,
   isActiveParking,
@@ -381,7 +381,7 @@ export default function ParkedScreen({ route, navigation }: Props) {
         <Button
           style={{ flex: 1 }}
           label={t("v2.parked.share")}
-          onPress={() => ShareLocationAsync({ latitude: spot.latitude, longitude: spot.longitude })}
+          onPress={() => shareSpotAsync(spot)}
         />
         <Button style={{ flex: 1 }} label={t("v2.parked.edit")} onPress={edit} />
       </View>

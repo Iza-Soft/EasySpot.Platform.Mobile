@@ -295,10 +295,6 @@
     "disabled_title": "🔔 Bildirimler devre dışı",
     "disabled_message": "Ayarları açmak ve bildirimleri etkinleştirmek için buraya dokunun."
   },
-  "navigation": {
-    "share_message": "📍 Mevcut konumum: {{url}}",
-    "share_title": "Mevcut Konumum"
-  },
   "timer": {
     "expired": "Süresi Doldu"
   },
@@ -733,6 +729,15 @@
       "above_other": "{{n}} kat yukarıda",
       "same": "Arabanın katındasın",
       "live": "Canlı · hava basıncına göre"
+    },
+    "share": {
+      "here_head": "Buradayım:",
+      "car_head": "Arabam burada park halinde:",
+      "past_head": "Park yeri:",
+      "place_head": "Favori yer:",
+      "title_here": "Nerede olduğumu paylaş",
+      "title_car": "Arabamın yerini paylaş",
+      "title_place": "Bu yeri paylaş"
     }
   }
 }

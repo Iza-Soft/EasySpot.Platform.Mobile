@@ -10,12 +10,13 @@ import { RootStackParamList } from "../../navigation/types";
 import { EasySpotLocation } from "../../modules/easyspot-location";
 import { getEcosystem } from "../../platform/services";
 import { hasBarometer } from "../../platform/barometer";
-import { ShareLocationAsync } from "../../services/navigation-service";
+import { shareHereAsync } from "../../services/navigation-service";
 import { SpotKind } from "../../services/spots-service";
 import { useTheme } from "../../theme/ThemeProvider";
 import { spacing } from "../../theme/tokens";
 import { AppHeader, Button, StatTile, Text } from "../../ui";
 import { Screen } from "../../ui/Screen";
+import { useCompact } from "../../ui/responsive";
 import { DebugAddressSheet } from "./DebugAddressSheet";
 import { ParkButton } from "./ParkButton";
 import { RemindersBanner } from "./RemindersBanner";
@@ -30,6 +31,7 @@ export function ReadyView({ navigation }: { navigation: NativeStackNavigationPro
   const [barometer, setBarometer] = useState<boolean | null>(null);
   const [debugOpen, setDebugOpen] = useState(false);
   const readiness = useReminderReadiness();
+  const compact = useCompact();
 
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export function ReadyView({ navigation }: { navigation: NativeStackNavigationPro
     if (busy) return;
     setBusy("share");
     try {
-      await ShareLocationAsync();
+      await shareHereAsync();
     } catch {
       Toast.show({ type: "error", text1: t("common.error"), text2: t("main.errors.share_failed") });
     } finally {
@@ -118,13 +120,13 @@ export function ReadyView({ navigation }: { navigation: NativeStackNavigationPro
 
       <View style={styles.actions}>
         <Button
-          style={{ flex: 1 }}
+          style={compact ? styles.actionCompact : styles.action}
           label={t("v2.park.favorite_place")}
           icon={<Ionicons name="star-outline" size={18} color={colors.accentFg} />}
           onPress={() => save("favorites")}
         />
         <Button
-          style={{ flex: 1 }}
+          style={compact ? styles.actionCompact : styles.action}
           label={t("v2.park.share_location")}
           loading={busy === "share"}
           icon={<Ionicons name="share-social-outline" size={18} color={colors.accentFg} />}
@@ -144,4 +146,6 @@ const styles = StyleSheet.create({
   centerTight: { marginTop: spacing.md, marginBottom: spacing.lg },
   tiles: { flexDirection: "row", gap: spacing.sm, marginBottom: spacing.md },
   actions: { flexDirection: "row", gap: spacing.sm },
+  action: { flex: 1 },
+  actionCompact: { flex: 1, paddingHorizontal: spacing.md },
 });

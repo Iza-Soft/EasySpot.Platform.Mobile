@@ -11,7 +11,7 @@
 | 0 | Основа | 2.0.0 | ✅ Завършен (14.10) — тестван на Samsung (Android 16) и Huawei; iPhone тестът е отложен | [Stage-0-Foundation.pdf](docs/stages/Stage-0-Foundation.pdf) |
 | 1 | Редизайн на екраните | 2.0.0 | ✅ Завършен (14.10) — тестван на Samsung и Huawei; iPhone тестът е отложен | [Stage-1-Screens.pdf](docs/stages/Stage-1-Screens.pdf) |
 | 2 | Нови функции 2.0 | 2.0.0 | ✅ Завършен (16.10) — тестван на Samsung и Huawei; iPhone тестът е отложен | [Stage-2-Features.pdf](docs/stages/Stage-2-Features.pdf) |
-| 3 | Тестове и публикуване 2.0 | 2.0.0 | 🟡 В процес — GitHub Actions ✅ (16.10) | — |
+| 3 | Тестове и публикуване 2.0 | 2.0.0 | 🟡 В процес — GitHub Actions ✅ (16.10), Google Play ✅ публикувано (2.0.0 — 19.10, 2.0.1 — 20.10), следва Huawei AppGallery | — |
 | 4 | Walk-back, Haptic Find, Routines, Auto-park | 2.1.0 | ⚪ Предстои | — |
 | 5 | Hand-off линк (backend + уеб) | 2.2.0 | ⚪ Предстои | — |
 
@@ -194,13 +194,20 @@
 - Onboarding → отпада (16.10): не е нужен
 
 ## Етап 3 — Тестове и публикуване 2.0
-- [x] **GitHub Actions** (16.10, работи): `.github/workflows/ci.yml` — при всеки push и pull request (всички branch-ове) и ръчно: Node 22, `npm ci`, TypeScript, 165 теста; по-нов push спира стария run; само права за четене. `sync-dev.yml` не е пипан
-- [ ] Скрийншоти и описания — за трите магазина (Google Play, AppGallery, App Store): снимки на екраните, кратко и пълно описание на 9-те езика; за Play и графика 1024×500
-- [ ] Google Play (Data safety)
-- [ ] Huawei AppGallery — проект в AppGallery Connect при качването; `agconnect-services.json` само ако ползваме HMS услуги (сега не ползваме)
+- [x] **GitHub Actions** (16.10, работи): `.github/workflows/ci.yml` — при всеки push и pull request (всички branch-ове) и ръчно: Node 22, `npm ci`, TypeScript, всички тестове (166); по-нов push спира стария run; само права за четене. `sync-dev.yml` не е пипан
+- [x] **Скрийншоти и описания за Google Play** (19.10): 6 снимки 1080×1920 + feature graphic 1024×500 + икона 512 (`docs/store/`), кратко и пълно описание на 9-те езика (`docs/store/play-listing.md`), бележки за версията (`docs/store/release-notes-2.0.0.txt`); AI asset declaration — маркирани като направени с AI. За AppGallery и App Store — същите текстове, снимки в техните размери (при качването)
+- [x] **Google Play** — ✅ публикувано 19.10 (2.0.0): release 5 (2.0.0), full rollout, листинг на 9 езика, Data safety (ML Kit: Diagnostics + Device or other IDs, collected, не shared, криптирано), политика за поверителност 2.0 на 9 езика (ilkoadamov.github.io/easyspot-privacy-policy). AAB подписан с upload ключа чрез `plugins/with-release-signing.js` + `credentials.json` (не е в repo-то). Одобрено и публикувано 19.10
+- [x] **2.0.1 — поправки** (20.10, versionCode 6) — ✅ публикувано в Google Play 20.10, full rollout: екраните при по-голям / удебелен шрифт и стандартен размер на дисплея (Honor Magic V6) — таван на шрифта по вид текст (`ui/responsive.ts`), статус барът не се застъпва при скрол, тесен изглед под ~380 dp (Намери само иконка, Оправи под текста, B2/−2 на отделен ред, полета 16 dp); споделянето казва какво се споделя (макети SH1–SH5, `domain/share.ts`): „Тук съм:“ / „Колата ми е паркирана тук:“ / „Място за паркиране:“ / името на мястото или „Любимо място:“, адрес или координати, линк — без емоджи и без подпис. Бележки: `docs/store/release-notes-2.0.1.txt`. Тестове 173
+- [ ] **Huawei AppGallery** (започнато 20.10) — нова апликация в AppGallery (1.x не е там); същият код 2.0.1, без HMS SDK и без `agconnect-services.json`
+  - [ ] Акаунт в HUAWEI Developers с потвърдена самоличност (individual)
+  - [ ] AppGallery Connect → нова Android апликация `com.ilkoadamov.easyspot`, категория Navigation / Travel; App ID → в `AboutScreen` (линк „Оцени“: `appmarket://` + `appgallery.huawei.com/app/C<App ID>`)
+  - [ ] Build за AppGallery: `EASYSPOT_STORE=appgallery`, подписан APK (arm64-v8a + armeabi-v7a) с нашия upload ключ — без App Signing на Huawei; проверка на подписа с keytool
+  - [ ] Листинг на 9 езика (текстовете от `docs/store/play-listing.md`), икона 216×216, скрийншоти 1080×1920 (същите), политика за поверителност, възрастов рейтинг, декларации за чувствителни разрешения (местоположение, камера, точни аларми)
+  - [ ] Държави: всички без Китай (за Китай трябват ICP / софтуерен сертификат), безплатна; изпращане за преглед (обикновено 3–5 работни дни)
 - [ ] App Store (App Privacy, TestFlight)
 
 ## Етап 4 — 2.1
+- [ ] **R8 за release** (Google Play: „DEX code optimization is below our threshold“, обфускация 1% < 25%, срок **февруари 2027**): `android.enableMinifyInReleaseBuilds` + `enableShrinkResourcesInReleaseBuilds` в `app.config.ts`, после кратка проверка на release build-а (PARK, снимка, напомняне, Spots). Решено 19.10: 2.0.0 се качва без него
 - [ ] Walk-back (пътят обратно без GPS)
 - [ ] Haptic Find
 - [ ] Routines (обичайни места)

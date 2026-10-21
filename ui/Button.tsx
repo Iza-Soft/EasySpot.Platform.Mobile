@@ -49,10 +49,14 @@ export function Button({ label, kind = "outline", size = "md", icon, loading, di
       ) : (
         <View style={styles.row}>
           {icon}
+          {/* One line always: shrinks a little before it would wrap (narrow screen, large text). */}
           <Text
             variant={solid ? "action" : "smallStrong"}
             tone={kind === "primary" ? "onAccent" : "default"}
-            style={kind === "danger" ? { color: colors.onAlert } : undefined}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.8}
+            style={[styles.label, kind === "danger" && { color: colors.onAlert }]}
           >
             {solid ? label.toUpperCase() : label}
           </Text>
@@ -69,5 +73,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  row: { flexDirection: "row", alignItems: "center", gap: spacing.sm, maxWidth: "100%" },
+  label: { flexShrink: 1 },
 });

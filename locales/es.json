@@ -12,10 +12,6 @@
       "share_failed": "No se pudo compartir tu ubicación actual."
     }
   },
-  "navigation": {
-    "share_message": "📍 Esta es mi ubicación actual: {{url}}",
-    "share_title": "Mi ubicación actual"
-  },
   "v2": {
     "tabs": {
       "park": "Aparcar",
@@ -443,6 +439,15 @@
       "above_other": "{{n}} plantas por encima",
       "same": "En la planta del coche",
       "live": "En vivo · por la presión del aire"
+    },
+    "share": {
+      "here_head": "Estoy aquí:",
+      "car_head": "Mi coche está aparcado aquí:",
+      "past_head": "Lugar de aparcamiento:",
+      "place_head": "Lugar favorito:",
+      "title_here": "Compartir dónde estoy",
+      "title_car": "Compartir dónde está mi coche",
+      "title_place": "Compartir este lugar"
     }
   }
 }

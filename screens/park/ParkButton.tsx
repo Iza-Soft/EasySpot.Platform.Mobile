@@ -88,7 +88,9 @@ export function ParkButton({ onPress }: { onPress: () => void }) {
           <Text variant="title" tone="onAccent" style={styles.parkLabel} numberOfLines={1} adjustsFontSizeToFit>
             {t("v2.park.park")}
           </Text>
-          <Text variant="overline" tone="onAccent">{t("v2.park.park_sub")}</Text>
+          <Text variant="overline" tone="onAccent" numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>
+            {t("v2.park.park_sub")}
+          </Text>
         </Pressable>
       </Animated.View>
     </View>

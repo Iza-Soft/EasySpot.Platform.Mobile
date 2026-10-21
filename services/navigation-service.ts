@@ -5,6 +5,11 @@ import { EasySpotLocation } from "../modules/easyspot-location";
 import { getCurrentFix } from "../platform/location";
 import i18n from "../i18n";
 import { getPreferredMap } from "./map-preference-service";
+import { displayLevel } from "../domain/level";
+import { ShareSubject, shareText } from "../domain/share";
+import { getPrefs } from "../state/prefs";
+import { reverseGeocode, streetLine } from "./geocoding";
+import { isActiveParking, Spot, spotAddress } from "./spots-service";
 
 export async function openMapsAsync(navigation: NavigationProps) {
   const { latitude, longitude } = navigation;
@@ -41,24 +46,10 @@ export async function openMapsAsync(navigation: NavigationProps) {
   }
 }
 
-export async function ShareLocationAsync(coordinates?: {
-  latitude: number | undefined;
-  longitude: number | undefined;
-}) {
-  let latitude: number;
-  let longitude: number;
-
-  if (coordinates?.latitude != null && coordinates?.longitude != null) {
-    latitude = coordinates.latitude;
-    longitude = coordinates.longitude;
-  } else {
-    // v2: Huawei-safe position (platform/location.ts)
-    ({ latitude, longitude } = await getCurrentFix());
-  }
-
+/** Map link for sharing — always a web link: the receiver may not have the same app. */
+export async function shareUrlAsync(latitude: number, longitude: number): Promise<string> {
   const preferredMap = await getPreferredMap();
 
-  //Sharing should always be over the internet - the receiver may not have the same app
   let url: string;
   switch (preferredMap) {
     case Maps.google:
@@ -83,11 +74,39 @@ export async function ShareLocationAsync(coordinates?: {
       url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
   }
 
-  const message = i18n.t("navigation.share_message", { url });
+  return url;
+}
 
-  await Share.share({
-    message,
-    url,
-    title: i18n.t("navigation.share_title"),
+async function shareAsync(subject: ShareSubject) {
+  const url = await shareUrlAsync(subject.latitude, subject.longitude);
+  const { message, title } = shareText(subject, url, (k) => i18n.t(k));
+  // Android: message + title (the share sheet's heading); iOS: the message only (no url: it would be sent twice).
+  await Share.share({ message, title }, { dialogTitle: title, subject: title });
+}
+
+/** Home → "Share where I am": a fresh fix and its address (when the phone's geocoder answers within 2.5 s). */
+export async function shareHereAsync() {
+  // v2: Huawei-safe position (platform/location.ts)
+  const { latitude, longitude } = await getCurrentFix();
+  const a = await Promise.race([
+    reverseGeocode(latitude, longitude),
+    new Promise<null>((r) => setTimeout(() => r(null), 2500)),
+  ]).catch(() => null);
+  const address = a ? [streetLine(a) ?? a.estate ?? null, a.city].filter(Boolean).join(", ") || null : null;
+  await shareAsync({ kind: "here", latitude, longitude, address });
+}
+
+/** A saved spot: an active parking ("My car is parked here"), a past one, or a favorite place. */
+export async function shareSpotAsync(spot: Spot) {
+  const kind = spot.type === "favorites" ? "place" : isActiveParking(spot) ? "car" : "pastParking";
+  await shareAsync({
+    kind,
+    latitude: spot.latitude,
+    longitude: spot.longitude,
+    name: spot.title,
+    address: spotAddress(spot),
+    level: spot.level ? displayLevel(spot.level, getPrefs().levelLabels) : null,
+    zone: spot.section,
+    spot: spot.spot,
   });
 }

@@ -2,6 +2,7 @@ import React, { forwardRef } from "react";
 import { StyleSheet, TextInput, TextInputProps, View, ViewStyle } from "react-native";
 import { useTheme } from "../theme/ThemeProvider";
 import { fontFamily, radius, spacing } from "../theme/tokens";
+import { FONT_CAP } from "./responsive";
 import { Text } from "./Text";
 
 interface FieldProps extends TextInputProps {
@@ -24,7 +25,7 @@ export const Field = forwardRef<TextInput, FieldProps>(function Field({ label, m
         accessibilityLabel={label}
         placeholderTextColor={colors.textMuted}
         selectionColor={colors.accentFg}
-        maxFontSizeMultiplier={metric ? 1 : 1.3}
+        maxFontSizeMultiplier={metric ? FONT_CAP.FIXED : FONT_CAP.UI}
         style={[
           styles.input,
           {

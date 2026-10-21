@@ -12,7 +12,7 @@ import { useSpot } from "../../hook/useSpots";
 import { RootStackParamList } from "../../navigation/types";
 import { areaLine } from "../../services/geocoding";
 import { getPreferredMap } from "../../services/map-preference-service";
-import { openMapsAsync, ShareLocationAsync } from "../../services/navigation-service";
+import { openMapsAsync, shareSpotAsync } from "../../services/navigation-service";
 import { deleteSpot, markViewed, spotName } from "../../services/spots-service";
 import { useTheme } from "../../theme/ThemeProvider";
 import { radius, spacing } from "../../theme/tokens";
@@ -146,7 +146,7 @@ export default function SpotDetailsScreen({ route, navigation }: Props) {
       />
       <View style={styles.row}>
         <Button style={{ flex: 1 }} label={t("v2.details.edit")} onPress={edit} />
-        <Button style={{ flex: 1 }} label={t("v2.details.share")} onPress={() => ShareLocationAsync({ latitude: spot.latitude, longitude: spot.longitude })} />
+        <Button style={{ flex: 1 }} label={t("v2.details.share")} onPress={() => shareSpotAsync(spot)} />
         <Button style={{ flex: 1 }} kind="ghost" label={t("v2.details.delete")} onPress={() => setConfirm(true)} />
       </View>
 

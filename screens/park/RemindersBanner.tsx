@@ -32,12 +32,14 @@ export function RemindersBanner({ readiness, onPress }: { readiness: Readiness; 
       <View style={[styles.icon, { backgroundColor: colors.alert }]}>
         <Ionicons name="notifications-off-outline" size={20} color={colors.onAlert} />
       </View>
-      <View style={{ flex: 1, gap: 2 }}>
+      <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
         <Text variant="bodyStrong">{t("v2.reminders.banner_title")}</Text>
         <Text variant="small" tone="secondary">{sub}</Text>
       </View>
       <View style={[styles.fix, { backgroundColor: colors.alert }]}>
-        <Text variant="smallStrong" style={{ color: colors.onAlert }}>{t("v2.reminders.fix")}</Text>
+        <Text variant="smallStrong" maxFontSizeMultiplier={1.05} numberOfLines={1} style={{ color: colors.onAlert }}>
+          {t("v2.reminders.fix")}
+        </Text>
       </View>
     </Pressable>
   );

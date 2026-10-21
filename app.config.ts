@@ -10,8 +10,8 @@ import { ExpoConfig } from "expo/config";
  */
 const STORE = (process.env.EASYSPOT_STORE ?? "play") as "play" | "appgallery" | "appstore";
 
-const VERSION = "2.0.0";
-const ANDROID_VERSION_CODE = 5; // 1.2.0 shipped as 4 — must always increase
+const VERSION = "2.0.1";
+const ANDROID_VERSION_CODE = 6; // 1.2.0 = 4, 2.0.0 = 5 — must always increase
 const IOS_BUILD_NUMBER = "1";
 
 const config: ExpoConfig = {
@@ -123,6 +123,8 @@ const config: ExpoConfig = {
     "./plugins/with-parking-module",
     // Lets Settings see / open the installed navigation apps (Android 11+ package visibility).
     "./plugins/with-map-queries",
+    // Release build signed with the Play upload key from credentials.json (not in the repo).
+    "./plugins/with-release-signing",
   ],
   extra: {
     store: STORE,

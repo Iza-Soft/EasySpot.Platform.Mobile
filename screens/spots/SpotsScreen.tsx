@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { dayBucket, DayBucket, formatClock, formatDayMonth, formatDuration, formatEnd } from "../../domain/time";
 import { getPreferredMap } from "../../services/map-preference-service";
-import { openMapsAsync, ShareLocationAsync } from "../../services/navigation-service";
+import { openMapsAsync, shareSpotAsync } from "../../services/navigation-service";
 import { RootStackParamList } from "../../navigation/types";
 import {
   deleteSpot,
@@ -33,6 +33,7 @@ import { useTheme } from "../../theme/ThemeProvider";
 import { fontFamily, radius, spacing } from "../../theme/tokens";
 import { ActionSheet, AppHeader, LevelTag, Pill, SheetAction, Text, TimeBar } from "../../ui";
 import { ConfirmSheet } from "../../ui/ConfirmSheet";
+import { FONT_CAP, useCompact, useGutter } from "../../ui/responsive";
 import { formatAddress } from "../../utils/address";
 
 const PAGE = 40;
@@ -62,6 +63,8 @@ export default function SpotsScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
+  const compact = useCompact();
+  const gutter = useGutter();
   const db = useSQLiteContext();
 
   const [filter, setFilter] = useState<Filter>("all");
@@ -146,7 +149,7 @@ export default function SpotsScreen() {
           key: "share",
           label: t("v2.spots.share"),
           icon: "share-social-outline",
-          onPress: () => ShareLocationAsync({ latitude: selected.latitude, longitude: selected.longitude }),
+          onPress: () => shareSpotAsync(selected),
         },
         {
           key: "addr",
@@ -255,7 +258,7 @@ export default function SpotsScreen() {
 
   const badge = (label: string, color: string) => (
     <View style={[styles.badge, { borderColor: color }]}>
-      <Text variant="smallStrong" style={[styles.badgeText, { color }]}>{label.toUpperCase()}</Text>
+      <Text variant="smallStrong" maxFontSizeMultiplier={1} style={[styles.badgeText, { color }]}>{label.toUpperCase()}</Text>
     </View>
   );
 
@@ -283,17 +286,25 @@ export default function SpotsScreen() {
           <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
             <View style={styles.badgeLine}>
               {badge(t("v2.spots.now"), colors.accentFg)}
-              <Text variant="small" tone="muted" numberOfLines={1}>{t("v2.spots.since", { time: formatClock(parkedAt) })}</Text>
+              <Text variant="small" tone="muted" numberOfLines={1} style={styles.shrink}>{t("v2.spots.since", { time: formatClock(parkedAt) })}</Text>
             </View>
             <Text variant="bodyStrong" numberOfLines={1}>{spotName(item, t("v2.spots.street_parking"))}</Text>
           </View>
+          {/* Narrow screen / large text: icon-only, so the name and "since" keep their room. */}
           <Pressable
             accessibilityRole="button"
+            accessibilityLabel={t("v2.spots.find")}
             onPress={() => find(item)}
-            style={({ pressed }) => [styles.find, { backgroundColor: pressed ? colors.accentPressed : colors.accent }]}
+            style={({ pressed }) => [
+              styles.find,
+              compact && styles.findIcon,
+              { backgroundColor: pressed ? colors.accentPressed : colors.accent },
+            ]}
           >
-            <Ionicons name="navigate" size={15} color={colors.onAccent} />
-            <Text variant="smallStrong" tone="onAccent">{t("v2.spots.find")}</Text>
+            <Ionicons name="navigate" size={compact ? 18 : 15} color={colors.onAccent} />
+            {compact ? null : (
+              <Text variant="smallStrong" tone="onAccent" numberOfLines={1}>{t("v2.spots.find")}</Text>
+            )}
           </Pressable>
           {moreButton(item)}
         </View>
@@ -301,10 +312,10 @@ export default function SpotsScreen() {
           <>
             <TimeBar fraction={(ends - now) / total} expired={expired} />
             <View style={styles.between}>
-              <Text variant="smallStrong" tone={expired || (ends - now) / total < 0.15 ? "alert" : "level"} numberOfLines={1}>
+              <Text variant="smallStrong" tone={expired || (ends - now) / total < 0.15 ? "alert" : "level"} numberOfLines={1} style={styles.shrink}>
                 {expired ? t("v2.parked.expired") : t("v2.parked.left_long", { d: formatDuration(ends - now, units) })}
               </Text>
-              <Text variant="small" tone="muted" numberOfLines={1}>
+              <Text variant="small" tone="muted" numberOfLines={1} style={styles.shrink}>
                 {expired ? t("v2.parked.ended_at", { time: formatEnd(ends) }) : t("v2.parked.until_short", { time: formatEnd(ends) })}
               </Text>
             </View>
@@ -334,7 +345,7 @@ export default function SpotsScreen() {
         {isNew ? (
           <View style={styles.badgeLine}>
             {badge(t("v2.spots.new"), colors.accentFg)}
-            <Text variant="small" tone="muted" numberOfLines={1}>{t("v2.spots.favorite")}</Text>
+            <Text variant="small" tone="muted" numberOfLines={1} style={styles.shrink}>{t("v2.spots.favorite")}</Text>
           </View>
         ) : null}
         <Text variant="bodyStrong" tone={isNew ? "default" : "secondary"} numberOfLines={1}>{spotName(item, t("v2.spots.street_parking"))}</Text>
@@ -346,7 +357,7 @@ export default function SpotsScreen() {
 
   return (
     <View style={[styles.fill, { backgroundColor: colors.background, paddingTop: insets.top + spacing.lg }]}>
-      <View style={styles.top}>
+      <View style={[styles.top, { paddingHorizontal: gutter }]}>
         <AppHeader title={t("v2.tabs.spots")} />
         <View style={[styles.search, { backgroundColor: colors.surface, borderColor: colors.border }]}>
           <Ionicons name="search" size={18} color={colors.textMuted} />
@@ -359,6 +370,7 @@ export default function SpotsScreen() {
             accessibilityLabel={t("v2.spots.search")}
             style={[styles.searchInput, { color: colors.text, fontFamily: fontFamily.regular }]}
             returnKeyType="search"
+            maxFontSizeMultiplier={FONT_CAP.UI}
           />
           {query ? (
             <Pressable accessibilityRole="button" accessibilityLabel={t("common.close")} onPress={() => setQuery("")} hitSlop={10}>
@@ -385,7 +397,7 @@ export default function SpotsScreen() {
         <SectionList
           sections={sections}
           keyExtractor={(s) => String(s.id)}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={[styles.list, { paddingHorizontal: gutter }]}
           stickySectionHeadersEnabled={false}
           onEndReachedThreshold={0.4}
           onEndReached={() => hasMore && load(false)}
@@ -447,7 +459,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   searchInput: { flex: 1, fontSize: 16, paddingVertical: 0 },
-  filters: { flexDirection: "row", gap: spacing.xs },
+  filters: { flexDirection: "row", flexWrap: "wrap", gap: spacing.xs },
   list: { paddingHorizontal: spacing.xl, paddingBottom: spacing.xxl, gap: spacing.xs },
   sectionHeader: { marginTop: spacing.md, marginBottom: spacing.xs },
   row: {
@@ -464,6 +476,8 @@ const styles = StyleSheet.create({
   badge: { height: 20, paddingHorizontal: 7, borderRadius: 999, borderWidth: 1, justifyContent: "center" },
   badgeText: { fontSize: 10, lineHeight: 12, letterSpacing: 1 },
   find: { flexDirection: "row", alignItems: "center", gap: 6, height: 40, paddingHorizontal: spacing.md, borderRadius: 999 },
+  findIcon: { width: 44, height: 44, paddingHorizontal: 0, justifyContent: "center" },
+  shrink: { flexShrink: 1 },
   more: { width: 40, height: 44, alignItems: "center", justifyContent: "center" },
   between: { flexDirection: "row", justifyContent: "space-between", gap: spacing.md },
   empty: { flex: 1, alignItems: "center", justifyContent: "center", gap: spacing.md, paddingHorizontal: spacing.xxl },

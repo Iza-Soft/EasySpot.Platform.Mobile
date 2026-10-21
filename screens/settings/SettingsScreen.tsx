@@ -20,6 +20,7 @@ import { Screen } from "../../ui/Screen";
 import { LANGUAGE_NAMES } from "../info/LanguageScreen";
 import { hasBarometer } from "../../platform/barometer";
 import { Toggle } from "../../ui/Toggle";
+import { useCompact } from "../../ui/responsive";
 
 /** Settings (mockup T1). */
 export default function SettingsScreen() {
@@ -39,6 +40,8 @@ export default function SettingsScreen() {
   /** Turned on here (it was off) → "for parkings saved from now on". */
   const [floorsTurnedOn, setFloorsTurnedOn] = useState(false);
   const reminders = useReminderReadiness();
+  /** Narrow screen / large text: the B2 / −2 switch goes under its label. */
+  const compact = useCompact();
   const version = Constants.expoConfig?.version ?? "";
   const build = Platform.OS === "android" ? String(Constants.expoConfig?.android?.versionCode ?? "") : Constants.expoConfig?.ios?.buildNumber ?? "";
 
@@ -117,7 +120,7 @@ export default function SettingsScreen() {
                     <Text variant="smallStrong" style={{ color: "#fff", fontSize: p.initial.length > 1 ? 11 : 14 }}>{p.initial}</Text>
                   </View>
                 )}
-                <View style={{ flex: 1, gap: 2 }}>
+                <View style={styles.rowText}>
                   <Text variant="bodyStrong">{p.label}</Text>
                   {p.webOnly ? <Text variant="small" tone="muted">{t("v2.settings.web_only")}</Text> : null}
                 </View>
@@ -130,13 +133,13 @@ export default function SettingsScreen() {
 
       <Section title={t("v2.settings.parking")}>
         <Card style={styles.list}>
-          <View style={styles.row}>
+          <View style={[styles.row, compact && styles.rowWrap]}>
             <IconBox name="business-outline" />
-            <View style={{ flex: 1, gap: 2 }}>
+            <View style={styles.rowText}>
               <Text variant="bodyStrong">{t("v2.settings.level_labels")}</Text>
               <Text variant="small" tone="muted">{t("v2.settings.level_labels_hint")}</Text>
             </View>
-            <View style={styles.segment}>
+            <View style={[styles.segment, compact && styles.segmentBelow]}>
               <Pill label="B2" selected={prefs.levelLabels === "letter"} onPress={() => setPref("levelLabels", "letter")} />
               <Pill label="−2" selected={prefs.levelLabels === "signed"} onPress={() => setPref("levelLabels", "signed")} />
             </View>
@@ -166,7 +169,7 @@ export default function SettingsScreen() {
             <View style={barometer === false && styles.faded}>
               <IconBox name="swap-vertical" />
             </View>
-            <View style={[{ flex: 1, gap: 2 }, barometer === false && styles.faded]}>
+            <View style={[styles.rowText, barometer === false && styles.faded]}>
               <Text variant="bodyStrong">{t("v2.settings.floors")}</Text>
               <Text variant="small" tone="muted">
                 {barometer === false ? t("v2.settings.floors_none") : t("v2.settings.floors_hint")}
@@ -295,7 +298,7 @@ function LinkRow({
       ]}
     >
       <IconBox name={icon} />
-      <View style={{ flex: 1, gap: 2 }}>
+      <View style={styles.rowText}>
         <Text variant="bodyStrong">{label}</Text>
         {hint ? <Text variant="small" tone="muted">{hint}</Text> : null}
         {chip ? (
@@ -304,7 +307,11 @@ function LinkRow({
           </View>
         ) : null}
       </View>
-      {value ? <Text variant="smallStrong" tone="level">{value}</Text> : null}
+      {value ? (
+        <Text variant="smallStrong" tone="level" numberOfLines={1} style={styles.value}>
+          {value}
+        </Text>
+      ) : null}
       <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
     </Pressable>
   );
@@ -314,6 +321,11 @@ const styles = StyleSheet.create({
   section: { gap: spacing.sm, marginBottom: spacing.xl },
   pills: { flexDirection: "row", gap: spacing.xs, flexWrap: "wrap" },
   segment: { flexDirection: "row", gap: 4 },
+  /** Wraps the B2 / −2 switch onto its own line, lined up with the text (icon 36 + gap 12). */
+  rowWrap: { flexWrap: "wrap", rowGap: spacing.sm },
+  segmentBelow: { width: "100%", paddingLeft: 36 + spacing.md },
+  rowText: { flex: 1, minWidth: 0, gap: 2 },
+  value: { flexShrink: 1, maxWidth: "40%" },
   list: { padding: 0, borderRadius: radius.xl, overflow: "hidden" },
   row: {
     flexDirection: "row",

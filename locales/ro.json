@@ -12,10 +12,6 @@
       "share_failed": "Nu s-a putut partaja locația curentă."
     }
   },
-  "navigation": {
-    "share_message": "📍 Iată locația mea curentă: {{url}}",
-    "share_title": "Locația mea curentă"
-  },
   "v2": {
     "tabs": {
       "park": "Parchează",
@@ -443,6 +439,15 @@
       "above_other": "{{n}} etaje deasupra ta",
       "same": "La etajul mașinii",
       "live": "Live · după presiunea aerului"
+    },
+    "share": {
+      "here_head": "Sunt aici:",
+      "car_head": "Mașina mea e parcată aici:",
+      "past_head": "Loc de parcare:",
+      "place_head": "Loc favorit:",
+      "title_here": "Trimite unde sunt",
+      "title_car": "Trimite unde e mașina",
+      "title_place": "Trimite acest loc"
     }
   }
 }

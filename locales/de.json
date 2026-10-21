@@ -295,10 +295,6 @@
     "disabled_title": "🔔 Benachrichtigungen deaktiviert",
     "disabled_message": "Tippen Sie hier, um die Einstellungen zu öffnen und Benachrichtigungen zu aktivieren."
   },
-  "navigation": {
-    "share_message": "📍 Mein aktueller Standort: {{url}}",
-    "share_title": "Mein aktueller Standort"
-  },
   "timer": {
     "expired": "Abgelaufen"
   },
@@ -733,6 +729,15 @@
       "above_other": "{{n}} Etagen über dir",
       "same": "Auf der Etage des Autos",
       "live": "Live · nach Luftdruck"
+    },
+    "share": {
+      "here_head": "Ich bin hier:",
+      "car_head": "Mein Auto parkt hier:",
+      "past_head": "Parkplatz:",
+      "place_head": "Lieblingsort:",
+      "title_here": "Teilen, wo ich bin",
+      "title_car": "Teilen, wo mein Auto steht",
+      "title_place": "Diesen Ort teilen"
     }
   }
 }

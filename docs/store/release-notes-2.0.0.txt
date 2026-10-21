@@ -1,0 +1,81 @@
+<en-US>
+EasySpot 2.0 — completely redesigned.
+• New design with dark and light theme
+• Photo of the spot: level, zone, spot and number plate filled in for you
+• Paid time up to 15 days, reminders on time, +30 min with undo
+• Scan the parking ticket — or a mall entry ticket for the free time
+• "3 floors below you": find your floor by air pressure
+• Now also in Spanish, Italian and Romanian
+</en-US>
+<bg>
+EasySpot 2.0 — изцяло обновен.
+• Нов дизайн с тъмна и светла тема
+• Снимка на мястото: нивото, зоната, мястото и номерът се попълват сами
+• Платено време до 15 дни, напомняне навреме, +30 мин с отмяна
+• Сканиране на билета от паркомата — или входния билет от мола за безплатното време
+• „3 етажа под теб“: намери етажа по въздушното налягане
+• Вече и на испански, италиански и румънски
+</bg>
+<ru-RU>
+EasySpot 2.0 — полностью обновлён.
+• Новый дизайн, тёмная и светлая тема
+• Фото места: уровень, зона, место и номер машины заполняются сами
+• Оплаченное время до 15 дней, напоминание вовремя, +30 мин с отменой
+• Сканирование парковочного билета — или билета на въезд в ТЦ для бесплатного времени
+• «На 3 этажа ниже вас»: этаж по атмосферному давлению
+• Теперь и на испанском, итальянском и румынском
+</ru-RU>
+<de-DE>
+EasySpot 2.0 – komplett neu gestaltet.
+• Neues Design mit dunklem und hellem Thema
+• Foto vom Stellplatz: Ebene, Zone, Platz und Kennzeichen werden ausgefüllt
+• Parkzeit bis 15 Tage, pünktliche Erinnerung, +30 Min. mit Rückgängig
+• Parkschein scannen – oder den Einfahrtsschein im Einkaufszentrum für die Gratiszeit
+• „3 Etagen unter dir“: die Etage per Luftdruck finden
+• Jetzt auch auf Spanisch, Italienisch und Rumänisch
+</de-DE>
+<fr-FR>
+EasySpot 2.0 — entièrement repensé.
+• Nouveau design, thème sombre et clair
+• Photo de la place : niveau, zone, place et plaque remplis pour vous
+• Temps payé jusqu'à 15 jours, rappel à l'heure, +30 min avec annulation
+• Scannez le ticket de stationnement — ou le ticket d'entrée du centre commercial pour le temps gratuit
+• « 3 étages sous vous » : retrouvez l'étage grâce à la pression de l'air
+• Désormais aussi en espagnol, italien et roumain
+</fr-FR>
+<es-ES>
+EasySpot 2.0 — completamente renovado.
+• Nuevo diseño con tema oscuro y claro
+• Foto de la plaza: nivel, zona, plaza y matrícula se rellenan solos
+• Tiempo pagado hasta 15 días, aviso a tiempo, +30 min con deshacer
+• Escanea el ticket del parquímetro — o el de entrada del centro comercial para el tiempo gratis
+• «3 plantas por debajo»: encuentra la planta por la presión del aire
+• Ahora también en español, italiano y rumano
+</es-ES>
+<it-IT>
+EasySpot 2.0 — completamente rinnovato.
+• Nuovo design con tema scuro e chiaro
+• Foto del posto: livello, zona, posto e targa compilati da soli
+• Tempo pagato fino a 15 giorni, promemoria puntuale, +30 min con annulla
+• Scansiona il biglietto del parchimetro — o quello d'ingresso del centro commerciale per il tempo gratuito
+• «3 piani sotto di te»: trova il piano con la pressione dell'aria
+• Ora anche in spagnolo, italiano e rumeno
+</it-IT>
+<ro>
+EasySpot 2.0 — complet reînnoit.
+• Design nou cu temă întunecată și luminoasă
+• Fotografia locului: nivelul, zona, locul și numărul se completează singure
+• Timp plătit până la 15 zile, memento la timp, +30 min cu anulare
+• Scanează tichetul de parcare — sau tichetul de intrare din mall pentru timpul gratuit
+• „3 etaje sub tine”: găsește etajul după presiunea aerului
+• Acum și în spaniolă, italiană și română
+</ro>
+<tr-TR>
+EasySpot 2.0 — tamamen yenilendi.
+• Koyu ve açık temalı yeni tasarım
+• Park yerinin fotoğrafı: kat, bölge, yer ve plaka otomatik doldurulur
+• 15 güne kadar ücretli süre, zamanında hatırlatma, geri alınabilen +30 dk
+• Park fişini tara — veya AVM giriş fişiyle ücretsiz süreyi ayarla
+• "3 kat aşağıda": katı hava basıncıyla bul
+• Artık İspanyolca, İtalyanca ve Rumence de var
+</tr-TR>

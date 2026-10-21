@@ -16,12 +16,14 @@ const FEATURES: { key: "f1" | "f2" | "f3" | "f4"; icon: keyof typeof Ionicons.gl
 ];
 
 const PACKAGE = "com.ilkoadamov.easyspot";
+/** EasySpot in AppGallery Connect (App information → App ID). */
+const APPGALLERY_APP_ID = "116885027";
 
 /** Store page for "Rate EasySpot": Google Play or AppGallery (decided at build time). null on iOS until it is published. */
 function storeLinks(): { app: string; web: string } | null {
   if (Platform.OS !== "android") return null;
   const store = Constants.expoConfig?.extra?.store;
-  if (store === "appgallery") return { app: `appmarket://details?id=${PACKAGE}`, web: `https://appgallery.huawei.com/` };
+  if (store === "appgallery") return { app: `appmarket://details?id=${PACKAGE}`, web: `https://appgallery.huawei.com/app/C${APPGALLERY_APP_ID}` };
   return { app: `market://details?id=${PACKAGE}`, web: `https://play.google.com/store/apps/details?id=${PACKAGE}` };
 }
 
