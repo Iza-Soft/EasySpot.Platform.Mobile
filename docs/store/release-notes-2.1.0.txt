@@ -1,0 +1,45 @@
+<en-US>
+EasySpot 2.1.0
+• EasySpot is now published by Izanix — questions and feedback: support@izanix.com
+• Smaller and faster app
+</en-US>
+<bg>
+EasySpot 2.1.0
+• EasySpot вече се издава от Izanix — въпроси и предложения: support@izanix.com
+• По-малко и по-бързо приложение
+</bg>
+<ru-RU>
+EasySpot 2.1.0
+• EasySpot теперь выпускает Izanix — вопросы и отзывы: support@izanix.com
+• Приложение стало меньше и быстрее
+</ru-RU>
+<de-DE>
+EasySpot 2.1.0
+• EasySpot wird jetzt von Izanix herausgegeben – Fragen und Feedback: support@izanix.com
+• Kleinere und schnellere App
+</de-DE>
+<fr-FR>
+EasySpot 2.1.0
+• EasySpot est désormais publié par Izanix — questions et avis : support@izanix.com
+• Application plus légère et plus rapide
+</fr-FR>
+<es-ES>
+EasySpot 2.1.0
+• EasySpot ahora lo publica Izanix — preguntas y comentarios: support@izanix.com
+• App más ligera y rápida
+</es-ES>
+<it-IT>
+EasySpot 2.1.0
+• EasySpot ora è pubblicato da Izanix — domande e suggerimenti: support@izanix.com
+• App più leggera e veloce
+</it-IT>
+<ro>
+EasySpot 2.1.0
+• EasySpot este acum publicat de Izanix — întrebări și sugestii: support@izanix.com
+• Aplicație mai mică și mai rapidă
+</ro>
+<tr-TR>
+EasySpot 2.1.0
+• EasySpot artık Izanix tarafından yayınlanıyor — soru ve öneriler: support@izanix.com
+• Daha küçük ve daha hızlı uygulama
+</tr-TR>

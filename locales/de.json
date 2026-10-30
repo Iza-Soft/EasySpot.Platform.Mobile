@@ -12,7 +12,7 @@
     "no_title": "(Kein Titel)",
     "unnamed_street": "Unbenannte Straße",
     "coming_soon": "Diese Funktion kommt bald!",
-    "footer": "© {{year}} EasySpot — Entwickelt von Ilko Adamov"
+    "footer": "© {{year}} EasySpot — Entwickelt von Izanix"
   },
   "battery_banner": {
     "title": "Akku-Optimierung erforderlich",
@@ -548,7 +548,7 @@
       "s_changes_h": "Änderungen",
       "s_changes": "Ändert sich diese Erklärung, zeigt die App die neue Version und bittet erneut um deine Zustimmung.",
       "s_contact_h": "Kontakt",
-      "s_contact": "Fragen zum Datenschutz: ilko.z.adamov@gmail.com"
+      "s_contact": "Fragen zum Datenschutz: support@izanix.com"
     },
     "terms": {
       "title": "Nutzungsbedingungen",
@@ -565,7 +565,7 @@
       "s_changes_h": "Änderungen",
       "s_changes": "Ändern sich diese Bedingungen, zeigt die App die neue Version.",
       "s_contact_h": "Kontakt",
-      "s_contact": "Fragen: ilko.z.adamov@gmail.com"
+      "s_contact": "Fragen: support@izanix.com"
     },
     "about": {
       "screen": "Über",
@@ -580,7 +580,7 @@
       "f4_t": "Privat von Anfang an",
       "f4_d": "Kein Konto, keine Werbung, Daten nur auf deinem Handy.",
       "rate": "EasySpot bewerten",
-      "copyright": "© {{year}} EasySpot — Ilko Adamov"
+      "copyright": "© {{year}} EasySpot — Izanix"
     },
     "language": {
       "title": "Sprache",

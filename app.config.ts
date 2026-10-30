@@ -10,8 +10,8 @@ import { ExpoConfig } from "expo/config";
  */
 const STORE = (process.env.EASYSPOT_STORE ?? "play") as "play" | "appgallery" | "appstore";
 
-const VERSION = "2.0.1";
-const ANDROID_VERSION_CODE = 6; // 1.2.0 = 4, 2.0.0 = 5 — must always increase
+const VERSION = "2.1.0";
+const ANDROID_VERSION_CODE = 7; // 1.2.0 = 4, 2.0.0 = 5, 2.0.1 = 6 — must always increase
 const IOS_BUILD_NUMBER = "1";
 
 const config: ExpoConfig = {
@@ -125,6 +125,8 @@ const config: ExpoConfig = {
     "./plugins/with-map-queries",
     // Release build signed with the Play upload key from credentials.json (not in the repo).
     "./plugins/with-release-signing",
+    // R8 in release builds (shrink + optimise + obfuscate) — Google Play requirement.
+    "./plugins/with-r8",
   ],
   extra: {
     store: STORE,

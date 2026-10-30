@@ -20,7 +20,7 @@ export function PrivacyPolicyText() {
         </View>
       ))}
       <Text variant="small" tone="muted" style={styles.footer}>
-        © {new Date().getFullYear()} EasySpot — Ilko Adamov
+        © {new Date().getFullYear()} EasySpot — Izanix
       </Text>
     </View>
   );

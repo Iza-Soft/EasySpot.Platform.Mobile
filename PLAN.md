@@ -11,9 +11,11 @@
 | 0 | Основа | 2.0.0 | ✅ Завършен (14.10) — тестван на Samsung (Android 16) и Huawei; iPhone тестът е отложен | [Stage-0-Foundation.pdf](docs/stages/Stage-0-Foundation.pdf) |
 | 1 | Редизайн на екраните | 2.0.0 | ✅ Завършен (14.10) — тестван на Samsung и Huawei; iPhone тестът е отложен | [Stage-1-Screens.pdf](docs/stages/Stage-1-Screens.pdf) |
 | 2 | Нови функции 2.0 | 2.0.0 | ✅ Завършен (16.10) — тестван на Samsung и Huawei; iPhone тестът е отложен | [Stage-2-Features.pdf](docs/stages/Stage-2-Features.pdf) |
-| 3 | Тестове и публикуване 2.0 | 2.0.0 | 🟡 В процес — GitHub Actions ✅ (16.10), Google Play ✅ публикувано (2.0.0 — 19.10, 2.0.1 — 20.10), следва Huawei AppGallery | — |
-| 4 | Walk-back, Haptic Find, Routines, Auto-park | 2.1.0 | ⚪ Предстои | — |
-| 5 | Hand-off линк (backend + уеб) | 2.2.0 | ⚪ Предстои | — |
+| 3 | Тестове и публикуване 2.0 | 2.0.0 | 🟡 В процес — GitHub Actions ✅ (16.10), Google Play ✅ публикувано (2.0.0 — 19.10, 2.0.1 — 20.10), Huawei AppGallery 2.0.1 изпратено за преглед (20.10) | — |
+| 4 | Izanix + R8 | 2.1.0 | 🟡 В процес — кодът е готов (27.10), чака build, проверка и качване. Walk-back и Haptic Find отпаднаха | — |
+| 5 | Auto-park (Bluetooth) | 2.2.0 | ⚪ Предстои | — |
+| 6 | Routines (обичайни места) | — | ⚪ Предстои | — |
+| — | Hand-off линк (backend + уеб) | по-късно | ⚪ Когато има повече потребители | — |
 
 ---
 
@@ -198,22 +200,35 @@
 - [x] **Скрийншоти и описания за Google Play** (19.10): 6 снимки 1080×1920 + feature graphic 1024×500 + икона 512 (`docs/store/`), кратко и пълно описание на 9-те езика (`docs/store/play-listing.md`), бележки за версията (`docs/store/release-notes-2.0.0.txt`); AI asset declaration — маркирани като направени с AI. За AppGallery и App Store — същите текстове, снимки в техните размери (при качването)
 - [x] **Google Play** — ✅ публикувано 19.10 (2.0.0): release 5 (2.0.0), full rollout, листинг на 9 езика, Data safety (ML Kit: Diagnostics + Device or other IDs, collected, не shared, криптирано), политика за поверителност 2.0 на 9 езика (ilkoadamov.github.io/easyspot-privacy-policy). AAB подписан с upload ключа чрез `plugins/with-release-signing.js` + `credentials.json` (не е в repo-то). Одобрено и публикувано 19.10
 - [x] **2.0.1 — поправки** (20.10, versionCode 6) — ✅ публикувано в Google Play 20.10, full rollout: екраните при по-голям / удебелен шрифт и стандартен размер на дисплея (Honor Magic V6) — таван на шрифта по вид текст (`ui/responsive.ts`), статус барът не се застъпва при скрол, тесен изглед под ~380 dp (Намери само иконка, Оправи под текста, B2/−2 на отделен ред, полета 16 dp); споделянето казва какво се споделя (макети SH1–SH5, `domain/share.ts`): „Тук съм:“ / „Колата ми е паркирана тук:“ / „Място за паркиране:“ / името на мястото или „Любимо място:“, адрес или координати, линк — без емоджи и без подпис. Бележки: `docs/store/release-notes-2.0.1.txt`. Тестове 173
-- [ ] **Huawei AppGallery** (започнато 20.10) — нова апликация в AppGallery (1.x не е там); същият код 2.0.1, без HMS SDK и без `agconnect-services.json`
-  - [ ] Акаунт в HUAWEI Developers с потвърдена самоличност (individual)
-  - [ ] AppGallery Connect → нова Android апликация `com.ilkoadamov.easyspot`, категория Navigation / Travel; App ID → в `AboutScreen` (линк „Оцени“: `appmarket://` + `appgallery.huawei.com/app/C<App ID>`)
-  - [ ] Build за AppGallery: `EASYSPOT_STORE=appgallery`, подписан APK (arm64-v8a + armeabi-v7a) с нашия upload ключ — без App Signing на Huawei; проверка на подписа с keytool
-  - [ ] Листинг на 9 езика (текстовете от `docs/store/play-listing.md`), икона 216×216, скрийншоти 1080×1920 (същите), политика за поверителност, възрастов рейтинг, декларации за чувствителни разрешения (местоположение, камера, точни аларми)
-  - [ ] Държави: всички без Китай (за Китай трябват ICP / софтуерен сертификат), безплатна; изпращане за преглед (обикновено 3–5 работни дни)
-- [ ] App Store (App Privacy, TestFlight)
+- [ ] **Huawei AppGallery** — 2.0.1 изпратено за преглед 20.10 („Reviewing“), обикновено 3–5 работни дни. Обновление на съществуващото приложение (1.0.0 от 02.2026, App ID 116885027 — одобрено, но не се показваше на HMS телефони, защото не работеше без Google)
+  - [x] APK (не AAB — App Signing в AppGallery е изключено), подписан с нашия upload ключ (SHA1 `2E:7C:81:5D…`), versionCode 6, `EASYSPOT_STORE=appgallery`, arm64-v8a + armeabi-v7a (80 MB). PowerShell: `.\gradlew assembleRelease "-PreactNativeArchitectures=arm64-v8a,armeabi-v7a"` (запетаята — в кавички)
+  - [x] „Оцени EasySpot“ в About → `appmarket://` + `appgallery.huawei.com/app/C116885027`
+  - [x] Държави: всички региони без Chinese mainland (199 + нови; в Северна Америка само Канада)
+  - [x] Рейтинг 3+ (въпрос 38 „услуги според местоположението“ — Yes), не е „само за деца“
+  - [x] Политика: ilkoadamov.github.io/easyspot-privacy-policy; Privacy tags → Analytics: Basic app information, App run logs, OS information, Other hardware/software parameters (ML Kit диагностика); Generative AI — Not involved
+  - [x] Бележка към рецензента (≤300 знака): работи без GMS, тествано на Pura 70 Ultra, молба да се показва на HMS телефони
+  - [x] Листинг на 9 езика (`docs/store/appgallery-listing.txt`: кратко описание ≤25 знака, пълно, „какво ново“ = бележките от 2.0.0), име „EasySpot“, нова икона 512, 6 нови скрийншота (само на английски — другите езици ги наследяват), категория Navigation
 
-## Етап 4 — 2.1
-- [ ] **R8 за release** (Google Play: „DEX code optimization is below our threshold“, обфускация 1% < 25%, срок **февруари 2027**): `android.enableMinifyInReleaseBuilds` + `enableShrinkResourcesInReleaseBuilds` в `app.config.ts`, после кратка проверка на release build-а (PARK, снимка, напомняне, Spots). Решено 19.10: 2.0.0 се качва без него
-- [ ] Walk-back (пътят обратно без GPS)
-- [ ] Haptic Find
-- [ ] Routines (обичайни места)
-- [ ] Auto-park при изключване на Bluetooth (Android)
+## Етап 4 — 2.1.0 (Izanix + R8)
+Решено 27.10: 2.1.0 = само Izanix + R8. Walk-back и Haptic Find отпадат (виж по-долу).
+- [x] **Автор „Izanix“** (име избрано 22.10; EU марки — чисто, САЩ — близка марка IZONIX в клас 9; домейни izanix.com + izanix.eu (Namecheap), izanix.dev (Cloudflare), купени 22.10). Навсякъде в приложението „Ilko Adamov“ → „Izanix“ (About, политиката в приложението, страницата за политиката), имейлът → support@izanix.com (About, политика, условия — 9 езика). **26.10 — support@izanix.com работи** (izanix.com в Cloudflare DNS; стари DNSSEC записи от предишния собственик махнати; Email Routing → Gmail, само получаване). Политиката остава версия 2.0 (само име и имейл) — потребителите не я приемат отново. Пакетът `com.ilkoadamov.easyspot` и Expo акаунтът `i.z.adamov` НЕ се сменят
+- [x] **R8 за release** (Google Play: „DEX code optimization is below our threshold“, срок **февруари 2027**): `plugins/with-r8.js` — `android.enableMinifyInReleaseBuilds` + `enableShrinkResourcesInReleaseBuilds` в gradle.properties и keep правила за нашия Kotlin (`com.ilkoadamov.easyspot.**`) в proguard-rules.pro (27.10)
+- [x] Версия 2.1.0, versionCode 7; бележки `docs/store/release-notes-2.1.0.txt` (9 езика)
+- [ ] Build + проверка на release build-а с R8 (Samsung + Huawei): PARK, снимка + разпознаване (OCR), напомняне (вкл. след рестарт), Spots, споделяне, Settings → списък с картите, About → имейл
+- [ ] Google Play: Developer name „Izanix“ + контактен имейл support@izanix.com; качване на 2.1.0 (+ mapping файла за четими crash-ове, ако Play го поиска)
+- [ ] AppGallery: 2.1.0 след като мине прегледът на 2.0.1 (за индивидуален акаунт името вероятно остава „Ilko Adamov“)
 
-## Етап 5 — 2.2
+### Отпаднали (27.10)
+- ~~**Walk-back — „Път обратно до колата“**~~ — направен и тестван (23–26.10): с корекция по GPS отвежда точно (6 m), но навън картите вече решават проблема, а вътре нивото / зоната / снимката / етажите покриват почти всичко; цената е висока (декларация за foreground service в Play, OEM ограничения, батерия, iOS, риск от грешна посока) при малка полза. Кодът е запазен извън проекта: `easyspot-walkback-shelved.zip` → за отделен клон (`feature/walk-back`)
+- ~~**Haptic Find**~~ — зависеше от Walk-back
+
+## Етап 5 — 2.2.0 (Auto-park)
+- [ ] **Auto-park при изключване на Bluetooth-а на колата (Android)** — записва паркирането автоматично, без да отваряш приложението (най-честият проблем: „забравих да запиша“). Mockup-и първо
+
+## Етап 6 — след 2.2.0
+- [ ] **Routines (обичайни места)** — разпознава, че паркираш на едно и също място (вкъщи, офис), и предлага да го запише
+
+## По-късно (когато има повече потребители)
 - [ ] Backend (ASP.NET Core + PostgreSQL)
 - [ ] Уеб страница за споделено място
 - [ ] App Links / Universal Links
@@ -221,10 +236,10 @@
 ---
 
 ## Отворени въпроси
-- Mac + Apple Developer акаунт или EAS Build в облака за iOS?
+- **App Store** (App Privacy, TestFlight) — отложено 20.10, засега не публикуваме за iPhone. Когато решим: Mac + Apple Developer акаунт или EAS Build в облака за iOS? Тест на iPhone (още не е правен)
 - ~~Huawei телефон без Google услуги за тестове?~~ → Pura 70 Ultra (с microG); за тест без никакви Google услуги може да се деинсталира microG
 - ~~Етикети на нивата по подразбиране: „B2“ или „−2“?~~ → B2 по подразбиране, избор в Settings
-- Домейн за hand-off линковете (2.2)?
+- Домейн за hand-off линковете (когато дойде backend-ът) — вероятно izanix.com?
 - Модел на монетизация?
 
 ## Как се пуска

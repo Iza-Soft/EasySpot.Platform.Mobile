@@ -12,7 +12,7 @@
     "no_title": "(Без заглавие)",
     "unnamed_street": "Неименувана улица",
     "coming_soon": "Тази функция очаква своя ред!",
-    "footer": "© {{year}} EasySpot — Разработено от Ilko Adamov"
+    "footer": "© {{year}} EasySpot — Разработено от Izanix"
   },
   "battery_banner": {
     "title": "Необходима е настройка на батерията",
@@ -549,7 +549,7 @@
       "s_changes_h": "Промени",
       "s_changes": "Ако политиката се промени, приложението ще покаже новата версия и ще поиска отново съгласието ти.",
       "s_contact_h": "Контакт",
-      "s_contact": "Въпроси за поверителността: ilko.z.adamov@gmail.com"
+      "s_contact": "Въпроси за поверителността: support@izanix.com"
     },
     "terms": {
       "title": "Условия за ползване",
@@ -566,7 +566,7 @@
       "s_changes_h": "Промени",
       "s_changes": "Ако условията се променят, приложението ще покаже новата версия.",
       "s_contact_h": "Контакт",
-      "s_contact": "Въпроси: ilko.z.adamov@gmail.com"
+      "s_contact": "Въпроси: support@izanix.com"
     },
     "about": {
       "screen": "За приложението",
@@ -581,7 +581,7 @@
       "f4_t": "Поверителност по замисъл",
       "f4_d": "Без акаунт, без реклами, данните са само на телефона.",
       "rate": "Оцени EasySpot",
-      "copyright": "© {{year}} EasySpot — Илко Адамов"
+      "copyright": "© {{year}} EasySpot — Izanix"
     },
     "language": {
       "title": "Език",

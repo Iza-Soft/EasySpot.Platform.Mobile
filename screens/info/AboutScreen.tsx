@@ -76,7 +76,7 @@ export default function AboutScreen() {
             <Text variant="bodyStrong" tone="level">{t("v2.about.rate")}</Text>
           </Pressable>
         ) : null}
-        <Text variant="small" tone="muted" selectable>ilko.z.adamov@gmail.com</Text>
+        <Text variant="small" tone="muted" selectable>support@izanix.com</Text>
         <Text variant="small" tone="muted">{t("v2.about.copyright", { year: new Date().getFullYear() })}</Text>
       </View>
     </InfoLayout>

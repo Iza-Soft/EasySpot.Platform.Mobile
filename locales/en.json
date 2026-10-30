@@ -12,7 +12,7 @@
     "no_title": "(No title)",
     "unnamed_street": "Unnamed Street",
     "coming_soon": "This feature is coming soon!",
-    "footer": "© {{year}} EasySpot — Developed by Ilko Adamov"
+    "footer": "© {{year}} EasySpot — Developed by Izanix"
   },
   "battery_banner": {
     "title": "Battery Optimization Needed",
@@ -549,7 +549,7 @@
       "s_changes_h": "Changes",
       "s_changes": "If this policy changes, the app will show the new version and ask you to agree again.",
       "s_contact_h": "Contact",
-      "s_contact": "Questions about privacy: ilko.z.adamov@gmail.com"
+      "s_contact": "Questions about privacy: support@izanix.com"
     },
     "terms": {
       "title": "Terms of service",
@@ -566,7 +566,7 @@
       "s_changes_h": "Changes",
       "s_changes": "If these terms change, the app will show the new version.",
       "s_contact_h": "Contact",
-      "s_contact": "Questions: ilko.z.adamov@gmail.com"
+      "s_contact": "Questions: support@izanix.com"
     },
     "about": {
       "screen": "About",
@@ -581,7 +581,7 @@
       "f4_t": "Private by design",
       "f4_d": "No account, no ads, data only on your phone.",
       "rate": "Rate EasySpot",
-      "copyright": "© {{year}} EasySpot — Ilko Adamov"
+      "copyright": "© {{year}} EasySpot — Izanix"
     },
     "language": {
       "title": "Language",

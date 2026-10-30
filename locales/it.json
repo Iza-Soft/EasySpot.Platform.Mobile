@@ -258,7 +258,7 @@
       "s_changes_h": "Modifiche",
       "s_changes": "Se l'informativa cambia, l'app mostrerà la nuova versione e chiederà di nuovo il tuo consenso.",
       "s_contact_h": "Contatti",
-      "s_contact": "Domande sulla privacy: ilko.z.adamov@gmail.com"
+      "s_contact": "Domande sulla privacy: support@izanix.com"
     },
     "terms": {
       "title": "Termini di servizio",
@@ -275,7 +275,7 @@
       "s_changes_h": "Modifiche",
       "s_changes": "Se questi termini cambiano, l'app mostrerà la nuova versione.",
       "s_contact_h": "Contatti",
-      "s_contact": "Domande: ilko.z.adamov@gmail.com"
+      "s_contact": "Domande: support@izanix.com"
     },
     "about": {
       "screen": "Informazioni",
@@ -290,7 +290,7 @@
       "f4_t": "Privacy fin dal progetto",
       "f4_d": "Nessun account, nessuna pubblicità, dati solo sul telefono.",
       "rate": "Valuta EasySpot",
-      "copyright": "© {{year}} EasySpot — Ilko Adamov"
+      "copyright": "© {{year}} EasySpot — Izanix"
     },
     "language": {
       "title": "Lingua",

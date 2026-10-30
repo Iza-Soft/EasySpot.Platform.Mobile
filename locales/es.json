@@ -258,7 +258,7 @@
       "s_changes_h": "Cambios",
       "s_changes": "Si esta política cambia, la app mostrará la nueva versión y te pedirá de nuevo tu aceptación.",
       "s_contact_h": "Contacto",
-      "s_contact": "Preguntas sobre privacidad: ilko.z.adamov@gmail.com"
+      "s_contact": "Preguntas sobre privacidad: support@izanix.com"
     },
     "terms": {
       "title": "Condiciones de uso",
@@ -275,7 +275,7 @@
       "s_changes_h": "Cambios",
       "s_changes": "Si estas condiciones cambian, la app mostrará la nueva versión.",
       "s_contact_h": "Contacto",
-      "s_contact": "Preguntas: ilko.z.adamov@gmail.com"
+      "s_contact": "Preguntas: support@izanix.com"
     },
     "about": {
       "screen": "Acerca de",
@@ -290,7 +290,7 @@
       "f4_t": "Privacidad desde el diseño",
       "f4_d": "Sin cuenta, sin anuncios, datos solo en tu teléfono.",
       "rate": "Valorar EasySpot",
-      "copyright": "© {{year}} EasySpot — Ilko Adamov"
+      "copyright": "© {{year}} EasySpot — Izanix"
     },
     "language": {
       "title": "Idioma",

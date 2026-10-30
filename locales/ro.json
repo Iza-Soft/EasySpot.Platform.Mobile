@@ -258,7 +258,7 @@
       "s_changes_h": "Modificări",
       "s_changes": "Dacă politica se schimbă, aplicația va afișa noua versiune și îți va cere din nou acordul.",
       "s_contact_h": "Contact",
-      "s_contact": "Întrebări despre confidențialitate: ilko.z.adamov@gmail.com"
+      "s_contact": "Întrebări despre confidențialitate: support@izanix.com"
     },
     "terms": {
       "title": "Termeni și condiții",
@@ -275,7 +275,7 @@
       "s_changes_h": "Modificări",
       "s_changes": "Dacă acești termeni se schimbă, aplicația va afișa noua versiune.",
       "s_contact_h": "Contact",
-      "s_contact": "Întrebări: ilko.z.adamov@gmail.com"
+      "s_contact": "Întrebări: support@izanix.com"
     },
     "about": {
       "screen": "Despre",
@@ -290,7 +290,7 @@
       "f4_t": "Confidențialitate din proiectare",
       "f4_d": "Fără cont, fără reclame, date doar pe telefon.",
       "rate": "Evaluează EasySpot",
-      "copyright": "© {{year}} EasySpot — Ilko Adamov"
+      "copyright": "© {{year}} EasySpot — Izanix"
     },
     "language": {
       "title": "Limbă",

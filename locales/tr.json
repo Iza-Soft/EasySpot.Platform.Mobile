@@ -12,7 +12,7 @@
     "no_title": "(Başlık yok)",
     "unnamed_street": "İsimsiz Sokak",
     "coming_soon": "Bu özellik yakında geliyor!",
-    "footer": "© {{year}} EasySpot — Ilko Adamov tarafından geliştirildi"
+    "footer": "© {{year}} EasySpot — Izanix tarafından geliştirildi"
   },
   "battery_banner": {
     "title": "Pil Optimizasyonu Gerekli",
@@ -548,7 +548,7 @@
       "s_changes_h": "Değişiklikler",
       "s_changes": "Bu politika değişirse uygulama yeni sürümü gösterir ve onayını yeniden ister.",
       "s_contact_h": "İletişim",
-      "s_contact": "Gizlilikle ilgili sorular: ilko.z.adamov@gmail.com"
+      "s_contact": "Gizlilikle ilgili sorular: support@izanix.com"
     },
     "terms": {
       "title": "Kullanım koşulları",
@@ -565,7 +565,7 @@
       "s_changes_h": "Değişiklikler",
       "s_changes": "Bu koşullar değişirse uygulama yeni sürümü gösterir.",
       "s_contact_h": "İletişim",
-      "s_contact": "Sorular: ilko.z.adamov@gmail.com"
+      "s_contact": "Sorular: support@izanix.com"
     },
     "about": {
       "screen": "Hakkında",
@@ -580,7 +580,7 @@
       "f4_t": "Gizlilik odaklı",
       "f4_d": "Hesap yok, reklam yok, veriler yalnızca telefonunda.",
       "rate": "EasySpot'u değerlendir",
-      "copyright": "© {{year}} EasySpot — Ilko Adamov"
+      "copyright": "© {{year}} EasySpot — Izanix"
     },
     "language": {
       "title": "Dil",
